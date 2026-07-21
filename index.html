@@ -1,0 +1,2888 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Diagram — AI Vocabulary Photo Note</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('v')) {
+        urlParams.set('v', 'fresh-' + Date.now());
+        window.location.search = urlParams.toString();
+        return;
+      }
+      const saved = localStorage.getItem('theme');
+      const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    })();
+  </script>
+  <style>
+    :root {
+      --bg: #F4F3EF;
+      --surface: #FFFFFF;
+      --surface-hover: #FAFAF8;
+      --surface-aside: #EFECE6;
+      --ink: #1D1D1C;
+      --body: #4A4A49;
+      --muted: #8E8D88;
+      --line: #DFDDD5;
+      --line-soft: #EBEAE4;
+      --primary: #D35400; /* Terracotta/Clay style */
+      --primary-soft: rgba(211, 84, 0, 0.08);
+      --accent: #2980B9;
+      --accent-soft: rgba(41, 128, 185, 0.08);
+      --success: #27AE60;
+      --success-soft: rgba(39, 174, 96, 0.08);
+      --warning: #F39C12;
+      --zone-bg: rgba(20, 20, 19, 0.015);
+      --zone-line: #CDCDC7;
+      
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+    
+    html.dark {
+      --bg: #121211;
+      --surface: #1B1B1A;
+      --surface-hover: #222221;
+      --surface-aside: #171716;
+      --ink: #F5F4F0;
+      --body: #CAC9C3;
+      --muted: #7E7D78;
+      --line: #2D2D2C;
+      --line-soft: #232322;
+      --primary: #E67E22;
+      --primary-soft: rgba(230, 126, 34, 0.12);
+      --accent: #3498DB;
+      --accent-soft: rgba(52, 152, 219, 0.12);
+      --success: #2ECC71;
+      --success-soft: rgba(46, 204, 113, 0.12);
+      --warning: #F1C40F;
+      --zone-bg: rgba(245, 244, 240, 0.02);
+      --zone-line: #2D2D2C;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      background: var(--bg);
+      color: var(--body);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* --- Header Bar --- */
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 24px;
+      padding-top: 72px; /* Push down to clear space for the floating switcher */
+      background: var(--surface);
+      border-bottom: 1px solid var(--line-soft);
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+    }
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .brand .sub {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+    .filters {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border: 1px solid var(--line);
+      border-radius: 99px;
+      background: transparent;
+      color: var(--body);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .filter-chip:hover {
+      border-color: var(--muted);
+      color: var(--ink);
+    }
+    .filter-chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #FFFFFF;
+    }
+    
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-action {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--body);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .btn-action:hover {
+      border-color: var(--muted);
+      color: var(--ink);
+      background: var(--surface-hover);
+    }
+    .zoom-indicator {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      min-width: 40px;
+      text-align: center;
+    }
+
+    /* --- Workspace Layout --- */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      position: relative;
+    }
+
+    /* --- Left Sidebar (Search & Principles) --- */
+    .sidebar-left {
+      width: 320px;
+      background: var(--surface-aside);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 5;
+    }
+    .sidebar-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .sidebar-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .search-box {
+      position: relative;
+      margin-top: 10px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      pointer-events: none;
+      font-size: 14px;
+    }
+    .sidebar-scrollable {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .principles-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .principle-card {
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .principle-card:hover {
+      border-color: var(--line);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+    .principle-card.active {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+    .principle-card h3 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .principle-card p {
+      font-size: 11px;
+      color: var(--body);
+      line-height: 1.4;
+      margin-top: 4px;
+    }
+
+    .class-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .class-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      color: var(--body);
+      transition: all 0.1s ease;
+    }
+    .class-item:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+    .class-item.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      font-weight: 500;
+    }
+    .class-tag {
+      font-size: 9px;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      border-radius: 99px;
+      background: var(--line-soft);
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .class-item.active .class-tag {
+      background: rgba(255, 255, 255, 0.2);
+      color: #FFFFFF;
+    }
+
+    /* --- Right Sidebar (Inspector) --- */
+    .sidebar-right {
+      width: 380px;
+      background: var(--surface-aside);
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      z-index: 5;
+      position: relative;
+    }
+    .sidebar-right.collapsed {
+      width: 0;
+      overflow: hidden;
+      border-left: none;
+    }
+    .inspector-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .inspector-header h2 {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-close:hover {
+      color: var(--ink);
+    }
+    .inspector-scrollable {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .inspector-intro {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+    .inspector-intro svg {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 12px;
+      stroke: var(--muted);
+      opacity: 0.5;
+    }
+    .class-badge-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+    .stereotype-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--primary);
+      font-weight: 500;
+    }
+    .inspector-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+    }
+    .inspector-desc {
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--body);
+    }
+    .db-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--surface);
+      border: 1px solid var(--line-soft);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      margin-top: 6px;
+    }
+    
+    .inspector-section {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 16px;
+    }
+    .inspector-section h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .attribute-list, .method-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .member-item {
+      background: var(--surface);
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--line-soft);
+    }
+    .member-sig {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .member-sig span.type {
+      color: var(--accent);
+    }
+    .member-sig span.param {
+      color: var(--warning);
+    }
+    .member-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+    
+    .relationship-item {
+      background: var(--surface);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .relationship-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .relationship-target {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--primary);
+      cursor: pointer;
+    }
+    .relationship-target:hover {
+      text-decoration: underline;
+    }
+    .relationship-type {
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 10px;
+    }
+    .relationship-desc {
+      font-size: 11.5px;
+      color: var(--body);
+      line-height: 1.4;
+    }
+
+    .mapping-item {
+      background: var(--surface);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--line-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 12px;
+    }
+    .mapping-field {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .mapping-desc {
+      color: var(--body);
+      font-size: 11px;
+    }
+
+    /* --- Stage/Canvas Panel --- */
+    .stage-container {
+      flex: 1;
+      position: relative;
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(var(--line) 1px, transparent 1px),
+        radial-gradient(var(--line) 1px, transparent 1px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      overflow: hidden;
+      cursor: grab;
+    }
+    .stage-container:active {
+      cursor: grabbing;
+    }
+    .stage-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* --- SVG Elements --- */
+    .zone-rect {
+      fill: var(--zone-bg);
+      stroke: var(--zone-line);
+      stroke-width: 1.5;
+      stroke-dasharray: 6 4;
+      rx: 12;
+      transition: all 0.2s ease;
+    }
+    .zone-title {
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      fill: var(--muted);
+    }
+    
+    /* --- Class Cards inside ForeignObject --- */
+    .class-card {
+      width: 100%;
+      height: 100%;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      overflow: hidden;
+      transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+      cursor: pointer;
+    }
+    .class-card:hover {
+      border-color: var(--muted);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    }
+    .class-card.selected {
+      border-color: var(--primary) !important;
+      border-width: 2px !important;
+      box-shadow: 0 8px 24px rgba(211, 84, 0, 0.12);
+    }
+    .class-card.highlighted {
+      border-color: var(--primary);
+    }
+    .card-header {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--surface-hover);
+      display: flex;
+      flex-direction: column;
+    }
+    .card-stereotype {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--primary);
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+    .card-name-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .card-db-tag {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--muted);
+      background: var(--line-soft);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+    .card-compartment {
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+    }
+    .card-compartment + .card-compartment {
+      border-top: 1px solid var(--line-soft);
+    }
+    .card-member {
+      font-family: var(--font-mono);
+      color: var(--body);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-member span.type {
+      color: var(--accent);
+    }
+
+    /* --- Connector Edges --- */
+    .edge-path {
+      fill: none;
+      stroke: var(--line);
+      stroke-width: 1.6;
+      transition: stroke 0.2s ease, stroke-width 0.2s ease, opacity 0.2s ease;
+      marker-end: url(#marker-assoc);
+    }
+    .edge-path.assoc {
+      marker-end: url(#marker-assoc);
+    }
+    .edge-path.composition {
+      marker-start: url(#marker-diamond-filled);
+      marker-end: url(#marker-assoc);
+    }
+    .edge-path.aggregation {
+      marker-start: url(#marker-diamond-empty);
+      marker-end: url(#marker-assoc);
+    }
+    .edge-path.dependency {
+      stroke-dasharray: 5 4;
+      marker-end: url(#marker-dependency);
+    }
+    .edge-path.selected {
+      stroke: var(--primary) !important;
+      stroke-width: 2.2 !important;
+      opacity: 1 !important;
+    }
+    .edge-path.lit {
+      stroke: var(--primary) !important;
+      stroke-width: 2.2 !important;
+      opacity: 1 !important;
+      stroke-dasharray: 6 4;
+      animation: edgeMarch 1s linear infinite;
+    }
+    @keyframes edgeMarch {
+      to {
+        stroke-dashoffset: -20;
+      }
+    }
+    
+    .edge-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      fill: var(--muted);
+      background: var(--bg);
+      transition: fill 0.2s ease, opacity 0.2s ease;
+    }
+    .edge-label.selected {
+      fill: var(--primary);
+      font-weight: 500;
+    }
+
+    /* --- Fading states (Filtering) --- */
+    .stage-container.flowing .class-card {
+      opacity: 0.25;
+    }
+    .stage-container.flowing .class-card.lit {
+      opacity: 1;
+    }
+    .stage-container.flowing .edge-path {
+      opacity: 0.15;
+    }
+    .stage-container.flowing .edge-path.lit {
+      opacity: 1;
+    }
+    .stage-container.flowing .edge-label {
+      opacity: 0.15;
+    }
+    .stage-container.flowing .edge-label.lit {
+      opacity: 1;
+    }
+    .stage-container.flowing .zone-rect {
+      opacity: 0.2;
+    }
+    .stage-container.flowing .zone-rect.lit {
+      opacity: 1;
+    }
+
+    /* --- Float HUD Elements --- */
+    .canvas-hud {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 4px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      z-index: 4;
+    }
+    .hud-btn {
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      color: var(--body);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.15s ease;
+    }
+    .hud-btn:hover {
+      background: var(--surface-hover);
+      color: var(--ink);
+    }
+
+    /* --- Floating AI Chatbot --- */
+    .chatbot-toggle {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 56px;
+      height: 56px;
+      border-radius: 99px;
+      background: var(--primary);
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      z-index: 20;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .chatbot-toggle:hover {
+      transform: scale(1.08) translateY(-2px);
+      box-shadow: 0 8px 32px rgba(211, 84, 0, 0.2);
+    }
+    .chatbot-toggle svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    .chatbot-window {
+      position: absolute;
+      bottom: 90px;
+      right: 20px;
+      width: 380px;
+      height: 550px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 20;
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+    }
+    .chatbot-window.open {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line-soft);
+      background: var(--surface-hover);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary-soft);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .chat-header-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .chat-header-status {
+      font-size: 10px;
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 1px;
+    }
+    .chat-header-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+    }
+    
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .chat-bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .chat-bubble.bot {
+      background: var(--surface-aside);
+      color: var(--body);
+      align-self: flex-start;
+      border-bottom-left-radius: 2px;
+    }
+    .chat-bubble.bot code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--primary);
+    }
+    .chat-bubble.user {
+      background: var(--primary);
+      color: #FFFFFF;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+    }
+    
+    .chat-suggestions {
+      padding: 10px 20px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line-soft);
+    }
+    .chat-suggestion-chip {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      background: var(--surface-hover);
+      border: 1px solid var(--line);
+      color: var(--body);
+      padding: 4px 10px;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .chat-suggestion-chip:hover {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    
+    .chat-input-area {
+      padding: 12px 20px;
+      border-top: 1px solid var(--line-soft);
+      background: var(--surface-hover);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .chat-input:focus {
+      border-color: var(--primary);
+    }
+    .chat-send {
+      background: var(--primary);
+      border: none;
+      color: #FFFFFF;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+    }
+    .chat-send:hover {
+      background: #B34200;
+    }
+    .chat-send svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+    /* --- Floating View Mode Switcher --- */
+    .view-mode-switcher {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid #E8DCD1;
+      border-radius: 99px;
+      padding: 4px;
+      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.08);
+      z-index: 9999;
+      user-select: none;
+    }
+    html.dark .view-mode-switcher {
+      background: rgba(45, 39, 35, 0.85);
+      border-color: #3E342F;
+    }
+    .view-mode-switcher a {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5C4F4B;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 99px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    html.dark .view-mode-switcher a {
+      color: #D8CECA;
+    }
+    .view-mode-switcher a.active {
+      background: #D2A374;
+      color: #FFFFFF !important;
+    }
+    .view-mode-switcher a:hover:not(.active) {
+      background: rgba(210, 163, 116, 0.15);
+      color: #D2A374;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- --- Floating View Mode Switcher --- -->
+  <div class="view-mode-switcher">
+    <a href="index.html" onclick="location.href='index.html?v=fresh-' + Date.now(); return false;" class="switch-btn active">📊 Class Diagram UML</a>
+    <a href="capy_vocab.html" onclick="location.href='capy_vocab.html?v=fresh-' + Date.now(); return false;" class="switch-btn">📱 Giao diện App (Capybara)</a>
+  </div>
+
+  <!-- --- Top Header Bar --- -->
+  <div class="bar">
+    <div class="brand">
+      <h1>Class Diagram Explorer</h1>
+      <div class="sub">AI Vocabulary Photo Note · 13 Classes · 3 Packages</div>
+    </div>
+    
+    <!-- Filter Chips -->
+    <div class="filters">
+      <button class="filter-chip active" data-package="all">Tất cả</button>
+      <button class="filter-chip" data-package="Core Entities">Domain & Entities</button>
+      <button class="filter-chip" data-package="AI & Processing">AI & Canvas Processing</button>
+      <button class="filter-chip" data-package="Batch & SRS">Batch & SRS Engine</button>
+    </div>
+
+    <!-- Actions & theme -->
+    <div class="actions">
+      <button id="btnHighlightRelations" class="btn-action" title="Highlight all connecting relationships">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <span>Liên kết</span>
+      </button>
+      <button id="themeToggle" class="btn-action" title="Toggle dark/light mode">Theme</button>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <!-- --- Left Sidebar: Principles & List --- -->
+    <div class="sidebar-left">
+      <div class="sidebar-header">
+        <h2>Kiến Trúc & Thiết Kế</h2>
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="classSearch" class="search-input" placeholder="Tìm kiếm lớp hoặc thuộc tính...">
+        </div>
+      </div>
+      
+      <div class="sidebar-scrollable">
+        <!-- System Design Principles -->
+        <div>
+          <div class="section-title">Nguyên tắc thiết kế</div>
+          <div class="principles-list">
+            <div class="principle-card" data-principle="Freemium">
+              <h3>Freemium Quota Rules</h3>
+              <p>User.canScan() kiểm soát giới hạn quota quét ảnh miễn phí hàng ngày.</p>
+            </div>
+            <div class="principle-card" data-principle="Skia">
+              <h3>Skia Rendering Engine</h3>
+              <p>SkiaCanvasRenderer vẽ pointer lines, ghim ghim và ô nghĩa đè lên canvas.</p>
+            </div>
+            <div class="principle-card" data-principle="SRS">
+              <h3>SM-2 Algorithm (SRS)</h3>
+              <p>SRSAlgorithm tính toán repetitions, intervalDays và nextReviewAt cho thẻ ôn tập.</p>
+            </div>
+            <div class="principle-card" data-principle="Coords">
+              <h3>Coordinate Mapping %</h3>
+              <p>Lưu tọa độ tương đối % trên PhotoNote để hiển thị co giãn trên mọi màn hình.</p>
+            </div>
+            <div class="principle-card" data-principle="Batch">
+              <h3>Batch Extraction</h3>
+              <p>BatchExtractor lọc trùng và gom từ vựng từ nhiều ảnh đã chọn để xuất thẻ học.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Class Quick Navigation -->
+        <div>
+          <div class="section-title">Danh sách các lớp (<span id="class-count">13</span>)</div>
+          <div class="class-list" id="classList">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- Center Stage (SVG Diagram) --- -->
+    <div class="stage-container" id="stageContainer">
+      <svg class="stage-svg" id="stageSvg" viewBox="0 0 1700 1280" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <!-- Markers for relations -->
+          <marker id="marker-assoc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,2 L10,5 L0,8" fill="none" stroke="var(--line)" stroke-width="1.8" stroke-linecap="round"/>
+          </marker>
+          <marker id="marker-dependency" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M0,2 L10,5 L0,8" fill="none" stroke="var(--line)" stroke-width="1.5" stroke-linecap="round"/>
+          </marker>
+          <marker id="marker-diamond-empty" viewBox="0 0 12 12" refX="0" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M6,0 L12,6 L6,12 L0,6 Z" fill="var(--surface)" stroke="var(--line)" stroke-width="1.5"/>
+          </marker>
+          <marker id="marker-diamond-filled" viewBox="0 0 12 12" refX="0" refY="6" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+            <path d="M6,0 L12,6 L6,12 L0,6 Z" fill="var(--muted)" stroke="var(--line)" stroke-width="1.5"/>
+          </marker>
+        </defs>
+
+        <!-- Wrapper for Zoom/Pan -->
+        <g id="svgContent">
+          <!-- Package Zones -->
+          <g class="zone" id="zone-entities">
+            <rect class="zone-rect" x="40" y="50" width="680" height="1290"/>
+            <text class="zone-title" x="60" y="80">📦 Gói 1: Core Domain Entities (SQLite)</text>
+          </g>
+          
+          <g class="zone" id="zone-ai">
+            <rect class="zone-rect" x="750" y="50" width="370" height="690"/>
+            <text class="zone-title" x="770" y="80">📦 Gói 2: AI & Canvas Processing</text>
+          </g>
+
+          <g class="zone" id="zone-batch">
+            <rect class="zone-rect" x="750" y="760" width="900" height="470"/>
+            <text class="zone-title" x="770" y="795">📦 Gói 3: Batch Extraction & SRS Engine</text>
+          </g>
+
+          <g class="zone" id="zone-renderer">
+            <rect class="zone-rect" x="1140" y="50" width="420" height="690"/>
+            <text class="zone-title" x="1160" y="80">📦 Gói 2: Rendering Stage</text>
+          </g>
+
+          <!-- SVG Connecting Paths -->
+          <!-- Relationships -->
+          <g id="svgEdges">
+            <!-- User -> Photo -->
+            <path class="edge-path assoc" id="edge-User-Photo" d="M 210,370 L 210,450"/>
+            <text class="edge-label" id="lbl-User-Photo" x="220" y="410">owns (1..*)</text>
+
+            <!-- User -> UserInventory -->
+            <path class="edge-path composition" id="edge-User-UserInventory" d="M 340,210 L 420,210"/>
+            <text class="edge-label" id="lbl-User-UserInventory" x="350" y="200">owns (1)</text>
+
+            <!-- UserInventory -> PetItem -->
+            <path class="edge-path assoc" id="edge-UserInventory-PetItem" d="M 550,270 L 550,290"/>
+            <text class="edge-label" id="lbl-UserInventory-PetItem" x="560" y="285">references</text>
+
+            <!-- Photo -> SelectedVocabSession -->
+            <path class="edge-path assoc" id="edge-Photo-SelectedVocabSession" d="M 340,580 C 600,580 800,820 1080,820"/>
+            <text class="edge-label" id="lbl-Photo-SelectedVocabSession" x="650" y="650">selected (0..*)</text>
+
+            <!-- SelectedVocabSession -> Vocabulary -->
+            <path class="edge-path dependency" id="edge-SelectedVocabSession-Vocabulary" d="M 1080,850 L 680,850"/>
+            <text class="edge-label" id="lbl-SelectedVocabSession-Vocabulary" x="880" y="840">aggregates</text>
+
+            <!-- SelectedVocabSession -> SRSCard -->
+            <path class="edge-path dependency" id="edge-SelectedVocabSession-SRSCard" d="M 1340,830 L 1360,830"/>
+            <text class="edge-label" id="lbl-SelectedVocabSession-SRSCard" x="1342" y="820">generates</text>
+
+            <!-- Photo -> PhotoNote -->
+            <path class="edge-path composition" id="edge-Photo-PhotoNote" d="M 340,550 L 420,550"/>
+            <text class="edge-label" id="lbl-Photo-PhotoNote" x="350" y="540">contains (1..*)</text>
+
+            <!-- Photo -> Vocabulary -->
+            <path class="edge-path composition" id="edge-Photo-Vocabulary" d="M 340,600 C 370,600 380,850 420,850"/>
+            <text class="edge-label" id="lbl-Photo-Vocabulary" x="355" y="730">generates</text>
+
+            <!-- Photo -> NoteTemplate -->
+            <path class="edge-path assoc" id="edge-Photo-NoteTemplate" d="M 210,650 L 210,760"/>
+            <text class="edge-label" id="lbl-Photo-NoteTemplate" x="220" y="710">applies (N..1)</text>
+
+            <!-- Vocabulary -> SRSCard -->
+            <path class="edge-path assoc" id="edge-Vocabulary-SRSCard" d="M 680,910 C 900,910 1000,890 1360,890"/>
+            <text class="edge-label" id="lbl-Vocabulary-SRSCard" x="910" y="880">creates (0..1)</text>
+
+            <!-- SkiaCanvasRenderer -> PhotoNote -->
+            <path class="edge-path dependency" id="edge-SkiaCanvasRenderer-PhotoNote" d="M 1220,480 C 900,480 800,530 680,530"/>
+            <text class="edge-label" id="lbl-SkiaCanvasRenderer-PhotoNote" x="930" y="500">renders</text>
+
+            <!-- SkiaCanvasRenderer -> CoordinateMapper -->
+            <path class="edge-path dependency" id="edge-SkiaCanvasRenderer-CoordinateMapper" d="M 1180,450 L 1060,390"/>
+            <text class="edge-label" id="lbl-SkiaCanvasRenderer-CoordinateMapper" x="1110" y="415">uses</text>
+
+            <!-- User -> ChatMessage -->
+            <path class="edge-path composition" id="edge-User-ChatMessage" d="M 210,370 L 210,1110 L 420,1110"/>
+            <text class="edge-label" id="lbl-User-ChatMessage" x="220" y="1090">sends (1..*)</text>
+
+            <!-- Vocabulary -> ChatMessage -->
+            <path class="edge-path assoc" id="edge-Vocabulary-ChatMessage" d="M 550,960 L 550,1000"/>
+            <text class="edge-label" id="lbl-Vocabulary-ChatMessage" x="560" y="980">context (0..*)</text>
+
+            <!-- AIChatService -> ChatMessage -->
+            <path class="edge-path dependency" id="edge-AIChatService-ChatMessage" d="M 800,650 C 740,650 740,1110 680,1110"/>
+            <text class="edge-label" id="lbl-AIChatService-ChatMessage" x="725" y="940">generates</text>
+
+            <!-- BatchExtractor -> Photo -->
+            <path class="edge-path dependency" id="edge-BatchExtractor-Photo" d="M 800,850 C 650,850 400,690 340,640"/>
+            <text class="edge-label" id="lbl-BatchExtractor-Photo" x="570" y="760">reads</text>
+
+            <!-- BatchExtractor -> Vocabulary -->
+            <path class="edge-path dependency" id="edge-BatchExtractor-Vocabulary" d="M 800,880 L 680,880"/>
+            <text class="edge-label" id="lbl-BatchExtractor-Vocabulary" x="725" y="870">extracts</text>
+
+            <!-- BatchExtractor -> SRSCard -->
+            <path class="edge-path dependency" id="edge-BatchExtractor-SRSCard" d="M 1060,880 C 1150,880 1250,910 1360,910"/>
+            <text class="edge-label" id="lbl-BatchExtractor-SRSCard" x="1115" y="875">instantiates</text>
+
+            <!-- SRSAlgorithm -> SRSCard -->
+            <path class="edge-path dependency" id="edge-SRSAlgorithm-SRSCard" d="M 1490,1020 L 1490,960"/>
+            <text class="edge-label" id="lbl-SRSAlgorithm-SRSCard" x="1500" y="995">updates</text>
+
+            <!-- User -> LessonNode -->
+            <path class="edge-path composition" id="edge-User-LessonNode" d="M 100,370 L 100,1020"/>
+            <text class="edge-label" id="lbl-User-LessonNode" x="110" y="680">progresses (0..*)</text>
+
+            <!-- Photo -> LessonNode -->
+            <path class="edge-path assoc" id="edge-Photo-LessonNode" d="M 180,650 L 180,1020"/>
+            <text class="edge-label" id="lbl-Photo-LessonNode" x="190" y="850">mapped (1..1)</text>
+
+            <!-- OrderGameEngine -> PhotoNote -->
+            <path class="edge-path dependency" id="edge-OrderGameEngine-PhotoNote" d="M 800,1050 C 650,1050 550,690 550,690"/>
+            <text class="edge-label" id="lbl-OrderGameEngine-PhotoNote" x="650" y="880">validates</text>
+
+            <!-- OrderGameEngine -> LessonNode -->
+            <path class="edge-path dependency" id="edge-OrderGameEngine-LessonNode" d="M 800,1110 L 340,1110"/>
+            <text class="edge-label" id="lbl-OrderGameEngine-LessonNode" x="550" y="1100">updates</text>
+          </g>
+
+          <!-- Class cards inserted as HTML inside foreignObject -->
+          <g id="svgNodes">
+            <!-- User -->
+            <foreignObject id="node-User" x="80" y="120" width="260" height="250">
+              <div class="class-card" data-class="User" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">User</span>
+                    <span class="card-db-tag">users</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ email: <span class="type">string</span></div>
+                  <div class="card-member">+ subscriptionTier: <span class="type">SubTier</span></div>
+                  <div class="card-member">+ dailyScansLeft: <span class="type">int</span></div>
+                  <div class="card-member">+ dailyChatLeft: <span class="type">int</span></div>
+                  <div class="card-member">+ totalYuzuCoins: <span class="type">number</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ canScan(): <span class="type">boolean</span></div>
+                  <div class="card-member">+ canChat(): <span class="type">boolean</span></div>
+                  <div class="card-member">+ addYuzuCoins(amt): <span class="type">void</span></div>
+                  <div class="card-member">+ deductYuzuCoins(amt): <span class="type">boolean</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- UserInventory -->
+            <foreignObject id="node-UserInventory" x="420" y="100" width="260" height="170">
+              <div class="class-card" data-class="UserInventory" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">UserInventory</span>
+                    <span class="card-db-tag">user_inventories</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ userId: <span class="type">string</span></div>
+                  <div class="card-member">+ unlockedItemIds: <span class="type">string[]</span></div>
+                  <div class="card-member">+ equippedMascotId: <span class="type">string</span></div>
+                  <div class="card-member">+ equippedOutfitId: <span class="type">string</span></div>
+                  <div class="card-member">+ equippedBgId: <span class="type">string</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ equipItem(itemId: string): <span class="type">void</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- PetItem -->
+            <foreignObject id="node-PetItem" x="420" y="290" width="260" height="145">
+              <div class="class-card" data-class="PetItem" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">PetItem</span>
+                    <span class="card-db-tag">pet_items</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ name: <span class="type">string</span></div>
+                  <div class="card-member">+ category: <span class="type">ItemCategory</span></div>
+                  <div class="card-member">+ priceInYuzu: <span class="type">number</span></div>
+                  <div class="card-member">+ isUnlocked: <span class="type">boolean</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- Photo -->
+            <foreignObject id="node-Photo" x="80" y="450" width="260" height="200">
+              <div class="class-card" data-class="Photo" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">Photo</span>
+                    <span class="card-db-tag">photos</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ userId: <span class="type">string</span></div>
+                  <div class="card-member">+ originalUri: <span class="type">string</span></div>
+                  <div class="card-member">+ annotatedUri: <span class="type">string</span></div>
+                  <div class="card-member">+ templateId: <span class="type">string</span></div>
+                  <div class="card-member">+ createdAt: <span class="type">Date</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ getNotes(): <span class="type">PhotoNote[]</span></div>
+                  <div class="card-member">+ getVocabularies(): <span class="type">Vocabulary[]</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- NoteTemplate -->
+            <foreignObject id="node-NoteTemplate" x="80" y="760" width="260" height="220">
+              <div class="class-card" data-class="NoteTemplate" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">NoteTemplate</span>
+                    <span class="card-db-tag">note_templates</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ name: <span class="type">string</span></div>
+                  <div class="card-member">+ fontFamily: <span class="type">string</span></div>
+                  <div class="card-member">+ primaryColor: <span class="type">string</span></div>
+                  <div class="card-member">+ pinStyle: <span class="type">PinStyle</span></div>
+                  <div class="card-member">+ boxBackgroundColor: <span class="type">string</span></div>
+                  <div class="card-member">+ isProOnly: <span class="type">boolean</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- PhotoNote -->
+            <foreignObject id="node-PhotoNote" x="420" y="450" width="260" height="240">
+              <div class="class-card" data-class="PhotoNote" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">PhotoNote</span>
+                    <span class="card-db-tag">photo_notes</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ photoId: <span class="type">string</span></div>
+                  <div class="card-member">+ word: <span class="type">string</span></div>
+                  <div class="card-member">+ phonetic: <span class="type">string</span></div>
+                  <div class="card-member">+ vietnameseMeaning: <span class="type">string</span></div>
+                  <div class="card-member">+ wordType: <span class="type">string</span></div>
+                  <div class="card-member">+ orderIndex: <span class="type">int</span></div>
+                  <div class="card-member">+ posXPercent: <span class="type">float</span></div>
+                  <div class="card-member">+ posYPercent: <span class="type">float</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- Vocabulary -->
+            <foreignObject id="node-Vocabulary" x="420" y="740" width="260" height="220">
+              <div class="class-card" data-class="Vocabulary" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">Vocabulary</span>
+                    <span class="card-db-tag">vocabularies</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ photoId: <span class="type">string</span></div>
+                  <div class="card-member">+ word: <span class="type">string</span></div>
+                  <div class="card-member">+ phonetic: <span class="type">string</span></div>
+                  <div class="card-member">+ vietnameseMeaning: <span class="type">string</span></div>
+                  <div class="card-member">+ contextSentenceEn: <span class="type">string</span></div>
+                  <div class="card-member">+ contextSentenceVi: <span class="type">string</span></div>
+                  <div class="card-member">+ isFavorite: <span class="type">boolean</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- AIVisionClient -->
+            <foreignObject id="node-AIVisionClient" x="800" y="100" width="260" height="180">
+              <div class="class-card" data-class="AIVisionClient" data-package="AI & Processing">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">AIVisionClient</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">- apiKey: <span class="type">string</span></div>
+                  <div class="card-member">- baseUrl: <span class="type">string</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ analyzeImage(imageUri, level): <span class="type">Promise</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- CoordinateMapper -->
+            <foreignObject id="node-CoordinateMapper" x="800" y="320" width="260" height="140">
+              <div class="class-card" data-class="CoordinateMapper" data-package="AI & Processing">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;utility&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">CoordinateMapper</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ mapPercentToPixel(pt, bounds): <span class="type">Point</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- SkiaCanvasRenderer -->
+            <foreignObject id="node-SkiaCanvasRenderer" x="1180" y="410" width="300" height="240">
+              <div class="class-card" data-class="SkiaCanvasRenderer" data-package="AI & Processing">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;component&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">SkiaCanvasRenderer</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ template: <span class="type">NoteTemplate</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ renderPins(notes): <span class="type">JSX.Element</span></div>
+                  <div class="card-member">+ renderPointerLines(notes): <span class="type">JSX.Element</span></div>
+                  <div class="card-member">+ renderVocabBoxes(notes): <span class="type">JSX.Element</span></div>
+                  <div class="card-member">+ renderContextBox(en, vi): <span class="type">JSX.Element</span></div>
+                  <div class="card-member">+ exportToImageFile(ref): <span class="type">Promise</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- BatchExtractor -->
+            <foreignObject id="node-BatchExtractor" x="800" y="780" width="260" height="200">
+              <div class="class-card" data-class="BatchExtractor" data-package="Batch & SRS">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">BatchExtractor</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ extractVocabFromPhotos(ids): <span class="type">Vocab[]</span></div>
+                  <div class="card-member">+ exportToPlainText(list): <span class="type">string</span></div>
+                  <div class="card-member">+ createFlashcardsFromVocab(list): <span class="type">Card[]</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- SelectedVocabSession -->
+            <foreignObject id="node-SelectedVocabSession" x="1080" y="780" width="260" height="165">
+              <div class="class-card" data-class="SelectedVocabSession" data-package="Batch & SRS">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">SelectedVocabSession</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ selectedPhotoIds: <span class="type">string[]</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ aggregateVocabularies(): <span class="type">Vocabulary[]</span></div>
+                  <div class="card-member">+ generateFlashcardDeck(): <span class="type">SRSCard[]</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- SRSCard -->
+            <foreignObject id="node-SRSCard" x="1360" y="740" width="260" height="220">
+              <div class="class-card" data-class="SRSCard" data-package="Batch & SRS">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">SRSCard</span>
+                    <span class="card-db-tag">srs_cards</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ vocabId: <span class="type">string</span></div>
+                  <div class="card-member">+ repetitions: <span class="type">int</span></div>
+                  <div class="card-member">+ intervalDays: <span class="type">float</span></div>
+                  <div class="card-member">+ easinessFactor: <span class="type">float</span></div>
+                  <div class="card-member">+ nextReviewAt: <span class="type">Date</span></div>
+                  <div class="card-member">+ status: <span class="type">CardStatus</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- SRSAlgorithm -->
+            <foreignObject id="node-SRSAlgorithm" x="1360" y="1020" width="260" height="140">
+              <div class="class-card" data-class="SRSAlgorithm" data-package="Batch & SRS">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;utility&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">SRSAlgorithm</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ calculateNextReview(card, grade): <span class="type">Card</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- AIChatService -->
+            <foreignObject id="node-AIChatService" x="800" y="500" width="260" height="180">
+              <div class="class-card" data-class="AIChatService" data-package="AI & Processing">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">AIChatService</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">- apiKey: <span class="type">string</span></div>
+                  <div class="card-member">- systemPrompt: <span class="type">string</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ sendQuery(query, contextVocab): <span class="type">Promise</span></div>
+                  <div class="card-member">+ getSynonyms(word): <span class="type">Promise</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- ChatMessage -->
+            <foreignObject id="node-ChatMessage" x="420" y="1000" width="260" height="220">
+              <div class="class-card" data-class="ChatMessage" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">ChatMessage</span>
+                    <span class="card-db-tag">chat_messages</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ userId: <span class="type">string</span></div>
+                  <div class="card-member">+ vocabId: <span class="type">string</span></div>
+                  <div class="card-member">+ sender: <span class="type">SenderRole</span></div>
+                  <div class="card-member">+ message: <span class="type">string</span></div>
+                  <div class="card-member">+ createdAt: <span class="type">Date</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ isFromUser(): <span class="type">boolean</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- LessonNode -->
+            <foreignObject id="node-LessonNode" x="80" y="1020" width="260" height="240">
+              <div class="class-card" data-class="LessonNode" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">LessonNode</span>
+                    <span class="card-db-tag">lesson_nodes</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ photoId: <span class="type">string</span></div>
+                  <div class="card-member">+ nodeSequence: <span class="type">int</span></div>
+                  <div class="card-member">+ isUnlocked: <span class="type">boolean</span></div>
+                  <div class="card-member">+ isCompleted: <span class="type">boolean</span></div>
+                  <div class="card-member">+ starsEarned: <span class="type">int</span></div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ unlockNextNode(): <span class="type">void</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- OrderGameEngine -->
+            <foreignObject id="node-OrderGameEngine" x="800" y="1020" width="260" height="200">
+              <div class="class-card" data-class="OrderGameEngine" data-package="Batch & SRS">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">OrderGameEngine</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ loadLessonData(photoId): <span class="type">LessonQuestion</span></div>
+                  <div class="card-member">+ validateStep(selectedWord, expectedIndex): <span class="type">boolean</span></div>
+                  <div class="card-member">+ calculateReward(correctCount): <span class="type">int</span></div>
+                </div>
+              </div>
+            </foreignObject>
+          </g>
+        </g>
+      </svg>
+
+      <!-- Canvas HUD (Zoom controls) -->
+      <div class="canvas-hud">
+        <button class="hud-btn" id="zoomIn" title="Phóng to">+</button>
+        <div class="zoom-indicator" id="zoomLevel">100%</div>
+        <button class="hud-btn" id="zoomOut" title="Thu nhỏ">-</button>
+        <button class="hud-btn" id="zoomReset" title="Đặt lại vị trí">Reset</button>
+      </div>
+    </div>
+
+    <!-- --- Right Sidebar: Inspector --- -->
+    <div class="sidebar-right" id="inspectorSidebar">
+      <div class="inspector-header">
+        <h2>Thông tin chi tiết</h2>
+        <button class="btn-close" id="closeInspector" title="Close details panel">×</button>
+      </div>
+      <div class="inspector-scrollable" id="inspectorContent">
+        <!-- Default State -->
+        <div class="inspector-intro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <p>Nhấp vào một lớp trên sơ đồ hoặc danh sách để xem thông tin chi tiết.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- --- Floating AI Chatbot Assistant --- -->
+  <button class="chatbot-toggle" id="chatbotToggle" title="Trợ lý AI">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+  </button>
+  
+  <div class="chatbot-window" id="chatbotWindow">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-avatar">AI</div>
+        <div>
+          <div class="chat-header-title">Trợ lý Thiết kế AI</div>
+          <div class="chat-header-status">Đang trực tuyến</div>
+        </div>
+      </div>
+      <button class="btn-close" id="closeChat" title="Đóng chat">×</button>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-bubble bot">
+        Xin chào! Tôi là Trợ lý AI thiết kế hệ thống. Bạn có câu hỏi nào về các lớp, mối quan hệ hay thuật toán của dự án <b>AI Vocabulary Photo Note</b> không?
+      </div>
+    </div>
+    
+    <div class="chat-suggestions">
+      <button class="chat-suggestion-chip" data-prompt="Giải thích thuật toán SM-2 (SRS)?">Thuật toán SM-2?</button>
+      <button class="chat-suggestion-chip" data-prompt="Lọc gói AI & Processing">Lọc gói AI</button>
+      <button class="chat-suggestion-chip" data-prompt="Tìm lớp User">Xem lớp User</button>
+      <button class="chat-suggestion-chip" data-prompt="Bật Dark Mode">Bật Dark Mode</button>
+    </div>
+    
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Hỏi tôi về class diagram...">
+      <button class="chat-send" id="chatSend">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // --- Detailed Class Data ---
+    const CLASS_DATA = {
+      User: {
+        name: "User",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "users",
+        description: "Đại diện cho tài khoản người dùng trong hệ thống. Quản lý cấp thành viên (FREE / PRO) của mô hình Freemium, quota quét ảnh, quota chat đàm thoại học từ vựng và số xu Yuzu tích lũy.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính kiểu String (UUID)." },
+          { field: "subscriptionTier", desc: "Lưu hạng subscription hiện tại của người dùng (FREE hoặc PRO) đồng bộ từ RevenueCat." },
+          { field: "dailyScansLeft", desc: "Lượt quét AI còn lại trong ngày (Free chốt cứng 3-5 lượt/ngày, Pro không giới hạn)." },
+          { field: "dailyChatLeft", desc: "Lượt trò chuyện giải thích từ vựng AI còn lại trong ngày (Free 10 câu/ngày, Pro vô hạn)." },
+          { field: "totalYuzuCoins", desc: "Tổng số xu Yuzu mà người dùng kiếm được." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "UUID định danh người dùng." },
+          { name: "email", type: "string", desc: "Địa chỉ email đăng ký." },
+          { name: "subscriptionTier", type: "SubscriptionTier", desc: "Bậc thành viên (`FREE` hoặc `PRO`)." },
+          { name: "dailyScansLeft", type: "number", desc: "Số lượt quét miễn phí còn lại của ngày hiện tại." },
+          { name: "dailyChatLeft", type: "number", desc: "Số lượt đặt câu hỏi đàm thoại miễn phí còn lại." },
+          { name: "lastScanDate", type: "string", desc: "Ngày quét gần nhất (mốc reset quota vào lúc 0h00)." },
+          { name: "totalYuzuCoins", type: "number", desc: "Tổng xu Yuzu tích lũy được." }
+        ],
+        methods: [
+          { name: "canScan()", desc: "Kiểm tra xem User còn lượt quét AI miễn phí trong ngày hay không (hoặc là PRO)." },
+          { name: "canChat()", desc: "Kiểm tra xem User còn lượt đặt câu hỏi chat AI miễn phí hay không (hoặc là PRO)." },
+          { name: "addYuzuCoins(amount)", desc: "Cộng thêm xu Yuzu cho người dùng khi hoàn thành ôn tập hoặc chơi game bài học." },
+          { name: "deductYuzuCoins(amount)", desc: "Trừ xu Yuzu của người dùng khi mua vật phẩm trong Pet Shop. Trả về true nếu thành công." },
+          { name: "decrementQuota()", desc: "Trừ đi 1 lượt quét miễn phí khi thực hiện analyze ảnh thành công." },
+          { name: "decrementChatQuota()", desc: "Trừ đi 1 lượt chat miễn phí khi người dùng gửi tin nhắn." },
+          { name: "resetDailyQuota()", desc: "Khôi phục quota quét ảnh và chat hàng ngày khi qua ngày mới." }
+        ],
+        principles: [
+          { title: "Freemium Quota Management", desc: "Ngăn chặn việc spam tài nguyên API AI Vision & AI Chat từ các tài khoản miễn phí." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Association 1 → N", desc: "Một người dùng có thể sở hữu nhiều bức ảnh được ghi chú từ vựng trong bộ sưu tập cá nhân." },
+          { target: "ChatMessage", type: "Composition 1 → N", desc: "Quan hệ ràng buộc vòng đời: Một người dùng sở hữu lịch sử tin nhắn hỏi đáp." },
+          { target: "UserInventory", type: "Composition 1 → 1", desc: "Mỗi User sở hữu một UserInventory để quản lý các vật phẩm trang phục, linh vật đã mở khóa." }
+        ]
+      },
+      UserInventory: {
+        name: "UserInventory",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "user_inventories",
+        description: "Quản lý kho đồ cá nhân của người dùng, lưu vết các vật phẩm/trang phục đã mở khóa và ghi nhớ mascot hay trang phục nào đang được trang bị cho Capybara Mascot.",
+        dbMapping: [
+          { field: "userId", desc: "Liên kết ngoại tham chiếu đến tài khoản người dùng." },
+          { field: "unlockedItemIds", desc: "Danh sách các ID vật phẩm trang trí/trang phục hoặc mascot pet phụ đã được mở khóa bằng xu Yuzu." },
+          { field: "equippedMascotId", desc: "ID linh vật pet chính đang được trang bị để hiển thị trên màn hình." },
+          { field: "equippedOutfitId", desc: "ID trang phục/phụ kiện đang mặc trên linh vật." },
+          { field: "equippedBgId", desc: "ID hình nền đang được trang bị cho bối cảnh Mascot." }
+        ],
+        attributes: [
+          { name: "userId", type: "string", desc: "Mã định danh User." },
+          { name: "unlockedItemIds", type: "string[]", desc: "Mảng ID các vật phẩm đã mở khóa." },
+          { name: "equippedMascotId", type: "string", desc: "ID linh vật pet đang được trang bị." },
+          { name: "equippedOutfitId", type: "string", desc: "ID trang phục đang mặc." },
+          { name: "equippedBgId", type: "string", desc: "ID hình nền bối cảnh đang dùng." }
+        ],
+        methods: [
+          { name: "equipItem(itemId)", desc: "Trang bị hoặc tháo một vật phẩm đã mở khóa lên Capybara Mascot." }
+        ],
+        principles: [
+          { title: "Inventory State Persistence", desc: "Đảm bảo trạng thái trang bị của mascot được lưu trữ bền vững ở SQLite cục bộ." }
+        ],
+        relationships: [
+          { target: "User", type: "Composition 1 → 1 (Inverse)", desc: "Kho đồ thuộc về một User duy nhất." },
+          { target: "PetItem", type: "Association N → N", desc: "Kho đồ chứa nhiều PetItem tương ứng." }
+        ]
+      },
+      PetItem: {
+        name: "PetItem",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "pet_items",
+        description: "Đại diện cho một vật phẩm (mascot, outfit, accessory, background) trong Pet Shop có thể dùng xu Yuzu để mở khóa.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính định danh vật phẩm." },
+          { field: "name", desc: "Tên hiển thị vật phẩm." },
+          { field: "category", desc: "Phân loại vật phẩm (`MASCOT_PET`, `OUTFIT`, `ACCESSORY`, `BACKGROUND`)." },
+          { field: "priceInYuzu", desc: "Giá trị bằng xu Yuzu cần có để mở khóa." },
+          { field: "isUnlocked", desc: "Cờ xác định vật phẩm đã được mua/mở khóa hay chưa." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Mã định danh vật phẩm." },
+          { name: "name", type: "string", desc: "Tên hiển thị." },
+          { name: "category", type: "ItemCategory", desc: "Loại vật phẩm." },
+          { name: "priceInYuzu", type: "number", desc: "Giá bán bằng xu Yuzu." },
+          { name: "isUnlocked", type: "boolean", desc: "Trạng thái mở khóa." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Modular Store Configuration", desc: "Tách biệt thuộc tính vật phẩm giúp dễ dàng mở rộng thêm phụ kiện mới mà không sửa logic lõi." }
+        ],
+        relationships: [
+          { target: "UserInventory", type: "Association N → N (Inverse)", desc: "Tham chiếu ngược từ kho đồ của người học." }
+        ]
+      },
+      Photo: {
+        name: "Photo",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "photos",
+        description: "Đại diện cho bức ảnh ghi chú học từ vựng hoàn chỉnh. Lưu giữ đường dẫn tệp ảnh gốc cùng đường dẫn tệp ảnh đã render hoàn chỉnh đè các thẻ Note Skia.",
+        dbMapping: [
+          { field: "originalUri", desc: "Đường dẫn tệp cục bộ đến ảnh thô do camera chụp hoặc thư viện tải lên." },
+          { field: "annotatedUri", desc: "Đường dẫn ảnh thành phẩm cuối cùng sau khi canvas vẽ đè Note và render ra file đĩa." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Khóa chính định danh bức ảnh." },
+          { name: "userId", type: "string", desc: "Khóa ngoại liên kết tới người sở hữu (User)." },
+          { name: "originalUri", type: "string", desc: "URI tệp ảnh gốc chưa xử lý ghim." },
+          { name: "annotatedUri", type: "string", desc: "URI tệp ảnh thành phẩm đã ghim note và lưu đĩa." },
+          { name: "templateId", type: "string", desc: "ID mẫu giao diện note đang được áp dụng." },
+          { name: "createdAt", type: "Date", desc: "Thời điểm tạo ghi chú ảnh." }
+        ],
+        methods: [
+          { name: "getNotes()", desc: "Truy vấn danh sách các ghim thẻ Note đang đè trên ảnh này từ database." },
+          { name: "getVocabularies()", desc: "Truy vấn danh sách từ vựng chi tiết trích xuất ra từ ảnh này." }
+        ],
+        principles: [
+          { title: "Offline-First Asset Storage", desc: "Lưu giữ đường dẫn URI ảnh cục bộ trong thư mục máy để hiển thị ngoại tuyến nhanh chóng." }
+        ],
+        relationships: [
+          { target: "User", type: "Association N → 1", desc: "Bức ảnh phải thuộc quyền sở hữu của một User xác định." },
+          { target: "NoteTemplate", type: "Association N → 1", desc: "Bức ảnh liên kết tới mẫu Template đang dùng để vẽ giao diện Note đè." },
+          { target: "PhotoNote", type: "Composition 1 → N", desc: "Quan hệ ràng buộc vòng đời: Xóa ảnh thì toàn bộ ghim PhotoNote nằm trên ảnh sẽ bị xóa theo." },
+          { target: "Vocabulary", type: "Composition 1 → N", desc: "Một ảnh trích xuất ra nhiều từ vựng lưu trữ trong SQLite." }
+        ]
+      },
+      NoteTemplate: {
+        name: "NoteTemplate",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "note_templates",
+        description: "Chứa các cấu hình giao diện visual của thẻ ghim từ vựng trên ảnh (màu sắc ghim, font chữ hiển thị, nền hộp thoại nghĩa...). Hỗ trợ phân loại Pro và Free.",
+        dbMapping: [
+          { field: "pinStyle", desc: "Kiểu dáng chấm tròn ghim (DOT - chấm đặc, RING - vòng tròn khuyên, CUSTOM)." },
+          { field: "isProOnly", desc: "Cờ xác định template độc quyền PRO, tài khoản FREE không áp dụng được." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Định danh mẫu template." },
+          { name: "name", type: "string", desc: "Tên hiển thị mẫu thiết kế (Aesthetic, Minimalist, Dark Mode...)." },
+          { name: "fontFamily", type: "string", desc: "Tên font chữ cấu hình hiển thị." },
+          { name: "primaryColor", type: "string", desc: "Màu sắc gạch chủ đạo của ghim và viền." },
+          { name: "pinStyle", type: "PinStyle", desc: "Kiểu ghim đầu nối ghim trên ảnh." },
+          { name: "boxBackgroundColor", type: "string", desc: "Màu nền hộp nghĩa từ vựng." },
+          { name: "isProOnly", type: "boolean", desc: "Xác nhận template độc quyền PRO." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Pro Visual Gating", desc: "Làm đòn bẩy thúc đẩy người dùng nâng cấp lên PRO để mở khóa các template màu sắc chuyên nghiệp hơn." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Association 1 → N", desc: "Một template có thể được áp dụng trang trí cho nhiều ảnh ghi chú của người dùng." }
+        ]
+      },
+      PhotoNote: {
+        name: "PhotoNote",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "photo_notes",
+        description: "Chi tiết vị trí ghim và thông tin tóm lược của từ vựng đè trực tiếp trên ảnh. Lưu tọa độ dưới dạng phần trăm (%) tương đối thay vì pixel để tự động co giãn chính xác trên mọi kích thước màn hình thiết bị.",
+        dbMapping: [
+          { field: "posXPercent", desc: "Tọa độ X tương đối (0.0 -> 100.0) tính từ góc trái trên." },
+          { field: "posYPercent", desc: "Tọa độ Y tương đối (0.0 -> 100.0) tính từ góc trái trên." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Định danh ghim Note." },
+          { name: "photoId", type: "string", desc: "Khóa ngoại liên kết tới bức ảnh cha (Photo)." },
+          { name: "word", type: "string", desc: "Từ tiếng Anh hiển thị chính trên nhãn." },
+          { name: "phonetic", type: "string", desc: "Phiên âm phát âm từ vựng." },
+          { name: "vietnameseMeaning", type: "string", desc: "Nghĩa tiếng Việt rút gọn." },
+          { name: "wordType", type: "string", desc: "Từ loại (Noun, Verb, Adj, Adv...)." },
+          { name: "orderIndex", type: "number", desc: "Số thứ tự sắp xếp (1, 2, 3...) theo tọa độ để chơi game." },
+          { name: "posXPercent", type: "float", desc: "Tọa độ X phần trăm." },
+          { name: "posYPercent", type: "float", desc: "Tọa độ Y phần trăm." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Relative Coordinate mapping", desc: "Đảm bảo ghim hiển thị đúng vị trí trên vật thể bất kể thiết bị chạy ảnh màn hình nhỏ hay máy tính bảng." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Composition N → 1", desc: "Thuộc về và chịu sự quản lý trực tiếp bởi vòng đời của Photo." }
+        ]
+      },
+      Vocabulary: {
+        name: "Vocabulary",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "vocabularies",
+        description: "Lớp chi tiết thông tin từ vựng đầy đủ được sinh ra từ ảnh, bao gồm cả câu ví dụ ngữ cảnh tiếng Anh và bản dịch Việt hỗ trợ tối ưu ghi nhớ từ.",
+        dbMapping: [
+          { field: "contextSentenceEn", desc: "Câu ví dụ minh họa bằng tiếng Anh có chứa từ vựng, liên quan đến bối cảnh ảnh." },
+          { field: "contextSentenceVi", desc: "Bản dịch tiếng Việt của câu ví dụ." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Định danh từ vựng." },
+          { name: "photoId", type: "string", desc: "Khóa ngoại liên kết tới ảnh nguồn." },
+          { name: "word", type: "string", desc: "Từ vựng tiếng Anh." },
+          { name: "phonetic", type: "string", desc: "Phát âm tiếng Anh." },
+          { name: "vietnameseMeaning", type: "string", desc: "Nghĩa dịch tiếng Việt." },
+          { name: "contextSentenceEn", type: "string", desc: "Câu ví dụ tiếng Anh liên quan đến ảnh." },
+          { name: "contextSentenceVi", type: "string", desc: "Dịch tiếng Việt câu ví dụ." },
+          { name: "isFavorite", type: "boolean", desc: "Đánh dấu từ vựng yêu thích." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Contextual Memory Enhancement", desc: "Sử dụng câu ví dụ ngữ cảnh trực quan từ ảnh để đẩy nhanh khả năng nhớ nghĩa của người học." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Composition N → 1", desc: "Thuộc về Photo gốc sinh ra từ vựng." },
+          { target: "SRSCard", type: "Association 1 → 0..1", desc: "Một từ vựng có thể được chuyển đổi thành thẻ Flashcard SRS để kích hoạt chu kỳ ôn tập ngắt quãng." }
+        ]
+      },
+      AIVisionClient: {
+        name: "AIVisionClient",
+        package: "AI & Processing",
+        stereotype: "service",
+        dbTable: "N/A",
+        description: "Client kết nối gọi API từ xa (GPT-4o Vision hoặc Gemini Vision). Nhận vào tệp ảnh và trả về cấu trúc JSON chứa tọa độ các nhãn Note, từ vựng và câu bối cảnh dịch thuật.",
+        dbMapping: [],
+        attributes: [
+          { name: "apiKey", type: "string", desc: "Khóa truy cập API AI." },
+          { name: "baseUrl", type: "string", desc: "Địa chỉ cổng API AI Vision." }
+        ],
+        methods: [
+          { name: "analyzeImage(imageUri, level)", desc: "Tải ảnh lên API và cấu hình JSON prompt, yêu cầu trả về danh sách từ vựng khớp trình độ cấp học mục tiêu." }
+        ],
+        principles: [
+          { title: "AI Vision Extraction", desc: "Tự động hóa hoàn toàn quy trình gắn nhãn học tập mà người dùng không cần chỉnh tay kéo ghim thủ công." }
+        ],
+        relationships: []
+      },
+      CoordinateMapper: {
+        name: "CoordinateMapper",
+        package: "AI & Processing",
+        stereotype: "utility",
+        dbTable: "N/A",
+        description: "Lớp công cụ quy đổi điểm tọa độ. Chuyển đổi từ tọa độ phần trăm (%) tương đối từ AI Vision thành tọa độ pixel trên View hiển thị của thiết bị di động thực tế.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "mapPercentToPixel(pt, bounds)", desc: "Quy đổi vị trí: x_pixel = x_percent * screen_width / 100; y_pixel = y_percent * screen_height / 100." }
+        ],
+        principles: [
+          { title: "Dynamic Screen Adaptability", desc: "Đảm bảo giao diện ghim Note nằm trùng khít lên vật thể của ảnh bất kể tỷ lệ hiển thị ảnh bị co giãn." }
+        ],
+        relationships: []
+      },
+      SkiaCanvasRenderer: {
+        name: "SkiaCanvasRenderer",
+        package: "AI & Processing",
+        stereotype: "component",
+        dbTable: "N/A",
+        description: "Trình kết xuất đồ họa hiệu năng cao sử dụng React Native Skia. Vẽ đè các điểm ghim, pointer chỉ hướng, hộp nghĩa chữ và khối văn bản ví dụ góc màn hình.",
+        dbMapping: [],
+        attributes: [
+          { name: "template", type: "NoteTemplate", desc: "Cấu hình màu sắc, kiểu dáng vẽ theo thiết kế." }
+        ],
+        methods: [
+          { name: "renderPins(notes)", desc: "Vẽ các chấm hoặc vòng tròn neo ghim Skia tại tọa độ pixel." },
+          { name: "renderPointerLines(notes)", desc: "Vẽ đường thẳng/đường cong nối từ chấm neo ghim tới nhãn chữ nghĩa." },
+          { name: "renderVocabBoxes(notes)", desc: "Dựng hình chữ nhật nền màu bo góc chứa từ vựng và nghĩa." },
+          { name: "renderContextBox(en, vi)", desc: "Vẽ khối hiển thị câu bối cảnh mẫu ở góc dưới ảnh." },
+          { name: "exportToImageFile(ref)", desc: "Xuất canvas đính kèm ảnh gốc thành một file ảnh thành phẩm lưu đĩa (.jpg) bằng React Native View Shot." }
+        ],
+        principles: [
+          { title: "Skia High-Performance Draw", desc: "Tận dụng GPU để vẽ mượt mà realtime các hình khối Vector sắc nét không bị vỡ hạt khi zoom." }
+        ],
+        relationships: [
+          { target: "PhotoNote", type: "Dependency (renders)", desc: "Renderer phụ thuộc vào thông tin nhãn để vẽ đúng vị trí và nội dung từ vựng." },
+          { target: "CoordinateMapper", type: "Dependency (uses)", desc: "Sử dụng mapper để chuyển đổi tọa độ trước khi vẽ." }
+        ]
+      },
+      SelectedVocabSession: {
+        name: "SelectedVocabSession",
+        package: "Batch & SRS",
+        stereotype: "service",
+        dbTable: "N/A (Session)",
+        description: "Dịch vụ runtime quản lý phiên ôn tập từ vựng đã chọn. Tổng hợp từ vựng từ nhiều bức ảnh đã tích chọn trong Gallery, tự động loại bỏ trùng từ và tạo ra bộ Flashcard để bắt đầu ôn tập.",
+        dbMapping: [],
+        attributes: [
+          { name: "selectedPhotoIds", type: "string[]", desc: "Mảng ID các bức ảnh được chọn từ Gallery." }
+        ],
+        methods: [
+          { name: "aggregateVocabularies()", desc: "Query và gộp tất cả từ vựng thuộc các ảnh đã chọn, tự động loại bỏ các từ bị trùng lặp." },
+          { name: "generateFlashcardDeck()", desc: "Sinh bộ thẻ học SRSCard tương ứng để truyền sang màn hình ôn tập Flashcard." }
+        ],
+        principles: [
+          { title: "Unified Session State", desc: "Quản lý tạm thời trạng thái chọn lọc từ vựng trước khi kích hoạt tiến trình ôn tập." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Association N → 1 (reads)", desc: "Đọc dữ liệu từ các Photo đã chọn." },
+          { target: "Vocabulary", type: "Dependency (aggregates)", desc: "Tổng hợp từ vựng." },
+          { target: "SRSCard", type: "Dependency (generates)", desc: "Tạo các thẻ ôn tập mới." }
+        ]
+      },
+      BatchExtractor: {
+        name: "BatchExtractor",
+        package: "Batch & SRS",
+        stereotype: "service",
+        dbTable: "N/A",
+        description: "Hỗ trợ xử lý hàng loạt trên bộ sưu tập ảnh. Lọc tìm, gom nhóm từ vựng của nhiều ảnh cùng lúc, định dạng text thô xuất bản hoặc tự động tạo thẻ Flashcard.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "extractVocabFromPhotos(ids)", desc: "Query dữ liệu từ vựng của danh sách ảnh đầu vào, tự động loại bỏ trùng từ." },
+          { name: "exportToPlainText(list)", desc: "Xuất từ vựng thành chuỗi String thô để người dùng copy ra clipboard." },
+          { name: "createFlashcardsFromVocab(list)", desc: "Khởi tạo loạt bản ghi SRSCard mới vào database để học tập." }
+        ],
+        principles: [
+          { title: "Bulk Data Processing", desc: "Tiết kiệm thời gian ôn tập của người dùng bằng cách gộp nhóm ôn tập từ vựng tiện lợi." }
+        ],
+        relationships: [
+          { target: "Photo", type: "Dependency (reads)", desc: "Đọc cấu trúc dữ liệu ảnh nguồn." },
+          { target: "Vocabulary", type: "Dependency (extracts)", desc: "Trích xuất từ vựng lưu trữ." },
+          { target: "SRSCard", type: "Dependency (instantiates)", desc: "Tạo và lưu trữ các thẻ Flashcard mới vào SQLite." }
+        ]
+      },
+      SRSCard: {
+        name: "SRSCard",
+        package: "Batch & SRS",
+        stereotype: "entity",
+        dbTable: "srs_cards",
+        description: "Lưu giữ tiến trình ôn tập lặp lại ngắt quãng của một từ vựng cụ thể theo mô hình SuperMemo SM-2.",
+        dbMapping: [
+          { field: "vocabId", desc: "Khóa ngoại liên kết tới từ vựng trong sổ từ." },
+          { field: "easinessFactor", desc: "Hệ số dễ (mặc định ban đầu 2.5), tăng/giảm theo phản hồi ôn tập." },
+          { field: "nextReviewAt", desc: "Mốc ngày giờ đến hạn ôn tập tiếp theo (dùng để lọc thẻ cần ôn hàng ngày)." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Định danh thẻ ôn tập." },
+          { name: "vocabId", type: "string", desc: "Khóa ngoại liên kết tới Vocabulary." },
+          { name: "repetitions", type: "int", desc: "Số lần liên tiếp ôn tập đúng của thẻ." },
+          { name: "intervalDays", type: "float", desc: "Số ngày chờ trước lần ôn tập tiếp theo." },
+          { name: "easinessFactor", type: "float", desc: "Hệ số dễ SM-2." },
+          { name: "nextReviewAt", type: "Date", desc: "Thời điểm hẹn ôn tiếp theo." },
+          { name: "status", type: "CardStatus", desc: "Trạng thái thẻ (`NEW` | `LEARNING` | `GRADUATED`)." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Spaced Repetition System", desc: "Nhắc nhở học từ vựng đúng thời điểm chuẩn bị quên để tối ưu hóa thời gian lưu trữ dài hạn." }
+        ],
+        relationships: [
+          { target: "Vocabulary", type: "Association N → 1", desc: "Thẻ Flashcard liên kết tham chiếu tới dữ liệu từ vựng gốc." }
+        ]
+      },
+      SRSAlgorithm: {
+        name: "SRSAlgorithm",
+        package: "Batch & SRS",
+        stereotype: "utility",
+        dbTable: "N/A",
+        description: "Bộ triển khai logic toán học của thuật toán ôn tập SM-2. Nhận phản hồi độ nhớ của User và tính toán hệ số dễ, số ngày chờ kế tiếp của thẻ.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "calculateNextReview(card, grade)", desc: "Thuật toán: grade nhận từ 0 (quên) đến 3 (rất dễ). Tính toán lại repetitions, intervalDays, easinessFactor và mốc ngày nextReviewAt mới." }
+        ],
+        principles: [
+          { title: "SM-2 Mathematical Model", desc: "Mô hình toán học kinh điển giúp tối ưu hiệu suất ghi nhớ và giảm số lượt ôn tập lặp lại thừa thãi." }
+        ],
+        relationships: [
+          { target: "SRSCard", type: "Dependency (updates)", desc: "Đọc cấu trúc cũ và trả về cấu trúc cập nhật mới cho thẻ." }
+        ]
+      },
+      ChatMessage: {
+        name: "ChatMessage",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "chat_messages",
+        description: "Lưu lịch sử tin nhắn hỏi đáp cục bộ (offline) trong SQLite phục vụ việc ôn tập và hội thoại tiếp nối.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính kiểu String (UUID)." },
+          { field: "userId", desc: "Khóa ngoại liên kết tới người dùng (User)." },
+          { field: "vocabId", desc: "Khóa ngoại liên kết tới từ vựng đang được nói đến (Nullable)." },
+          { field: "sender", desc: "Vai trò người gửi (USER hoặc CAPY_AI)." },
+          { field: "message", desc: "Nội dung tin nhắn." },
+          { field: "createdAt", desc: "Thời điểm gửi tin nhắn." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "UUID định danh tin nhắn." },
+          { name: "userId", type: "string", desc: "Mã người dùng sở hữu hội thoại." },
+          { name: "vocabId", type: "string", desc: "Mã từ vựng làm ngữ cảnh tham chiếu (nếu có)." },
+          { name: "sender", type: "SenderRole", desc: "Vai trò người gửi (`USER` | `CAPY_AI`)." },
+          { name: "message", type: "string", desc: "Nội dung văn bản tin nhắn." },
+          { name: "createdAt", type: "Date", desc: "Thời điểm gửi." }
+        ],
+        methods: [
+          { name: "isFromUser()", desc: "Trả về true nếu tin nhắn này do người dùng gửi." }
+        ],
+        principles: [
+          { title: "Offline Storage Strategy", desc: "Lưu trữ tin nhắn cục bộ giúp xem lại lịch sử ngay cả khi không có mạng." }
+        ],
+        relationships: [
+          { target: "User", type: "Association N → 1", desc: "Mỗi tin nhắn thuộc về một người dùng xác định." },
+          { target: "Vocabulary", type: "Association N → 1", desc: "Liên kết ngữ cảnh của tin nhắn tới từ vựng đang xem (nếu hỏi câu chung thì null)." }
+        ]
+      },
+      AIChatService: {
+        name: "AIChatService",
+        package: "AI & Processing",
+        stereotype: "service",
+        dbTable: "N/A (Runtime API)",
+        description: "Service chịu trách nhiệm kết nối trực tiếp với LLM API phục vụ tính năng giải thích từ vựng và đàm thoại.",
+        dbMapping: [],
+        attributes: [
+          { name: "apiKey", type: "string", desc: "Khóa API bảo mật của dịch vụ AI." },
+          { name: "systemPrompt", type: "string", desc: "Prompt hệ thống chỉ đạo giọng điệu thân thiện, ấm áp của Capy-sensei." }
+        ],
+        methods: [
+          { name: "sendQuery(query, contextVocab)", desc: "Gửi câu hỏi của người dùng kèm context từ vựng để nhận câu trả lời." },
+          { name: "getSynonyms(word)", desc: "Gọi AI lấy danh sách các từ đồng nghĩa của từ vựng." }
+        ],
+        principles: [
+          { title: "Persona-driven AI Tutor", desc: "Huấn luyện AI đóng vai linh vật Capy-sensei tạo trải nghiệm vui vẻ, thư giãn." }
+        ],
+        relationships: [
+          { target: "ChatMessage", type: "Dependency", desc: "Sử dụng và sinh ra các đối tượng ChatMessage mới trong hội thoại." }
+        ]
+      },
+      LessonNode: {
+        name: "LessonNode",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "lesson_nodes",
+        description: "Lớp quản lý các node bài học trên bản đồ uốn lượn (Learning Path). Mỗi node ánh xạ 1-1 với một bức ảnh đã chụp, sắp xếp theo thời gian tăng dần.",
+        dbMapping: [
+          { field: "photoId", desc: "Khóa ngoại liên kết tới bức ảnh nguồn." },
+          { field: "isUnlocked", desc: "Cờ đánh dấu bài học đã được mở khóa để chơi chưa." },
+          { field: "isCompleted", desc: "Cờ đánh dấu đã học xong bài." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "Định danh duy nhất của Lesson Node." },
+          { name: "photoId", type: "string", desc: "Liên kết tới Bức ảnh (Photo)." },
+          { name: "nodeSequence", type: "int", desc: "Thứ tự sắp xếp của node trên bản đồ." },
+          { name: "isUnlocked", type: "boolean", desc: "Trạng thái mở khóa." },
+          { name: "isCompleted", type: "boolean", desc: "Trạng thái hoàn thành." },
+          { name: "starsEarned", type: "int", desc: "Số sao đạt được khi hoàn thành (0 đến 3 sao)." }
+        ],
+        methods: [
+          { name: "unlockNextNode()", desc: "Mở khóa node tiếp theo trong chuỗi bài học khi hoàn thành bài này." }
+        ],
+        principles: [
+          { title: "Linear Lesson Progress", desc: "Buộc người học hoàn thành các bài cũ trước khi mở rộng vốn từ sang ảnh mới." }
+        ],
+        relationships: [
+          { target: "User", type: "Composition N → 1", desc: "Thuộc tiến độ học của một tài khoản User nhất định." },
+          { target: "Photo", type: "Association 1 → 1", desc: "Liên kết trực tiếp tới bức ảnh chụp chứa từ vựng cần chơi game." }
+        ]
+      },
+      OrderGameEngine: {
+        name: "OrderGameEngine",
+        package: "Batch & SRS",
+        stereotype: "service",
+        dbTable: "N/A",
+        description: "Bộ máy điều khiển trò chơi sắp xếp từ theo số thứ tự (Order By Number). Tự động lấy tọa độ của ghim, ẩn chữ và kiểm tra chuỗi câu trả lời của người dùng.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "loadLessonData(photoId)", desc: "Tải dữ liệu ảnh, tọa độ các ghim và sắp xếp thứ tự từ trên xuống dưới, trái qua phải để tạo danh sách game." },
+          { name: "validateStep(selectedWord, expectedIndex)", desc: "Xác minh từ chọn của người dùng có khớp với số thứ tự mong đợi hiện tại không." },
+          { name: "calculateReward(correctCount)", desc: "Tính điểm thưởng học tập dựa trên số câu trả lời đúng (thưởng cỏ Yuzu)." }
+        ],
+        principles: [
+          { title: "Immediate Feedback Loop", desc: "Trả kết quả Đúng/Sai tức thì (Ting! hoặc rung lắc) để nâng cao hiệu quả khắc sâu trí nhớ." }
+        ],
+        relationships: [
+          { target: "PhotoNote", type: "Dependency (validates)", desc: "Đọc `orderIndex` và vị trí ghim để thiết lập logic chấm điểm." },
+          { target: "LessonNode", type: "Dependency (updates_status)", desc: "Cập nhật cờ hoàn thành và mở khóa khi người dùng thắng game." }
+        ]
+      }
+    };
+
+    // --- DOM Elements ---
+    const classSearch = document.getElementById('classSearch');
+    const classList = document.getElementById('classList');
+    const inspectorSidebar = document.getElementById('inspectorSidebar');
+    const inspectorContent = document.getElementById('inspectorContent');
+    const closeInspector = document.getElementById('closeInspector');
+    const btnHighlightRelations = document.getElementById('btnHighlightRelations');
+    const themeToggle = document.getElementById('themeToggle');
+    const stageContainer = document.getElementById('stageContainer');
+    const stageSvg = document.getElementById('stageSvg');
+    const svgContent = document.getElementById('svgContent');
+    
+    // Zoom Controls
+    const zoomIn = document.getElementById('zoomIn');
+    const zoomOut = document.getElementById('zoomOut');
+    const zoomReset = document.getElementById('zoomReset');
+    const zoomLevel = document.getElementById('zoomLevel');
+
+    // State Variables
+    let selectedClass = null;
+    let relationsHighlighted = false;
+    let currentScale = 0.8;
+    let panX = 40;
+    let panY = 20;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let dragThreshold = 5;
+    let totalDragDistance = 0;
+
+    // --- Initialize Navigation List ---
+    function renderClassNav() {
+      classList.innerHTML = '';
+      const query = classSearch.value.trim().toLowerCase();
+      let count = 0;
+      
+      Object.keys(CLASS_DATA).forEach(key => {
+        const item = CLASS_DATA[key];
+        const matchName = item.name.toLowerCase().includes(query);
+        const matchDesc = item.description.toLowerCase().includes(query);
+        const matchAttr = item.attributes.some(a => a.name.toLowerCase().includes(query) || a.type.toLowerCase().includes(query));
+        const matchMethod = item.methods.some(m => m.name.toLowerCase().includes(query));
+        
+        if (query === '' || matchName || matchDesc || matchAttr || matchMethod) {
+          count++;
+          const el = document.createElement('div');
+          el.className = `class-item ${selectedClass === key ? 'active' : ''}`;
+          el.dataset.class = key;
+          
+          el.innerHTML = `
+            <span>${item.name}</span>
+            <span class="class-tag">${item.package.split(' & ')[0]}</span>
+          `;
+          
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectClass(key);
+          });
+          classList.appendChild(el);
+        }
+      });
+      document.getElementById('class-count').textContent = count;
+    }
+
+    // --- Zoom and Pan Functions ---
+    function applyTransform() {
+      svgContent.setAttribute('transform', `translate(${panX}, ${panY}) scale(${currentScale})`);
+      zoomLevel.textContent = `${Math.round(currentScale * 100)}%`;
+    }
+
+    // Zoom Center
+    function performZoom(factor, clientX = null, clientY = null) {
+      const oldScale = currentScale;
+      let newScale = oldScale * factor;
+      
+      // Boundaries
+      if (newScale < 0.25) newScale = 0.25;
+      if (newScale > 3.0) newScale = 3.0;
+      
+      if (clientX !== null && clientY !== null) {
+        const rect = stageContainer.getBoundingClientRect();
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
+        
+        // Translate to zoom relative to cursor position
+        panX = mouseX - (mouseX - panX) * (newScale / oldScale);
+        panY = mouseY - (mouseY - panY) * (newScale / oldScale);
+      }
+      
+      currentScale = newScale;
+      applyTransform();
+    }
+
+    // --- Interactive Selection ---
+    function selectClass(className) {
+      // Clear previous styles
+      document.querySelectorAll('.class-card').forEach(card => card.classList.remove('selected'));
+      document.querySelectorAll('.class-item').forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.edge-path').forEach(edge => {
+        edge.classList.remove('selected');
+        edge.classList.remove('lit');
+      });
+      document.querySelectorAll('.edge-label').forEach(lbl => {
+        lbl.classList.remove('selected');
+        lbl.classList.remove('lit');
+      });
+
+      if (selectedClass === className) {
+        // Toggle off
+        selectedClass = null;
+        showDefaultInspector();
+        return;
+      }
+
+      selectedClass = className;
+      
+      // Update canvas card state
+      const card = document.querySelector(`.class-card[data-class="${className}"]`);
+      if (card) {
+        card.classList.add('selected');
+      }
+
+      // Update Navigation sidebar item
+      const navItem = document.querySelector(`.class-item[data-class="${className}"]`);
+      if (navItem) navItem.classList.add('active');
+
+      // Highlight corresponding connections
+      const classMeta = CLASS_DATA[className];
+      if (classMeta) {
+        // Highlight outgoing
+        classMeta.relationships.forEach(rel => {
+          const edgeId = `edge-${className}-${rel.target}`;
+          const rEdgeId = `edge-${rel.target}-${className}`;
+          
+          const edgeEl = document.getElementById(edgeId) || document.getElementById(rEdgeId);
+          if (edgeEl) {
+            edgeEl.classList.add('selected');
+            if (relationsHighlighted) edgeEl.classList.add('lit');
+          }
+
+          const labelEl = document.getElementById(`lbl-${className}-${rel.target}`) || document.getElementById(`lbl-${rel.target}-${className}`);
+          if (labelEl) {
+            labelEl.classList.add('selected');
+            if (relationsHighlighted) labelEl.classList.add('lit');
+          }
+        });
+
+        // Highlight incoming relationships
+        Object.keys(CLASS_DATA).forEach(otherKey => {
+          if (otherKey === className) return;
+          CLASS_DATA[otherKey].relationships.forEach(rel => {
+            if (rel.target === className) {
+              const edgeId = `edge-${otherKey}-${className}`;
+              const rEdgeId = `edge-${className}-${otherKey}`;
+              
+              const edgeEl = document.getElementById(edgeId) || document.getElementById(rEdgeId);
+              if (edgeEl) {
+                edgeEl.classList.add('selected');
+                if (relationsHighlighted) edgeEl.classList.add('lit');
+              }
+              
+              const labelEl = document.getElementById(`lbl-${otherKey}-${className}`) || document.getElementById(`lbl-${className}-${otherKey}`);
+              if (labelEl) {
+                labelEl.classList.add('selected');
+                if (relationsHighlighted) labelEl.classList.add('lit');
+              }
+            }
+          });
+        });
+      }
+
+      showClassDetails(className);
+    }
+
+    function showDefaultInspector() {
+      inspectorContent.innerHTML = `
+        <div class="inspector-intro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+          <p>Nhấp vào một lớp trên sơ đồ hoặc danh sách để xem thông tin chi tiết.</p>
+        </div>
+      `;
+    }
+
+    function showClassDetails(className) {
+      const data = CLASS_DATA[className];
+      if (!data) return;
+
+      inspectorSidebar.classList.remove('collapsed');
+
+      let attributesHTML = data.attributes.map(attr => `
+        <div class="member-item">
+          <div class="member-sig">+ ${attr.name}: <span class="type">${attr.type}</span></div>
+          <div class="member-desc">${attr.desc}</div>
+        </div>
+      `).join('');
+
+      let methodsHTML = data.methods.map(method => `
+        <div class="member-item">
+          <div class="member-sig">+ ${method.name}</div>
+          <div class="member-desc">${method.desc}</div>
+        </div>
+      `).join('');
+
+      if (data.methods.length === 0) {
+        methodsHTML = `<div class="member-desc" style="font-style:italic; padding: 4px 0;">Không có phương thức nào</div>`;
+      }
+
+      let relationshipsHTML = data.relationships.map(rel => `
+        <div class="relationship-item">
+          <div class="relationship-header">
+            <span class="relationship-target" onclick="selectClass('${rel.target}')">${rel.target}</span>
+            <span class="relationship-type">${rel.type}</span>
+          </div>
+          <div class="relationship-desc">${rel.desc}</div>
+        </div>
+      `).join('');
+      
+      // Look for incoming relationships
+      let incomingHTML = '';
+      Object.keys(CLASS_DATA).forEach(otherKey => {
+        if (otherKey === className) return;
+        CLASS_DATA[otherKey].relationships.forEach(rel => {
+          if (rel.target === className) {
+            incomingHTML += `
+              <div class="relationship-item">
+                <div class="relationship-header">
+                  <span class="relationship-target" onclick="selectClass('${otherKey}')">${otherKey}</span>
+                  <span class="relationship-type">${rel.type} (Incoming)</span>
+                </div>
+                <div class="relationship-desc">${rel.desc}</div>
+              </div>
+            `;
+          }
+        });
+      });
+
+      if (relationshipsHTML === '' && incomingHTML === '') {
+        relationshipsHTML = `<div class="member-desc" style="font-style:italic;">Không có mối quan hệ trực tiếp</div>`;
+      } else {
+        relationshipsHTML = relationshipsHTML + incomingHTML;
+      }
+
+      let principlesHTML = data.principles.map(pr => `
+        <div class="mapping-item">
+          <div class="mapping-field">${pr.title}</div>
+          <div class="mapping-desc">${pr.desc}</div>
+        </div>
+      `).join('');
+
+      let dbMappingHTML = '';
+      if (data.dbMapping && data.dbMapping.length > 0) {
+        dbMappingHTML = data.dbMapping.map(map => `
+          <div class="mapping-item">
+            <div class="mapping-field">${map.field}</div>
+            <div class="mapping-desc">${map.desc}</div>
+          </div>
+        `).join('');
+      } else {
+        dbMappingHTML = `<div class="member-desc" style="font-style:italic;">Lớp nghiệp vụ (không lưu SQLite)</div>`;
+      }
+
+      // Add special flows in detail if applicable
+      let flowHTML = '';
+      if (className === 'AIVisionClient' || className === 'SkiaCanvasRenderer') {
+        flowHTML = `
+          <div class="inspector-section">
+            <h4>Luồng Xử Lý AI Vision & Render</h4>
+            <div class="mapping-item" style="border-left: 2px solid var(--primary)">
+              <div class="mapping-desc" style="font-size:11.5px; line-height:1.5;">
+                1. <b>Chụp ảnh:</b> <code>User</code> bắt đầu chụp → kiểm duyệt <code>User.canScan()</code>.<br>
+                2. <b>Phát hiện:</b> <code>AIVisionClient.analyzeImage()</code> gửi sang AI và nhận về JSON tọa độ % ghim vật thể.<br>
+                3. <b>Map điểm:</b> <code>CoordinateMapper</code> quy đổi từ % sang Pixel thực tế.<br>
+                4. <b>Vẽ Canvas:</b> <code>SkiaCanvasRenderer</code> dựng đồ họa ghim, đường dẫn và ô từ vựng và chụp thành tệp hình ảnh thành phẩm để lưu trữ đĩa.
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (className === 'BatchExtractor') {
+        flowHTML = `
+          <div class="inspector-section">
+            <h4>Luồng Trích Xuất Hàng Loạt</h4>
+            <div class="mapping-item" style="border-left: 2px solid var(--accent)">
+              <div class="mapping-desc" style="font-size:11.5px; line-height:1.5;">
+                1. <b>Chọn ảnh:</b> User check chọn nhiều ảnh từ bộ sưu tập.<br>
+                2. <b>Trích xuất:</b> <code>BatchExtractor.extractVocabFromPhotos()</code> gom từ vựng từ các ảnh và lọc trùng lặp tự động.<br>
+                3. <b>Copy Text:</b> Xuất dạng text thô qua <code>exportToPlainText()</code>.<br>
+                4. <b>Sinh thẻ học:</b> Nhấp "Học Flashcard" kích hoạt <code>createFlashcardsFromVocab()</code> tự động tạo loạt thẻ <code>SRSCard</code> mới lưu database.
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (className === 'SRSAlgorithm' || className === 'SRSCard') {
+        flowHTML = `
+          <div class="inspector-section">
+            <h4>Luồng Học Spaced Repetition (SRS)</h4>
+            <div class="mapping-item" style="border-left: 2px solid var(--success)">
+              <div class="mapping-desc" style="font-size:11.5px; line-height:1.5;">
+                1. <b>Hẹn giờ:</b> Lọc thẻ cần ôn có <code>nextReviewAt <= Today</code>.<br>
+                2. <b>Đánh giá:</b> Người học tự đánh giá độ nhớ (0: Quên, 1: Khó, 2: Tốt, 3: Dễ).<br>
+                3. <b>Cập nhật:</b> Gọi <code>SRSAlgorithm.calculateNextReview()</code> để tính toán lại hệ số dễ <code>easinessFactor</code>, chu kỳ lặp lại <code>intervalDays</code> và cập nhật mốc <code>nextReviewAt</code> mới.
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      inspectorContent.innerHTML = `
+        <div>
+          <div class="class-badge-wrapper">
+            <span class="stereotype-badge">&lt;&lt;${data.stereotype}&gt;&gt;</span>
+            <span class="class-tag">${data.package}</span>
+          </div>
+          <h3 class="inspector-title">${data.name}</h3>
+          ${data.dbTable !== "N/A" ? `
+            <div class="db-badge">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:2px;"><path d="M12 22c5.523 0 10-2.239 10-5V7c0-2.761-4.477-5-10-5S2 4.239 2 7v10c0 2.761 4.477 5 10 5z"></path><path d="M22 7c0 2.761-4.477 5-10 5S2 9.761 2 7"></path><path d="M2 12c0 2.761 4.477 5 10 5s10-2.239 10-5"></path></svg>
+              Table: ${data.dbTable}
+            </div>
+          ` : ''}
+          <p class="inspector-desc" style="margin-top: 12px;">${data.description}</p>
+        </div>
+
+        <div class="inspector-section">
+          <h4>Thuộc tính (${data.attributes.length})</h4>
+          <div class="attribute-list">${attributesHTML}</div>
+        </div>
+
+        <div class="inspector-section">
+          <h4>Phương thức (${data.methods.length})</h4>
+          <div class="method-list">${methodsHTML}</div>
+        </div>
+
+        <div class="inspector-section">
+          <h4>SQLite Database Mapping</h4>
+          <div class="attribute-list">${dbMappingHTML}</div>
+        </div>
+
+        <div class="inspector-section">
+          <h4>Nguyên lý thiết kế</h4>
+          <div class="attribute-list">${principlesHTML}</div>
+        </div>
+
+        ${flowHTML}
+
+        <div class="inspector-section">
+          <h4>Liên kết mối quan hệ</h4>
+          <div class="attribute-list">${relationshipsHTML}</div>
+        </div>
+      `;
+    }
+
+    // --- Package Filtering ---
+    function setPackageFilter(packageName) {
+      document.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.package === packageName);
+      });
+
+      if (packageName === 'all') {
+        stageContainer.classList.remove('flowing');
+        document.querySelectorAll('.class-card').forEach(card => card.classList.remove('lit'));
+        document.querySelectorAll('.edge-path').forEach(edge => edge.classList.remove('lit'));
+        document.querySelectorAll('.edge-label').forEach(lbl => lbl.classList.remove('lit'));
+        document.querySelectorAll('.zone-rect').forEach(z => z.classList.remove('lit'));
+        return;
+      }
+
+      stageContainer.classList.add('flowing');
+      
+      // Light up package classes
+      document.querySelectorAll('.class-card').forEach(card => {
+        const isMatched = card.dataset.package === packageName;
+        card.classList.toggle('lit', isMatched);
+      });
+
+      // Highlight Zones
+      const zoneMap = {
+        'Core Entities': ['zone-entities'],
+        'AI & Processing': ['zone-ai', 'zone-renderer'],
+        'Batch & SRS': ['zone-batch']
+      };
+
+      document.querySelectorAll('.zone-rect').forEach(z => {
+        const zoneId = z.parentNode.id;
+        const matchingZones = zoneMap[packageName] || [];
+        z.classList.toggle('lit', matchingZones.includes(zoneId));
+      });
+
+      // Light up package relations
+      document.querySelectorAll('.edge-path').forEach(edge => {
+        const edgeId = edge.id;
+        const parts = edgeId.replace('edge-', '').split('-');
+        if (parts.length === 2) {
+          const c1 = CLASS_DATA[parts[0]];
+          const c2 = CLASS_DATA[parts[1]];
+          const edgeLit = (c1 && c1.package === packageName) && (c2 && c2.package === packageName);
+          edge.classList.toggle('lit', edgeLit);
+
+          const lblEl = document.getElementById(`lbl-${parts[0]}-${parts[1]}`) || document.getElementById(`lbl-${parts[1]}-${parts[0]}`);
+          if (lblEl) lblEl.classList.toggle('lit', edgeLit);
+        }
+      });
+    }
+
+    // --- Highlight Flow/March animation ---
+    function toggleRelationsHighlight() {
+      relationsHighlighted = !relationsHighlighted;
+      btnHighlightRelations.classList.toggle('active', relationsHighlighted);
+      
+      document.querySelectorAll('.edge-path').forEach(edge => {
+        if (edge.classList.contains('selected')) {
+          edge.classList.toggle('lit', relationsHighlighted);
+        }
+      });
+      document.querySelectorAll('.edge-label').forEach(lbl => {
+        if (lbl.classList.contains('selected')) {
+          lbl.classList.toggle('lit', relationsHighlighted);
+        }
+      });
+    }
+
+    // --- Search & Filter Principles ---
+    function highlightPrinciple(principleKey) {
+      document.querySelectorAll('.principle-card').forEach(card => {
+        card.classList.toggle('active', card.dataset.principle === principleKey);
+      });
+
+      // Map principles to their involved classes
+      const principleClasses = {
+        Freemium: ['User', 'AIVisionClient'],
+        Skia: ['SkiaCanvasRenderer', 'PhotoNote', 'NoteTemplate'],
+        SRS: ['SRSCard', 'Vocabulary', 'SRSAlgorithm'],
+        Coords: ['PhotoNote', 'CoordinateMapper', 'SkiaCanvasRenderer'],
+        Batch: ['BatchExtractor', 'Photo', 'Vocabulary', 'SRSCard']
+      };
+
+      const classesToHighlight = principleClasses[principleKey] || [];
+      
+      stageContainer.classList.add('flowing');
+      document.querySelectorAll('.class-card').forEach(card => {
+        const isMatched = classesToHighlight.includes(card.dataset.class);
+        card.classList.toggle('lit', isMatched);
+      });
+
+      // Fade connection paths
+      document.querySelectorAll('.edge-path').forEach(edge => edge.classList.remove('lit'));
+      document.querySelectorAll('.edge-label').forEach(lbl => lbl.classList.remove('lit'));
+    }
+
+    // --- Event Listeners Setup ---
+
+    // 1. Search Box
+    classSearch.addEventListener('input', renderClassNav);
+
+    // 2. Filter Chips
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.principle-card').forEach(c => c.classList.remove('active'));
+        setPackageFilter(chip.dataset.package);
+      });
+    });
+
+    // 3. Principle Cards
+    document.querySelectorAll('.principle-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+        
+        if (card.classList.contains('active')) {
+          card.classList.remove('active');
+          setPackageFilter('all');
+        } else {
+          highlightPrinciple(card.dataset.principle);
+        }
+      });
+    });
+
+    // 4. Click stage background to clear details/filters
+    stageContainer.addEventListener('click', (e) => {
+      if (e.target === stageContainer || e.target === stageSvg || e.target.classList.contains('zone-rect') || e.target.tagName === 'svg') {
+        if (selectedClass) {
+          selectClass(selectedClass); // Toggle off
+        }
+        setPackageFilter('all');
+        document.querySelectorAll('.principle-card').forEach(c => c.classList.remove('active'));
+      }
+    });
+
+    // 5. Connect card elements click event
+    document.querySelectorAll('.class-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectClass(card.dataset.class);
+      });
+    });
+
+    // 6. Action buttons
+    btnHighlightRelations.addEventListener('click', toggleRelationsHighlight);
+    
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    closeInspector.addEventListener('click', () => {
+      inspectorSidebar.classList.add('collapsed');
+      if (selectedClass) selectClass(selectedClass); // Toggle off on canvas
+    });
+
+    // 7. Pan and Zoom Event Listeners (SVG Stage)
+    stageContainer.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.class-card') || e.target.closest('.canvas-hud')) return;
+      isDragging = true;
+      startX = e.clientX - panX;
+      startY = e.clientY - panY;
+      totalDragDistance = 0;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      const newPanX = e.clientX - startX;
+      const newPanY = e.clientY - startY;
+      
+      totalDragDistance += Math.abs(newPanX - panX) + Math.abs(newPanY - panY);
+      
+      panX = newPanX;
+      panY = newPanY;
+      applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Scroll zoom
+    stageContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+      performZoom(zoomFactor, e.clientX, e.clientY);
+    }, { passive: false });
+
+    // HUD Zoom click
+    zoomIn.addEventListener('click', () => performZoom(1.15));
+    zoomOut.addEventListener('click', () => performZoom(0.85));
+    zoomReset.addEventListener('click', () => {
+      currentScale = 0.8;
+      panX = 40;
+      panY = 20;
+      applyTransform();
+    });
+
+    // --- Floating AI Chatbot Assistant Logic ---
+    const chatbotToggle = document.getElementById('chatbotToggle');
+    const chatbotWindow = document.getElementById('chatbotWindow');
+    const closeChat = document.getElementById('closeChat');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Toggle Window
+    chatbotToggle.addEventListener('click', () => {
+      chatbotWindow.classList.toggle('open');
+      if (chatbotWindow.classList.contains('open')) {
+        chatInput.focus();
+      }
+    });
+
+    closeChat.addEventListener('click', () => {
+      chatbotWindow.classList.remove('open');
+    });
+
+    // Send Message
+    function appendMessage(text, sender) {
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble ${sender}`;
+      bubble.innerHTML = text;
+      chatMessages.appendChild(bubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // AI Response Engine
+    function handleBotResponse(userMsg) {
+      const msg = userMsg.toLowerCase().trim();
+      let response = "";
+      
+      // Theme triggers
+      if (msg.includes("tối") || msg.includes("sáng") || msg.includes("dark") || msg.includes("light") || msg.includes("theme") || msg.includes("giao diện")) {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        response = `Đã chuyển đổi giao diện sang chế độ <b>${isDark ? 'Tối (Dark Mode)' : 'Sáng (Light Mode)'}</b> theo yêu cầu của bạn!`;
+        appendMessage(response, 'bot');
+        return;
+      }
+
+      // Filter triggers
+      if (msg.includes("lọc") || msg.includes("filter") || msg.includes("gói") || msg.includes("package")) {
+        if (msg.includes("core") || msg.includes("entity") || msg.includes("entities") || msg.includes("thực thể")) {
+          setPackageFilter("Core Entities");
+          response = "Đã áp dụng bộ lọc gói <b>Core Domain Entities</b> trong SQLite cho bạn.";
+        } else if (msg.includes("ai") || msg.includes("processing") || msg.includes("vẽ") || msg.includes("canvas") || msg.includes("nhận diện")) {
+          setPackageFilter("AI & Processing");
+          response = "Đã áp dụng bộ lọc gói <b>AI & Canvas Processing</b>.";
+        } else if (msg.includes("batch") || msg.includes("srs") || msg.includes("lặp lại") || msg.includes("ôn tập")) {
+          setPackageFilter("Batch & SRS");
+          response = "Đã áp dụng bộ lọc gói <b>Batch Extraction & SRS Learning Engine</b>.";
+        } else {
+          setPackageFilter("all");
+          response = "Đã hủy bộ lọc, đang hiển thị tất cả các gói lớp.";
+        }
+        appendMessage(response, 'bot');
+        return;
+      }
+
+      // Search & select class triggers
+      let matchedClass = null;
+      Object.keys(CLASS_DATA).forEach(key => {
+        if (msg.includes(key.toLowerCase()) || (CLASS_DATA[key].name && msg.includes(CLASS_DATA[key].name.toLowerCase()))) {
+          matchedClass = key;
+        }
+      });
+
+      if (matchedClass) {
+        selectClass(matchedClass);
+        const data = CLASS_DATA[matchedClass];
+        response = `Tôi đã tìm thấy và chọn lớp <code>${data.name}</code> (thuộc gói <i>${data.package}</i>) trên sơ đồ cho bạn. <br><br><b>Mô tả:</b> ${data.description}<br><b>SQLite table:</b> <code>${data.dbTable}</code>. Xem thông tin chi tiết thuộc tính và phương thức tại panel bên phải!`;
+        appendMessage(response, 'bot');
+        return;
+      }
+
+      // Special Architectural Questions
+      if (msg.includes("sm-2") || msg.includes("srs") || msg.includes("lặp lại ngắt quãng") || msg.includes("ôn tập")) {
+        // Highlight SRS classes
+        selectClass("SRSAlgorithm");
+        response = `<b>Thuật toán lặp lại ngắt quãng (SM-2)</b> được xử lý chính bởi <code>SRSAlgorithm</code> tác động lên <code>SRSCard</code>:<br><br>
+        - <b>Repetitions (Số lần lặp):</b> Tăng lên khi trả lời đúng, reset về 0 nếu quên.<br>
+        - <b>Easiness Factor (Hệ số dễ):</b> Mặc định 2.5. Thay đổi dựa trên điểm đánh giá từ 0 (Quên) đến 3 (Dễ).<br>
+        - <b>Interval Days (Số ngày chờ):</b> Ngày chờ kế tiếp = Khoảng cách trước đó * Easiness Factor. Thẻ mới bắt đầu bằng 1 ngày, sau đó 6 ngày.`;
+      } else if (msg.includes("sqlite") || msg.includes("database") || msg.includes("lưu trữ") || msg.includes("bảng")) {
+        response = `Hệ thống sử dụng cơ sở dữ liệu <b>SQLite Offline-First</b> để lưu trữ các bảng sau:<br>
+        - <code>users</code>: Tài khoản người dùng, Quota & xu Yuzu.<br>
+        - <code>user_inventories</code>: Kho đồ, trạng thái trang bị Capy Mascot & hình nền.<br>
+        - <code>pet_items</code>: Danh mục các bạn thú cưng, phụ kiện thời trang & hình nền bối cảnh.<br>
+        - <code>photos</code>: Đường dẫn ảnh gốc & ảnh vẽ ghim.<br>
+        - <code>photo_notes</code>: Vị trí ghim nhãn từ vựng %.<br>
+        - <code>vocabularies</code>: Sổ từ vựng & câu ví dụ.<br>
+        - <code>srs_cards</code>: Tiến trình học tập SM-2.<br>
+        - <code>chat_messages</code>: Lịch sử tin nhắn hỏi đáp offline.<br>
+        - <code>note_templates</code>: Mẫu giao diện note ghim.`;
+      } else if (msg.includes("quota") || msg.includes("canscan") || msg.includes("daily") || msg.includes("miễn phí") || msg.includes("free") || msg.includes("chat")) {
+        selectClass("User");
+        response = `Mô hình <b>Freemium Quota & Coins</b> được quản lý chặt chẽ ở lớp <code>User</code>:<br><br>
+        - <code>dailyScansLeft</code>: Số lượt quét miễn phí còn lại (3-5 lượt mỗi ngày).<br>
+        - <code>dailyChatLeft</code>: Số lượt chat AI miễn phí còn lại (10 lượt mỗi ngày).<br>
+        - <code>totalYuzuCoins</code>: Số xu Yuzu người dùng tích lũy để mua vật phẩm Pet Shop.<br>
+        - <code>canScan()</code> / <code>canChat()</code>: Kiểm tra quota khả dụng.<br>
+        - <code>addYuzuCoins()</code> / <code>deductYuzuCoins()</code>: Tăng/giảm số dư xu Yuzu.`;
+      } else if (msg.includes("pet") || msg.includes("shop") || msg.includes("cửa hàng") || msg.includes("thú cưng") || msg.includes("inventory") || msg.includes("kho đồ")) {
+        response = `Hệ thống tích hợp <b>Cửa Hàng Thú Cưng (Pet Shop)</b> thông qua các lớp thực thể:<br><br>
+        - <code>PetItem</code>: Định nghĩa vật phẩm (linh vật Shiba/Panda..., trang phục mũ/kính..., hình nền Onsen/Cafe...).<br>
+        - <code>UserInventory</code>: Lưu trữ danh sách vật phẩm người dùng đã mở khóa, mascot pet phụ, phụ kiện trang bị và hình nền bối cảnh đang áp dụng.<br>
+        Giao dịch mua sắm tiêu xu Yuzu được kiểm tra qua <code>User.deductYuzuCoins()</code>.`;
+      } else if (msg.includes("session") || msg.includes("phiên") || msg.includes("view vocabulary")) {
+        selectClass("SelectedVocabSession");
+        response = `Lớp <code>SelectedVocabSession</code> là một service quản lý phiên làm việc hiện tại khi người học chọn nhiều ảnh từ Gallery:<br><br>
+        - <code>aggregateVocabularies()</code>: Tổng hợp & khử trùng lặp từ vựng từ các ảnh được tick chọn.<br>
+        - <code>generateFlashcardDeck()</code>: Kích hoạt tạo bộ thẻ <code>SRSCard</code> tương ứng để mở trực tiếp màn hình Flashcard ôn tập.`;
+      } else if (msg.includes("chatmessage") || msg.includes("tin nhắn")) {
+        selectClass("ChatMessage");
+        response = `Lớp <code>ChatMessage</code> dùng để lưu lịch sử hội thoại cục bộ (offline) trong SQLite bảng <code>chat_messages</code>:<br><br>
+        - <code>sender</code>: Vai trò người gửi (<code>USER</code> hoặc <code>CAPY_AI</code>).<br>
+        - <code>vocabId</code>: Liên kết tùy chọn tham chiếu từ vựng làm bối cảnh.<br>
+        - <code>createdAt</code>: Thời gian tin nhắn được tạo.`;
+      } else if (msg.includes("aichatservice") || msg.includes("chat service") || msg.includes("api")) {
+        selectClass("AIChatService");
+        response = `Lớp <code>AIChatService</code> xử lý tương tác trực tiếp với API AI:<br><br>
+        - <code>sendQuery(query, contextVocab)</code>: Gửi đàm thoại đính kèm context từ vựng để AI trả lời đúng bối cảnh.<br>
+        - <code>getSynonyms(word)</code>: Lấy danh sách từ đồng nghĩa nhanh.<br>
+        - <code>systemPrompt</code>: Định hình nhân cách Capy-sensei ấm áp, dễ thương.`;
+      } else if (msg.includes("canvas") || msg.includes("skia") || msg.includes("vẽ")) {
+        selectClass("SkiaCanvasRenderer");
+        response = `Việc vẽ nhãn đè lên ảnh sử dụng <b>React Native Skia</b> ở lớp <code>SkiaCanvasRenderer</code>:<br><br>
+        - <code>renderPins()</code>: Vẽ neo ghim tròn.<br>
+        - <code>renderPointerLines()</code>: Vẽ đường dẫn hướng.<br>
+        - <code>renderVocabBoxes()</code>: Vẽ ô chứa từ vựng dịch.<br>
+        - <code>exportToImageFile()</code>: Chụp màn hình render canvas thành tệp ảnh lưu đĩa.`;
+      } else if (msg.includes("tọa độ") || msg.includes("coordinate") || msg.includes("mapper") || msg.includes("pos")) {
+        selectClass("CoordinateMapper");
+        response = `Lớp <code>CoordinateMapper</code> đảm nhiệm vai trò cực kỳ quan trọng:<br><br>
+        AI Vision trả về tọa độ dạng phần trăm <code>posXPercent</code>, <code>posYPercent</code> (từ 0 - 100%). Mapper sẽ quy đổi nó thành tọa độ <b>Pixel thực tế</b> trên màn hình thiết bị di động của bạn qua <code>mapPercentToPixel()</code>.`;
+      } else {
+        response = `Tôi có thể hỗ trợ bạn tìm hiểu nhanh kiến trúc lớp: <br>
+        - Hỏi về lớp cụ thể: <i>"Lớp User làm gì?", "Tìm lớp SkiaCanvasRenderer"</i><br>
+        - Hỏi về tính năng: <i>"Giải thích thuật toán SM-2", "Lưu trữ SQLite thế nào?", "Cơ chế quota quét ảnh"</i><br>
+        - Điều khiển giao diện: <i>"Lọc gói Batch & SRS", "Đổi giao diện tối", "Bật Light Mode"</i>`;
+      }
+      
+      appendMessage(response, 'bot');
+    }
+
+    function processUserInput() {
+      const text = chatInput.value.trim();
+      if (text === '') return;
+      appendMessage(text, 'user');
+      chatInput.value = '';
+      
+      // Simulate bot typing
+      setTimeout(() => {
+        handleBotResponse(text);
+      }, 500);
+    }
+
+    chatSend.addEventListener('click', processUserInput);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') processUserInput();
+    });
+
+    // Suggestions Click
+    document.querySelectorAll('.chat-suggestion-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.dataset.prompt;
+        appendMessage(text, 'user');
+        setTimeout(() => {
+          handleBotResponse(text);
+        }, 400);
+      });
+    });
+
+    // --- On Load Init ---
+    renderClassNav();
+    applyTransform();
+
+  </script>
+</body>
+</html>

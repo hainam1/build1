@@ -1,0 +1,4268 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capybara Vocab Note — Spa Từ Vựng Chill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('v')) {
+        urlParams.set('v', 'fresh-' + Date.now());
+        window.location.search = urlParams.toString();
+        return;
+      }
+      const saved = localStorage.getItem('theme');
+      const dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.classList.toggle('dark', dark);
+    })();
+  </script>
+  <style>
+    :root {
+      /* Base Neutrals */
+      --bg-cloud: #FAF8F5;
+      --surface: #FFFFFF;
+      --surface-aside: #F5EFEB;
+      --line: #E8DCD1;
+      --ink-coffee: #3A2E2B;
+      --body: #5C4F4B;
+      --muted: #A39690;
+      
+      /* Duolingo Design Tokens */
+      --duo-green: #58CC02;
+      --duo-green-shadow: #46A302;
+      --duo-orange: #FF9600;
+      --duo-orange-shadow: #E58700;
+      --duo-blue: #1CB0F6;
+      --duo-blue-shadow: #1899D6;
+      --duo-red: #FF4B4B;
+      --duo-red-shadow: #EA2B2B;
+      --duo-gray: #E5E5E5;
+      --duo-gray-shadow: #CCCCCC;
+      --duo-yellow: #FFC800;
+      --duo-yellow-shadow: #E6B000;
+      
+      /* Base palette themes */
+      --capy-brown: #D2A374;
+      --capy-brown-dark: #A67C52;
+      --matcha-milk: #C2E2B8;
+      --creamy-yuzu: #FFF2CC;
+      --yuzu-orange: #FFE082;
+      --strawberry-milk: #FFD1DC;
+      
+      --font-cute: 'Fredoka', sans-serif;
+      --font-body: 'Nunito', sans-serif;
+    }
+    
+    html.dark {
+      --bg-cloud: #1E1A17;
+      --surface: #2D2723;
+      --surface-aside: #241E1B;
+      --line: #3E342F;
+      --ink-coffee: #F5EFEB;
+      --body: #D8CECA;
+      --muted: #8F817B;
+      
+      --capy-brown: #A67C52;
+      --capy-brown-dark: #D2A374;
+      --matcha-milk: #517F47;
+      --creamy-yuzu: #4D452B;
+      --yuzu-orange: #E67E22;
+      --strawberry-milk: #7D4956;
+      
+      --duo-gray: #3C3C3C;
+      --duo-gray-shadow: #2B2B2B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-cloud);
+      color: var(--body);
+      font-family: var(--font-body);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 80px;
+      padding-bottom: 40px;
+      overflow-x: hidden;
+      transition: background 0.3s ease;
+    }
+
+    /* --- Phone Simulator Shell --- */
+    .phone-container {
+      width: 410px;
+      height: 840px;
+      background: var(--surface);
+      border: 8px solid var(--ink-coffee);
+      border-radius: 40px;
+      box-shadow: 0 20px 60px rgba(58, 46, 43, 0.15);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* --- Phone Status Bar --- */
+    .status-bar {
+      height: 38px;
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      font-family: var(--font-cute);
+      background: transparent;
+      z-index: 10;
+      user-select: none;
+    }
+    .status-bar .notch {
+      width: 130px;
+      height: 20px;
+      background: var(--ink-coffee);
+      border-bottom-left-radius: 12px;
+      border-bottom-right-radius: 12px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 0;
+    }
+
+    /* --- Top Action Header --- */
+    .top-header {
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 5;
+    }
+    .points-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--creamy-yuzu);
+      border: 1.5px solid var(--line);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-family: var(--font-cute);
+      font-size: 13px;
+      color: var(--ink-coffee);
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      transition: transform 0.15s ease;
+    }
+    .points-badge:active {
+      transform: scale(0.95);
+    }
+    .points-badge span.accent {
+      color: #E67E22;
+    }
+    .theme-toggle-btn {
+      background: var(--surface-aside);
+      border: 1.5px solid var(--line);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink-coffee);
+      transition: transform 0.15s ease;
+    }
+    .theme-toggle-btn:active {
+      transform: scale(0.9);
+    }
+
+    /* --- Main Screen Panels --- */
+    .screen-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 20px 90px; /* spacing for bottom bar */
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .screen-view {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+    .hidden {
+      display: none !important;
+    }
+
+    /* --- Common Styled UI Cards & Squircle --- */
+    .capy-card {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      position: relative;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .capy-card.pastel-yuzu { background: var(--creamy-yuzu); }
+    .capy-card.pastel-matcha { background: var(--matcha-milk); }
+    .capy-card.pastel-strawberry { background: var(--strawberry-milk); }
+    
+    /* Duolingo flat 3D Card */
+    .duo-card-3d {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-bottom: 6px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      position: relative;
+    }
+
+    /* Title headers inside cards */
+    .card-title {
+      font-family: var(--font-cute);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Sticker Border Style Buttons */
+    .btn-cute {
+      font-family: var(--font-cute);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border: 2px solid var(--ink-coffee);
+      border-bottom: 5px solid var(--ink-coffee);
+      border-radius: 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.08s ease;
+      user-select: none;
+      background: var(--surface);
+      color: var(--ink-coffee);
+    }
+    .btn-cute:active {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+    }
+    .btn-cute.primary {
+      background: var(--duo-green);
+      color: #FFFFFF;
+      border-color: var(--ink-coffee);
+      border-bottom-color: var(--duo-green-shadow);
+      box-shadow: 0 4px 0 var(--duo-green-shadow), 0 4px 0 2px var(--ink-coffee);
+    }
+    .btn-cute.primary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--duo-green-shadow), 0 1px 0 2px var(--ink-coffee);
+    }
+    .btn-cute.secondary {
+      background: var(--surface);
+      color: var(--ink-coffee);
+      border-color: var(--ink-coffee);
+      border-bottom-color: var(--duo-gray-shadow);
+      box-shadow: 0 4px 0 var(--duo-gray-shadow), 0 4px 0 2px var(--ink-coffee);
+    }
+    .btn-cute.secondary:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--duo-gray-shadow), 0 1px 0 2px var(--ink-coffee);
+    }
+    .btn-cute.orange {
+      background: var(--duo-orange);
+      color: #FFFFFF;
+      border-color: var(--ink-coffee);
+      border-bottom-color: var(--duo-orange-shadow);
+      box-shadow: 0 4px 0 var(--duo-orange-shadow), 0 4px 0 2px var(--ink-coffee);
+    }
+    .btn-cute.orange:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--duo-orange-shadow), 0 1px 0 2px var(--ink-coffee);
+    }
+
+    /* --- TAB 1: HOME --- */
+    .home-avatar-section {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 6px;
+      box-shadow: none;
+    }
+    .avatar-wrapper {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border: 2px solid var(--ink-coffee);
+      border-radius: 50%;
+      background: var(--surface-aside);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .home-welcome-text h2 {
+      font-family: var(--font-cute);
+      font-size: 18px;
+      color: var(--ink-coffee);
+    }
+    .home-welcome-text p {
+      font-size: 12px;
+      color: var(--body);
+      margin-top: 2px;
+    }
+
+    /* Streak orange indicator (Duolingo Flame style) */
+    .streak-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      padding: 12px 18px;
+      border-radius: 20px;
+      border: 2px solid var(--ink-coffee);
+      box-shadow: 0 4px 0 var(--ink-coffee);
+    }
+    .streak-flame-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .flame-icon {
+      font-size: 28px;
+      display: inline-block;
+      animation: flameWobble 0.6s infinite alternate;
+    }
+    @keyframes flameWobble {
+      0% { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 2px #FF9600); }
+      100% { transform: scale(1.15) rotate(3deg); filter: drop-shadow(0 0 8px #FF4B4B); }
+    }
+    @keyframes flameGrow {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.6) rotate(15deg); filter: drop-shadow(0 0 15px #FF9600); }
+      100% { transform: scale(1.15); }
+    }
+    .streak-days {
+      font-family: var(--font-cute);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--duo-orange);
+    }
+
+    .cloud-quota {
+      background: #FFFFFF;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 6px;
+      box-shadow: none;
+      text-align: center;
+    }
+    .cloud-quota p {
+      font-size: 13.5px;
+      color: var(--body);
+      font-weight: 700;
+    }
+
+    .review-widget {
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 6px;
+      box-shadow: none;
+    }
+    .review-widget-content {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .recent-notes-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scroll-snap-type: x mandatory;
+    }
+    .recent-note-card {
+      flex: 0 0 160px;
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 8px;
+      background: var(--surface);
+      scroll-snap-align: start;
+    }
+    .recent-note-img {
+      width: 100%;
+      height: 100px;
+      border-radius: 12px;
+      background: var(--surface-aside);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+    .recent-note-img .badge-label {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      background: var(--ink-coffee);
+      color: var(--surface);
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+    .recent-note-card h4 {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .recent-note-card p {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    /* --- TAB 2: STORAGE (ALBUM) --- */
+    .storage-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .album-item {
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      padding: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .album-item:active {
+      transform: scale(0.97);
+    }
+    .album-item.selected {
+      border-color: var(--yuzu-orange);
+      background: var(--creamy-yuzu);
+      box-shadow: 0 4px 12px rgba(255, 200, 0, 0.08);
+    }
+    .album-item .checkbox-indicator {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ink-coffee);
+      background: var(--surface);
+      z-index: 2;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+    }
+    .album-item.selected .checkbox-indicator {
+      background: var(--yuzu-orange);
+      display: flex;
+    }
+    .album-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .preview-chip {
+      font-size: 9px;
+      background: var(--surface-aside);
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 1px 5px;
+      font-weight: 700;
+      color: var(--body);
+      white-space: nowrap;
+    }
+    .album-item.selected .preview-chip {
+      background: var(--surface);
+      border-color: var(--line);
+    }
+    .album-item-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Selection Drawer */
+    .selection-drawer {
+      position: absolute;
+      bottom: -100px;
+      left: 0;
+      width: 100%;
+      background: var(--surface);
+      border-top: 2px solid var(--ink-coffee);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 15;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+      transition: bottom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    .selection-drawer.open {
+      bottom: 74px; /* sits right above bottom bar */
+    }
+    .selection-drawer-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .selection-drawer-info span {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+    }
+
+    /* --- TAB 3: BOTTOM SHEET & FAB TRIGGER --- */
+    .bottom-sheet-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(58, 46, 43, 0.4);
+      z-index: 25;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .bottom-sheet-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .bottom-sheet {
+      position: absolute;
+      bottom: -400px;
+      left: 0;
+      width: 100%;
+      background: var(--surface);
+      border-top: 2px solid var(--ink-coffee);
+      border-top-left-radius: 32px;
+      border-top-right-radius: 32px;
+      padding: 24px 28px;
+      z-index: 30;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: 0 -8px 32px rgba(0,0,0,0.1);
+      transition: bottom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+    }
+    .bottom-sheet-overlay.open .bottom-sheet {
+      bottom: 0;
+    }
+    .bottom-sheet-notch {
+      width: 48px;
+      height: 5px;
+      background: var(--line);
+      border-radius: 99px;
+      align-self: center;
+      margin-bottom: 4px;
+    }
+    .upload-options-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .upload-opt {
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--surface-aside);
+      transition: all 0.15s ease;
+    }
+    .upload-opt:hover {
+      border-color: var(--primary);
+      background: var(--creamy-yuzu);
+    }
+    .upload-opt .icon {
+      font-size: 26px;
+      margin-bottom: 6px;
+    }
+    .upload-opt h4 {
+      font-family: var(--font-cute);
+      font-size: 13.5px;
+      color: var(--ink-coffee);
+    }
+    .template-scroll-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 4px 0;
+    }
+    .tmpl-badge {
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--surface-aside);
+      border: 1.5px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 99px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .tmpl-badge.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* --- TAB 4: WORKSHOP (VOCAB LIST & FLASHCARD) --- */
+    .workshop-tabs {
+      display: flex;
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 4px;
+      background: var(--surface-aside);
+    }
+    .workshop-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 8px 0;
+      font-family: var(--font-cute);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--body);
+      cursor: pointer;
+      border-radius: 16px;
+      transition: all 0.15s ease;
+    }
+    .workshop-tab-btn.active {
+      background: var(--surface);
+      color: var(--ink-coffee);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    /* Sub-tab 1: list */
+    .vocab-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .vocab-row-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 10px 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.01);
+    }
+    .vocab-row-info h3 {
+      font-family: var(--font-cute);
+      font-size: 15px;
+      color: var(--ink-coffee);
+    }
+    .vocab-row-info p {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .vocab-row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-audio {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--creamy-yuzu);
+      border: 1px solid var(--line);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--ink-coffee);
+    }
+
+    /* Sub-tab 2: Flashcards 3D flip */
+    .flashcard-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      padding: 10px 0;
+    }
+    .flip-card {
+      width: 290px;
+      height: 380px;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+    .flip-card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .flip-card.flipped .flip-card-inner {
+      transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      border: 2px solid var(--ink-coffee);
+      border-radius: 28px;
+      padding: 20px;
+      box-shadow: 4px 4px 0 var(--ink-coffee);
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+    }
+    .flip-card-front {
+      background: var(--creamy-yuzu);
+    }
+    .flip-card-back {
+      background: var(--surface);
+      transform: rotateY(180deg);
+    }
+    .card-photo-mock {
+      flex: 1;
+      border-radius: 18px;
+      border: 1.5px dashed var(--line);
+      background: var(--surface-aside);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card-photo-mock img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(4px);
+      opacity: 0.65;
+    }
+    .card-photo-mock .pin-spot {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 1.5px solid var(--ink-coffee);
+      animation: pinPulse 1.2s infinite alternate;
+    }
+    @keyframes pinPulse {
+      to { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 10px var(--primary); }
+    }
+    .flashcard-vocab-word {
+      font-family: var(--font-cute);
+      font-size: 22px;
+      text-align: center;
+      margin-top: 16px;
+      color: var(--ink-coffee);
+    }
+    
+    /* SRS Grading buttons row */
+    .srs-buttons-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      width: 100%;
+    }
+    .srs-grade-btn {
+      border: 1.5px solid var(--ink-coffee);
+      border-radius: 18px;
+      padding: 10px 4px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      box-shadow: 0 3px 0 var(--ink-coffee);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      user-select: none;
+    }
+    .srs-grade-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--ink-coffee);
+    }
+    .srs-grade-btn.forgot { background: var(--strawberry-milk); }
+    .srs-grade-btn.remember { background: var(--creamy-yuzu); }
+    .srs-grade-btn.easy { background: var(--matcha-milk); }
+    .srs-grade-btn .icon { font-size: 18px; }
+
+    /* --- TAB 5: SETTINGS & CAPY'S DEN --- */
+    .settings-sub-toggle {
+      display: flex;
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 4px;
+      background: var(--surface-aside);
+    }
+    .settings-tab-btn {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 8px 0;
+      font-family: var(--font-cute);
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--body);
+      cursor: pointer;
+      border-radius: 16px;
+      transition: all 0.15s ease;
+    }
+    .settings-tab-btn.active {
+      background: var(--surface);
+      color: var(--ink-coffee);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    /* Closet wardrobe grid */
+    .closet-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .closet-item {
+      border: 1.5px solid var(--line);
+      border-radius: 20px;
+      padding: 12px;
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .closet-item:active {
+      transform: scale(0.97);
+    }
+    .closet-item.unlocked.active {
+      border-color: var(--primary);
+      background: var(--creamy-yuzu);
+    }
+    .closet-item .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--muted);
+      z-index: 2;
+    }
+    html.dark .closet-item .lock-overlay {
+      background: rgba(36,30,27,0.7);
+    }
+    .closet-item.unlocked .lock-overlay {
+      display: none;
+    }
+    .closet-item-icon {
+      font-size: 26px;
+    }
+    .closet-item-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+    }
+    .closet-item-price {
+      font-family: var(--font-cute);
+      font-size: 11px;
+      color: #E67E22;
+      font-weight: 600;
+    }
+
+    /* Pro Paywall Receipt style */
+    .receipt-paywall {
+      background: var(--creamy-yuzu);
+      border: 1.8px dashed var(--ink-coffee);
+      padding: 20px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .receipt-paywall h3 {
+      font-family: var(--font-cute);
+      text-align: center;
+      font-size: 20px;
+      color: var(--ink-coffee);
+    }
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      border-bottom: 1px dotted var(--line);
+      padding-bottom: 6px;
+    }
+    .receipt-row.total {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--ink-coffee);
+      border-bottom: none;
+      padding-top: 6px;
+    }
+
+    /* --- Phone Navigation Bottom Bar --- */
+    .bottom-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 74px;
+      background: var(--surface);
+      border-top: 1px solid var(--line-soft);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 16px;
+      z-index: 10;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.01);
+    }
+    .nav-tab {
+      background: transparent;
+      border: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 700;
+      transition: all 0.15s ease;
+      width: 60px;
+    }
+    .nav-tab svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+    }
+    .nav-tab.active {
+      color: var(--primary);
+    }
+    .nav-tab.active svg {
+      stroke: var(--primary);
+    }
+    
+    /* Central FAB Orange Button */
+    .fab-orange-btn {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: var(--yuzu-orange);
+      border: 2px solid var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      top: -16px;
+      box-shadow: 0 6px 12px rgba(230, 126, 34, 0.2);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .fab-orange-btn:hover {
+      transform: scale(1.08) rotate(5deg);
+    }
+    .fab-orange-btn:active {
+      transform: scale(0.95);
+    }
+    .fab-orange-btn .leaf {
+      position: absolute;
+      top: -4px;
+      right: 14px;
+      width: 14px;
+      height: 10px;
+      background: var(--matcha-milk);
+      border: 1.2px solid var(--ink-coffee);
+      border-radius: 99px 0 99px 0;
+      transform: rotate(20deg);
+    }
+    .fab-orange-btn .icon {
+      font-size: 24px;
+      color: var(--ink-coffee);
+    }
+
+    /* Floating Text Point Animation */
+    .floating-points {
+      position: absolute;
+      font-family: var(--font-cute);
+      font-size: 20px;
+      font-weight: 700;
+      color: #E67E22;
+      pointer-events: none;
+      animation: floatUp 0.8s ease-out forwards;
+      z-index: 99;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-80px); opacity: 0; }
+    }
+
+    .btn-capy-chat {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--duo-blue);
+      border: 2px solid var(--ink-coffee);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #FFFFFF;
+      animation: pulseSoft 2.5s infinite alternate;
+      box-shadow: 0 3px 0 var(--ink-coffee);
+      transition: all 0.1s ease;
+    }
+    .btn-capy-chat:active {
+      transform: scale(0.9) translateY(2px);
+      box-shadow: 0 1px 0 var(--ink-coffee);
+    }
+    @keyframes pulseSoft {
+      to { transform: scale(1.06); }
+    }
+
+    /* --- Winding Lesson Path Styles --- */
+    .lesson-map-card {
+      padding: 16px 12px;
+      overflow: hidden;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 6px;
+      box-shadow: none;
+    }
+    .winding-path-container {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      margin-top: 10px;
+    }
+    .path-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .path-node {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 3px solid var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 3;
+      user-select: none;
+      transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .path-node:hover {
+      transform: scale(1.1);
+    }
+    .path-node.completed {
+      background: var(--duo-green);
+      box-shadow: 0 4px 0 var(--duo-green-shadow), 0 4px 0 3px var(--ink-coffee);
+    }
+    .path-node.completed:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--duo-green-shadow), 0 1px 0 3px var(--ink-coffee);
+    }
+    .path-node.active {
+      background: var(--duo-orange);
+      box-shadow: 0 4px 0 var(--duo-orange-shadow), 0 4px 0 3px var(--ink-coffee);
+      animation: nodePulse 1.5s infinite alternate;
+    }
+    @keyframes nodePulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+    .path-node.locked {
+      background: #E5E5E5;
+      border-color: #A0A0A0;
+      box-shadow: 0 4px 0 #CCCCCC, 0 4px 0 3px #A0A0A0;
+      cursor: not-allowed;
+    }
+    .path-node.locked .node-icon {
+      font-size: 16px;
+      opacity: 0.65;
+    }
+
+    /* Floating mascot avatar on active node */
+    .path-mascot-avatar {
+      position: absolute;
+      top: -38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1.5px solid var(--ink-coffee);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      animation: mascotFloat 2s infinite ease-in-out;
+    }
+    @keyframes mascotFloat {
+      0%, 100% { transform: translate(-50%, -38px) translateY(0); }
+      50% { transform: translate(-50%, -38px) translateY(-5px); }
+    }
+
+    /* Tooltip / Details on node click */
+    .node-tooltip {
+      position: absolute;
+      bottom: -32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--ink-coffee);
+      color: #FFFFFF;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 3px 6px;
+      border-radius: 6px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      z-index: 5;
+    }
+    .path-node:hover .node-tooltip {
+      opacity: 1;
+    }
+
+    /* --- Pet Avatar Picker Grid --- */
+    .pet-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+      margin-top: 10px;
+    }
+    .pet-picker-item {
+      border: 2px solid var(--line);
+      border-bottom-width: 5px;
+      border-radius: 16px;
+      padding: 8px;
+      background: var(--surface);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      transition: all 0.1s ease;
+      text-align: center;
+    }
+    .pet-picker-item:active {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+    }
+    .pet-picker-item.active {
+      border-color: var(--duo-green);
+      background: var(--surface-aside);
+      box-shadow: 0 4px 0 var(--duo-green-shadow);
+    }
+    .pet-picker-item.locked .pet-lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--muted);
+      z-index: 2;
+    }
+    html.dark .pet-picker-item.locked .pet-lock-overlay {
+      background: rgba(30,26,23,0.7);
+    }
+    .pet-picker-item-icon {
+      font-size: 26px;
+    }
+    .pet-picker-item-name {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+    }
+    .pet-picker-item-price {
+      font-size: 9px;
+      color: var(--duo-orange);
+      font-weight: 700;
+    }
+
+    /* --- Duolingo Custom Speech Bubble --- */
+    .capy-speech-bubble {
+      position: relative;
+      background: var(--surface);
+      border: 2px solid var(--ink-coffee);
+      border-radius: 20px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 0 var(--ink-coffee);
+      font-size: 13px;
+      color: var(--ink-coffee);
+      line-height: 1.4;
+    }
+    .capy-speech-bubble::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: -10px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-right: 10px solid var(--ink-coffee);
+      border-bottom: 8px solid transparent;
+    }
+    .capy-speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: -7px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-right: 10px solid var(--surface);
+      border-bottom: 8px solid transparent;
+      z-index: 1;
+    }
+    .user-speech-bubble {
+      position: relative;
+      background: var(--creamy-yuzu);
+      border: 2px solid var(--ink-coffee);
+      border-radius: 20px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 0 var(--ink-coffee);
+      font-size: 13px;
+      color: var(--ink-coffee);
+      line-height: 1.4;
+    }
+    .user-speech-bubble::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      right: -10px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-left: 10px solid var(--ink-coffee);
+      border-bottom: 8px solid transparent;
+    }
+    .user-speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: 15px;
+      right: -7px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid transparent;
+      border-left: 10px solid var(--creamy-yuzu);
+      border-bottom: 8px solid transparent;
+      z-index: 1;
+    }
+
+    /* Chat 3D Action Chips */
+    .chat-action-chip {
+      font-family: var(--font-cute);
+      font-size: 11px;
+      background: var(--surface);
+      border: 2px solid var(--ink-coffee);
+      border-radius: 99px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--ink-coffee);
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 3px 0 var(--ink-coffee);
+      transition: all 0.1s ease;
+    }
+    .chat-action-chip:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--ink-coffee);
+    }
+
+    /* Custom Duolingo 3D FAB */
+    .fab-duo-wrapper {
+      position: relative;
+      top: -24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 12;
+      width: 72px;
+    }
+    .fab-duo-capy-peek {
+      margin-bottom: -8px;
+      animation: peekUpDown 3s infinite ease-in-out;
+      height: 36px;
+      display: flex;
+      align-items: flex-end;
+    }
+    @keyframes peekUpDown {
+      0%, 100% { transform: translateY(6px); }
+      50% { transform: translateY(-4px); }
+    }
+    .fab-duo-btn {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      background: var(--duo-green);
+      border: 2px solid var(--ink-coffee);
+      box-shadow: 0 5px 0 var(--duo-green-shadow), 0 5px 0 2px var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.1s ease;
+    }
+    .fab-duo-btn:active {
+      transform: translateY(4px);
+      box-shadow: 0 1px 0 var(--duo-green-shadow), 0 1px 0 2px var(--ink-coffee);
+    }
+    .fab-duo-btn .icon {
+      font-size: 26px;
+      color: #FFFFFF;
+      text-shadow: 1px 1px 0 var(--ink-coffee);
+    }
+
+    /* --- Floating View Mode Switcher --- */
+    .view-mode-switcher {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid #E8DCD1;
+      border-radius: 99px;
+      padding: 4px;
+      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.08);
+      z-index: 9999;
+      user-select: none;
+    }
+    html.dark .view-mode-switcher {
+      background: rgba(45, 39, 35, 0.85);
+      border-color: #3E342F;
+    }
+    .view-mode-switcher a {
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5C4F4B;
+      text-decoration: none;
+      padding: 8px 18px;
+      border-radius: 99px;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    html.dark .view-mode-switcher a {
+      color: #D8CECA;
+    }
+    .view-mode-switcher a.active {
+      background: #D2A374;
+      color: #FFFFFF !important;
+    }
+    .view-mode-switcher a:hover:not(.active) {
+      background: rgba(210, 163, 116, 0.15);
+      color: #D2A374;
+    }
+
+    /* --- Word Sorting 3D Game Styles --- */
+    .word-tile-3d {
+      background: var(--surface);
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 5px;
+      border-radius: 16px;
+      padding: 8px 16px;
+      font-family: var(--font-cute);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.05);
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .word-tile-3d:active {
+      transform: translateY(3px);
+      border-bottom-width: 2px;
+    }
+    .word-tile-3d.correct {
+      background: var(--duo-green) !important;
+      border-color: var(--ink-coffee) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 1px 0 var(--ink-coffee) !important;
+      cursor: not-allowed;
+      transform: translateY(3px);
+    }
+    .word-tile-3d.wrong {
+      background: var(--duo-red) !important;
+      border-color: var(--ink-coffee) !important;
+      color: #FFFFFF !important;
+      animation: shakeTile 0.4s ease;
+      box-shadow: 0 1px 0 var(--ink-coffee) !important;
+      transform: translateY(3px);
+    }
+    @keyframes shakeTile {
+      0%, 100% { transform: translateX(0) translateY(3px); }
+      20%, 60% { transform: translateX(-6px) translateY(3px); }
+      40%, 80% { transform: translateX(6px) translateY(3px); }
+    }
+
+    /* Numbered Pins on Game Screen */
+    .game-pin-marker {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      z-index: 5;
+      pointer-events: auto;
+    }
+    .game-pin-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-cute);
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--ink-coffee);
+      box-shadow: 0 3px 0 var(--ink-coffee);
+      transition: all 0.2s ease;
+    }
+    .game-pin-marker.active .game-pin-circle {
+      background: var(--duo-orange);
+      color: #FFFFFF;
+      transform: scale(1.15);
+      box-shadow: 0 4px 0 var(--ink-coffee);
+    }
+    .game-pin-marker.matched .game-pin-circle {
+      background: var(--duo-green);
+      color: #FFFFFF;
+      box-shadow: 0 1px 0 var(--ink-coffee);
+      transform: scale(1);
+    }
+    .game-pin-label {
+      background: var(--surface);
+      border: 1.5px solid var(--ink-coffee);
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+      white-space: nowrap;
+      box-shadow: 0 2px 0 var(--line);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .game-pin-marker.matched .game-pin-label {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* --- Floating Desktop Draggable Chatbot --- */
+    .desktop-chatbot-toggle {
+      position: absolute;
+      bottom: 85px;
+      right: 15px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--capy-brown);
+      color: #FFFFFF;
+      border: 2.5px solid var(--ink-coffee);
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 0 var(--ink-coffee);
+      z-index: 99;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      font-size: 24px;
+      user-select: none;
+      touch-action: none;
+    }
+    .desktop-chatbot-toggle:active {
+      cursor: grabbing;
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 var(--ink-coffee);
+    }
+    .desktop-chatbot-toggle:hover {
+      background: var(--capy-brown-dark);
+    }
+    .desktop-chatbot-window {
+      position: absolute;
+      bottom: 145px;
+      right: 15px;
+      width: 325px;
+      height: 420px;
+      background: var(--surface);
+      border: 3px solid var(--ink-coffee);
+      border-radius: 20px;
+      box-shadow: 0 8px 0 var(--ink-coffee), 0 10px 25px rgba(58, 46, 43, 0.1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 99;
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+      pointer-events: none;
+      transition: opacity 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.15), transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+      font-family: var(--font-body);
+    }
+    .desktop-chatbot-window.open {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: all;
+    }
+    .desktop-chat-header {
+      padding: 14px 20px;
+      background: var(--creamy-yuzu);
+      border-bottom: 3.5px solid var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+    .desktop-chat-header:active {
+      cursor: grabbing;
+    }
+    .desktop-chat-header-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .desktop-chat-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--yuzu-orange);
+      border: 2px solid var(--ink-coffee);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .desktop-chat-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .desktop-chat-title {
+      font-family: var(--font-cute);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink-coffee);
+    }
+    .desktop-chat-status {
+      font-size: 10px;
+      color: #517F47;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .desktop-chat-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #517F47;
+      display: inline-block;
+    }
+    .desktop-chat-close {
+      background: transparent;
+      border: none;
+      color: var(--ink-coffee);
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      transition: background 0.15s ease;
+    }
+    .desktop-chat-close:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    .desktop-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: var(--bg-cloud);
+    }
+    .desktop-chat-bubble {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+    .desktop-chat-bubble.bot {
+      background: var(--surface);
+      color: var(--ink-coffee);
+      align-self: flex-start;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-left-radius: 2px;
+      box-shadow: 0 3px 0 var(--line);
+    }
+    .desktop-chat-bubble.user {
+      background: var(--creamy-yuzu);
+      color: var(--ink-coffee);
+      align-self: flex-end;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-right-radius: 2px;
+      box-shadow: 0 3px 0 var(--line);
+    }
+    .desktop-chat-bubble code {
+      font-family: monospace;
+      background: rgba(0, 0, 0, 0.05);
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #D35400;
+      font-weight: 700;
+    }
+    .desktop-chat-suggestions {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 10px 16px;
+      border-top: 2px solid var(--line);
+      background: var(--surface);
+      scrollbar-width: none;
+    }
+    .desktop-chat-suggestions::-webkit-scrollbar {
+      display: none;
+    }
+    .desktop-chat-chip {
+      font-family: var(--font-cute);
+      font-size: 11px;
+      background: var(--surface-aside);
+      border: 2px solid var(--ink-coffee);
+      border-radius: 99px;
+      padding: 6px 12px;
+      cursor: pointer;
+      color: var(--ink-coffee);
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 3px 0 var(--ink-coffee);
+      transition: all 0.1s ease;
+    }
+    .desktop-chat-chip:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 var(--ink-coffee);
+    }
+    .desktop-chat-input-area {
+      padding: 12px 16px;
+      border-top: 3.5px solid var(--ink-coffee);
+      background: var(--surface);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .desktop-chat-input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid var(--ink-coffee);
+      border-radius: 16px;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: 13px;
+      background: var(--surface);
+      color: var(--ink-coffee);
+    }
+    .desktop-chat-send {
+      padding: 9px 15px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-family: var(--font-cute);
+      font-weight: 700;
+      background: var(--duo-green);
+      color: #FFFFFF;
+      border: 2px solid var(--ink-coffee);
+      border-bottom: 5px solid var(--ink-coffee);
+      box-shadow: 0 4px 0 var(--duo-green-shadow), 0 4px 0 2px var(--ink-coffee);
+      cursor: pointer;
+      transition: all 0.08s ease;
+    }
+    .desktop-chat-send:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 var(--duo-green-shadow), 0 1px 0 2px var(--ink-coffee);
+    }
+
+    /* Custom 3D dialog popup */
+    .custom-dialog-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      padding: 24px;
+    }
+    .custom-dialog-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .custom-dialog-box {
+      background: var(--surface);
+      border: 3px solid var(--ink-coffee);
+      border-bottom-width: 8px;
+      border-radius: 24px;
+      padding: 20px;
+      width: 100%;
+      max-width: 290px;
+      text-align: center;
+      transform: scale(0.9);
+      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .custom-dialog-overlay.open .custom-dialog-box {
+      transform: scale(1);
+    }
+    .custom-dialog-title {
+      font-family: var(--font-cute);
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--ink-coffee);
+      margin-bottom: 8px;
+    }
+    .custom-dialog-text {
+      font-size: 12.5px;
+      color: var(--body);
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+    .custom-dialog-buttons {
+      display: flex;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- --- Floating View Mode Switcher --- -->
+  <div class="view-mode-switcher">
+    <a href="index.html" onclick="location.href='index.html?v=fresh-' + Date.now(); return false;" class="switch-btn">📊 Class Diagram UML</a>
+    <a href="capy_vocab.html" onclick="location.href='capy_vocab.html?v=fresh-' + Date.now(); return false;" class="switch-btn active">📱 Giao diện App (Capybara)</a>
+  </div>
+
+  <!-- --- Phone Simulator Shell --- -->
+  <div class="phone-container">
+    
+    <!-- Notch & Status bar -->
+    <div class="status-bar">
+      <div class="notch"></div>
+      <div>9:41</div>
+      <div style="display:flex; gap:6px;">
+        <span>📶</span>
+        <span>🔋</span>
+      </div>
+    </div>
+
+    <!-- Header bar (Global settings/points) -->
+    <div class="top-header">
+      <button class="points-badge" id="pointsBadge" title="Study Points">
+        🍊 <span id="studyPointsText">200</span> <span class="accent">PTS</span>
+      </button>
+      
+      <div style="display:flex; gap:8px;">
+        <button class="theme-toggle-btn" id="themeBtn" title="Giao diện">☀️</button>
+      </div>
+    </div>
+
+    <!-- --- Screen View Contents --- -->
+    <div class="screen-content" id="screenContent">
+
+      <!-- ================== TAB 1: HOME ================== -->
+      <div class="screen-view" id="view-home">
+        <!-- Welcome avatar capy -->
+        <div class="capy-card home-avatar-section">
+          <div class="avatar-wrapper" id="homeAvatarWrapper">
+            <!-- Bath capy custom svg (Default) -->
+            <svg viewBox="0 0 100 100" width="60" height="60" style="margin-top: 10px;">
+              <ellipse cx="32" cy="48" rx="5" ry="4" fill="#A67C52" />
+              <ellipse cx="68" cy="48" rx="5" ry="4" fill="#A67C52" />
+              <rect x="28" y="46" width="44" height="34" rx="16" ry="16" fill="#D2A374" />
+              <ellipse cx="50" cy="62" rx="14" ry="10" fill="#A67C52" />
+              <circle cx="34" cy="60" r="3.5" fill="#FFD1DC" />
+              <circle cx="66" cy="60" r="3.5" fill="#FFD1DC" />
+              <path d="M37,55 C39,53 41,54 42,56" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+              <path d="M63,55 C61,53 59,54 58,56" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+              <circle cx="50" cy="36" r="6" fill="#FFE082" stroke="#3A2E2B" stroke-width="1.2" />
+              <path d="M52,31 C54,29 56,29 57,30 Z" fill="#C2E2B8" stroke="#3A2E2B" stroke-width="0.8" />
+            </svg>
+          </div>
+          <div class="home-welcome-text">
+            <h2>Chào Bạn học chill!</h2>
+            <p>Hôm nay hãy cùng Thú Cưng học thêm vài từ mới nhé 🐾</p>
+          </div>
+        </div>
+
+        <!-- Yuzu Streaks (Duolingo Flame style) -->
+        <div class="streak-container duo-streak" id="streakWidget">
+          <div class="streak-flame-info">
+            <span class="flame-icon">🔥</span>
+            <div>
+              <div class="streak-days"><span id="streakCount">3</span> ngày học liên tiếp</div>
+              <div style="font-size:10px; color:var(--muted)">Đừng để ngọn lửa vụt tắt nhé!</div>
+            </div>
+          </div>
+          <button class="btn-cute primary" id="btnClaimStreak">
+            Thắp Lửa 🔥
+          </button>
+        </div>
+
+        <!-- Lesson Map Winding Path -->
+        <div class="capy-card lesson-map-card">
+          <div class="card-title">🗺️ Bản đồ Học tập (Lesson Map)</div>
+          <div class="winding-path-container" id="lessonPathContainer">
+            <!-- Background connecting line using SVG -->
+            <svg class="path-svg" viewBox="0 0 320 400">
+              <path d="M 160 30 Q 80 110, 160 190 T 160 350" fill="none" stroke="var(--line)" stroke-width="6" stroke-linecap="round" stroke-dasharray="10 8"/>
+              <path d="M 160 30 Q 80 110, 160 190" fill="none" stroke="var(--duo-green)" stroke-width="6" stroke-linecap="round"/>
+            </svg>
+            
+            <!-- Nodes -->
+            <div class="path-node completed" style="left: 135px; top: 10px;" data-level="1">
+              <span class="node-icon">💡</span>
+              <div class="node-tooltip">Bài 1: Đèn làm việc (Ôn tập)</div>
+            </div>
+            
+            <div class="path-node completed" style="left: 55px; top: 90px;" data-level="2">
+              <span class="node-icon">☕</span>
+              <div class="node-tooltip">Bài 2: Tách Cà Phê (Ôn tập)</div>
+            </div>
+
+            <div class="path-node active" style="left: 135px; top: 170px;" data-level="3">
+              <span class="node-icon">💻</span>
+              <div class="node-tooltip">Bài 3: Bàn phím cơ (Chơi game 🎮)</div>
+              <!-- Floating Mascot Wrapper -->
+              <div class="path-mascot-avatar" id="pathMascotAvatar">
+                <!-- Selected Pet SVG goes here dynamically -->
+              </div>
+            </div>
+
+            <div class="path-node locked" style="left: 215px; top: 250px;" data-level="4">
+              <span class="node-icon">🔒</span>
+              <div class="node-tooltip">Bài 4: Ba lô du lịch (Khóa)</div>
+            </div>
+
+            <div class="path-node locked" style="left: 135px; top: 330px;" data-level="5">
+              <span class="node-icon">🔒</span>
+              <div class="node-tooltip">Bài 5: Sổ học tập (Khóa)</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quota counters -->
+        <div class="capy-card cloud-quota">
+          <p>☁️ Lượt quét hôm nay: <span id="quotaText">3/3</span> lượt miễn phí</p>
+        </div>
+
+        <!-- Daily Review Card -->
+        <div class="capy-card review-widget">
+          <div class="card-title">📌 Daily Card Ôn Tập</div>
+          <p style="font-size: 13px; line-height: 1.4;">Bé Capy đang gặm cỏ chờ bạn ôn tập lại <b>12 từ vựng</b> sắp quên kìa!</p>
+          <div class="review-widget-content">
+            <button class="btn-cute primary" id="btnPlayDailyReview">
+              Chơi Flashcard Ngay 🍊
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Notes list -->
+        <div>
+          <div class="card-title" style="margin-left: 4px; font-size:15px;">Ghi chú mới nhất 🖼️</div>
+          <div class="recent-notes-scroll">
+            
+            <div class="recent-note-card">
+              <div class="recent-note-img">
+                💻
+                <div class="badge-label">🏷️ 5 từ</div>
+              </div>
+              <h4>Laptop setup</h4>
+              <p>2 giờ trước</p>
+            </div>
+
+            <div class="recent-note-card">
+              <div class="recent-note-img">
+                ☕
+                <div class="badge-label">🏷️ 3 từ</div>
+              </div>
+              <h4>Coffee shop</h4>
+              <p>Hôm qua</p>
+            </div>
+
+            <div class="recent-note-card">
+              <div class="recent-note-img">
+                🌲
+                <div class="badge-label">🏷️ 4 từ</div>
+              </div>
+              <h4>Outdoor park</h4>
+              <p>3 ngày trước</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ================== TAB 2: STORAGE (ALBUM) ================== -->
+      <div class="screen-view hidden" id="view-storage">
+        <div class="storage-header">
+          <div class="card-title">Photo Notebook Album 📔</div>
+          <button class="btn-cute secondary" id="btnToggleBatch" style="padding: 5px 12px; font-size: 12px; border-radius: 12px;">
+            Chọn nhiều
+          </button>
+        </div>
+
+        <p style="font-size: 12px; color: var(--muted); margin-top: -8px;">Sổ lưu giữ hình ảnh học từ vựng thủ công như scrapbook dán nhãn.</p>
+
+        <div class="album-grid">
+          
+          <div class="album-item" data-photo="1">
+            <div>
+              <div class="checkbox-indicator">✓</div>
+              <div class="recent-note-img" style="height: 120px;">💻</div>
+              <h4 style="font-size: 13px; font-weight:700; margin-top:6px; color:var(--ink-coffee)">Study Desk Setup</h4>
+              <div class="album-chips">
+                <span class="preview-chip">Desk Lamp</span>
+                <span class="preview-chip">Bulb</span>
+                <span class="preview-chip">Switch</span>
+              </div>
+            </div>
+            <div class="album-item-tag">🏷️ 3 từ vựng</div>
+          </div>
+
+          <div class="album-item" data-photo="2">
+            <div>
+              <div class="checkbox-indicator">✓</div>
+              <div class="recent-note-img" style="height: 120px;">☕</div>
+              <h4 style="font-size: 13px; font-weight:700; margin-top:6px; color:var(--ink-coffee)">Coffee shop Mug</h4>
+              <div class="album-chips">
+                <span class="preview-chip">Coffee Mug</span>
+                <span class="preview-chip">Hot Steam</span>
+                <span class="preview-chip">Handle</span>
+              </div>
+            </div>
+            <div class="album-item-tag">🏷️ 3 từ vựng</div>
+          </div>
+
+          <div class="album-item" data-photo="3">
+            <div>
+              <div class="checkbox-indicator">✓</div>
+              <div class="recent-note-img" style="height: 120px;">🌲</div>
+              <h4 style="font-size: 13px; font-weight:700; margin-top:6px; color:var(--ink-coffee)">Green park tree</h4>
+              <div class="album-chips">
+                <span class="preview-chip">Tree</span>
+                <span class="preview-chip">Leaf</span>
+                <span class="preview-chip">Grass</span>
+              </div>
+            </div>
+            <div class="album-item-tag">🏷️ 3 từ vựng</div>
+          </div>
+
+          <div class="album-item" data-photo="4">
+            <div>
+              <div class="checkbox-indicator">✓</div>
+              <div class="recent-note-img" style="height: 120px;">👜</div>
+              <h4 style="font-size: 13px; font-weight:700; margin-top:6px; color:var(--ink-coffee)">My backpack item</h4>
+              <div class="album-chips">
+                <span class="preview-chip">Backpack</span>
+                <span class="preview-chip">Zipper</span>
+                <span class="preview-chip">Strap</span>
+              </div>
+            </div>
+            <div class="album-item-tag">🏷️ 3 từ vựng</div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- ================== TAB 4: PET SHOP 🛍️ ================== -->
+      <div class="screen-view hidden" id="view-petshop" style="display:flex; flex-direction:column; height:100%;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+          <div class="card-title">Cửa Hàng Pet 🛍️</div>
+          <div style="font-family:var(--font-cute); font-weight:800; font-size:14px; color:#E67E22; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:12px; padding:4px 10px; box-shadow:0 3px 0 var(--line);" id="shopYuzuBalance">
+            🍊 <span id="shopYuzuText">200</span> xu
+          </div>
+        </div>
+
+        <!-- Live Pet Avatar Preview (Top Area) -->
+        <div class="capy-card" id="shopMascotCard" style="display:flex; flex-direction:column; align-items:center; justify-content:center; background: radial-gradient(circle, var(--creamy-yuzu) 40%, var(--surface) 100%); border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; height:180px; margin-bottom:14px; overflow:hidden; position:relative; transition: background 0.3s ease;">
+          <!-- Real-time dynamic Background of the preview -->
+          <div id="shopPreviewBgText" style="position:absolute; inset:0; z-index:1; opacity:0.1; font-size: 80px; display:flex; align-items:center; justify-content:center; user-select:none;">♨️</div>
+          
+          <!-- Live Mascot Preview SVG -->
+          <div style="position:relative; width:110px; height:110px; z-index:2; transition: transform 0.2s ease;" id="shopMascotWrapper">
+             <!-- Renders pet and accessories dynamically in SVG -->
+          </div>
+          
+          <!-- Floating hearts for celebration -->
+          <div id="shopMascotHearts" style="position:absolute; inset:0; z-index:3; pointer-events:none;"></div>
+          
+          <div style="font-size:11px; font-weight:800; color:var(--ink-coffee); background:rgba(255,255,255,0.85); border:1.5px solid var(--ink-coffee); border-radius:8px; padding:2px 6px; z-index:2; position:absolute; bottom:8px; font-family:var(--font-cute);" id="shopMascotNameText">Capy Yuzu</div>
+        </div>
+
+        <!-- Confetti inside shop preview card -->
+        <canvas id="shopConfettiCanvas" style="position:absolute; width:100%; height:180px; top:36px; left:0; pointer-events:none; z-index:10; display:none;"></canvas>
+
+        <!-- Horizontal sub-tabs for categories -->
+        <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; scrollbar-width:none;" class="shop-sub-tabs">
+          <button class="btn-cute secondary active" id="shopTabMascots" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🐾 Linh Vật</button>
+          <button class="btn-cute secondary" id="shopTabAccessories" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🎩 Trang Phục</button>
+          <button class="btn-cute secondary" id="shopTabBackgrounds" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🖼️ Hình Nền</button>
+        </div>
+
+        <!-- Grid container for cards -->
+        <div id="shopItemsContainer" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; height:340px; overflow-y:auto; padding-bottom:40px; scrollbar-width:none;">
+           <!-- Populated by JavaScript dynamically based on category tab -->
+        </div>
+      </div>
+
+      <!-- ================== SELECTED VOCAB COLLECTION ================== -->
+      <div class="screen-view hidden" id="view-selected-vocab" style="display:flex; flex-direction:column; height:100%;">
+        <div style="flex: 1; overflow-y: auto; display:flex; flex-direction:column; gap:12px; scrollbar-width:none;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
+            <div class="card-title">Giỏ từ vựng đã chọn 🧺</div>
+            <button class="btn-cute secondary" id="btnBackToStorage" style="padding: 5px 12px; font-size: 12px; border-radius: 12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">✕ Đóng</button>
+          </div>
+          <p style="font-size: 12px; color: var(--muted); margin-top: -8px;">Danh sách tổng hợp từ vựng đã trích xuất từ các ảnh bạn chọn.</p>
+
+          <div id="selectedVocabList" style="display:flex; flex-direction:column; gap:10px;">
+            <!-- Populated dynamically via JS -->
+          </div>
+        </div>
+        
+        <div style="padding-top: 12px; border-top: 1.5px dashed var(--line); display:flex; justify-content:center;">
+          <button class="btn-cute primary" id="btnCreateFlashcards" style="width:100%; font-size:14px; padding: 12px; border-radius:18px; box-shadow: 0 4px 0 var(--duo-green-shadow), 0 4px 0 2px var(--ink-coffee);">
+            CREATE FLASHCARDS & STUDY NOW 🎴
+          </button>
+        </div>
+      </div>
+
+      <!-- ================== FLASHCARD SRS GAMEPLAY ================== -->
+      <div class="screen-view hidden" id="view-srs-gameplay" style="display:flex; flex-direction:column; height:100%;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
+          <!-- Top bar with progress and exit -->
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <button id="btnExitSrs" class="btn-cute secondary" style="padding:6px 12px; font-size:13px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">✕</button>
+            <div class="srs-progress-wrapper" style="flex: 1; display: flex; align-items: center; gap: 8px; margin: 0 10px;">
+              <div class="srs-progress-bg" style="flex: 1; height: 14px; background: #E5E5E5; border-radius: 99px; overflow: hidden; border: 2px solid var(--ink-coffee); position: relative;">
+                <div class="srs-progress-bar" id="gameplaySrsProgressBar" style="width: 25%; height: 100%; background: var(--duo-green); transition: width 0.3s ease;"></div>
+              </div>
+              <span style="font-size: 11px; font-weight: 700; color: var(--muted);" id="gameplaySrsProgressText">1/4</span>
+            </div>
+            <div style="font-size:13px; font-weight:800; color:#E67E22;" id="srsCoinsBadge">🍊 <span id="srsCoinsText">200</span></div>
+          </div>
+
+          <div class="flashcard-stage" style="margin-top: 10px;">
+            <!-- Flippable Card -->
+            <div class="flip-card" id="gameplaySrsCard">
+              <div class="flip-card-inner">
+                <!-- Front Side -->
+                <div class="flip-card-front">
+                  <div class="card-photo-mock">
+                    <span id="gameplayFrontEmoji" style="font-size:42px;">💻</span>
+                    <div class="pin-spot"></div>
+                  </div>
+                  <div class="flashcard-vocab-word" id="gameplayFrontWord">? ? ?</div>
+                  <p style="text-align:center; font-size:12px; color:var(--muted); margin-top:8px;">Bấm để lật xem từ vựng</p>
+                </div>
+                
+                <!-- Back Side -->
+                <div class="flip-card-back">
+                  <div class="flashcard-vocab-word" id="gameplayBackWord" style="color:var(--duo-orange); margin-top:10px;">Keyboard</div>
+                  <p style="text-align:center; font-size:12px; font-family:var(--font-mono); color:var(--muted);" id="gameplayBackPhonetic">/ˈkiːbɔːrd/</p>
+                  
+                  <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
+                    <div>
+                      <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Ý nghĩa</span>
+                      <p style="font-size:14px; font-weight:700; color:var(--ink-coffee)" id="gameplayBackMeaning">Bàn phím máy tính</p>
+                    </div>
+                    <div>
+                      <span style="font-size:10px; font-weight:700; text-transform:uppercase; color:var(--muted)">Ví dụ bối cảnh ảnh</span>
+                      <p style="font-size:11.5px; line-height:1.3; color:var(--body); font-style:italic;" id="gameplayBackExampleEn">"I am typing on the wireless mechanical keyboard."</p>
+                      <p style="font-size:10.5px; color:var(--muted); margin-top:2px;" id="gameplayBackExampleVi">"Tôi đang gõ trên bàn phím cơ không dây."</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pronounce and Chat buttons inside gameplay -->
+            <div style="display:flex; gap:8px; width:290px; margin-top:-4px;">
+              <button class="btn-cute secondary" id="btnGameplayPronounce" style="flex:1; border-radius:16px; font-size:12px; gap:6px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">
+                🔊 Phát âm
+              </button>
+              <button class="btn-cute secondary" id="btnGameplaySrsChat" style="flex:2; border-radius:16px; font-size:12px; gap:6px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">
+                🦫 Hỏi Capy 🔍
+              </button>
+            </div>
+
+            <!-- SRS grading buttons -->
+            <div class="srs-buttons-row" style="width: 290px;">
+              <button class="srs-grade-btn forgot" data-grade="0">
+                <span class="icon">🔴</span>
+                <span>Quên</span>
+              </button>
+              <button class="srs-grade-btn remember" data-grade="1">
+                <span class="icon">🟡</span>
+                <span>Mơ hồ</span>
+              </button>
+              <button class="srs-grade-btn easy" data-grade="2">
+                <span class="icon">🟢</span>
+                <span>Dễ ợt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ================== TAB 5: SETTINGS ================== -->
+      <div class="screen-view hidden" id="view-settings" style="display:flex; flex-direction:column; gap:16px;">
+        <div class="card-title">Cài đặt hệ thống ⚙️</div>
+        
+        <!-- Account preferences list -->
+        <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none;">
+          <div style="display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Tài khoản học tập</span>
+              <span style="font-size:12px; color:var(--muted);">user@example.com</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Mục tiêu hàng ngày</span>
+              <span style="font-size:12px; color:var(--primary); font-weight:700;">15 từ / ngày 🎯</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Âm thanh & Rung</span>
+              <span style="font-size:12px; color:var(--success); font-weight:700;">Đang Bật 🔊</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; padding-bottom:4px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Thông báo nhắc nhở</span>
+              <span style="font-size:12px; color:var(--muted);">08:00 hàng ngày ⏰</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sub-tab 2: Paywall -->
+        <div class="receipt-paywall">
+          <h3>👑 MỞ KHÓA PRO THÀNH VIÊN</h3>
+          <p style="font-size: 12px; text-align:center; color: var(--muted); margin-top:-6px;">Cùng Bé Capy nâng tầm vốn từ vựng!</p>
+          
+          <div style="margin: 10px 0; display:flex; flex-direction:column; gap:8px;">
+            <div class="receipt-row">
+              <span>Quét ảnh AI vô hạn</span>
+              <span>Unlimited</span>
+            </div>
+            <div class="receipt-row">
+              <span>Mở khóa toàn bộ Template Pro</span>
+              <span>Unlocked</span>
+            </div>
+            <div class="receipt-row">
+              <span>Xóa logo & Quảng cáo</span>
+              <span>100% Free</span>
+            </div>
+            <div class="receipt-row total">
+              <span>Gói cước tháng</span>
+              <span>49.000đ / tháng</span>
+            </div>
+          </div>
+
+          <button class="btn-cute primary" id="btnBuyPro" style="width:100%;">
+            Nâng cấp lên PRO ngay 🚀
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- --- Floating bottom selection drawer --- -->
+    <div class="selection-drawer" id="selectionDrawer" style="background:transparent; border-top:none; box-shadow:none; justify-content:center; padding: 12px 24px; pointer-events:none;">
+      <button class="btn-cute primary" id="btnBatchExtract" style="width: 100%; font-size:13.5px; border-radius:16px; padding: 12px 20px; pointer-events:auto;">
+        VIEW VOCABULARY (<span id="selectedCountText">0</span> Selected) 📖
+      </button>
+    </div>
+
+    <!-- --- FAB Yuzu Button & Bottom Sheet --- -->
+    <div class="bottom-sheet-overlay" id="bottomSheetOverlay">
+      <div class="bottom-sheet">
+        <div class="bottom-sheet-notch"></div>
+        <div class="card-title" style="justify-content:center;">Quét từ vựng qua ảnh</div>
+        
+        <div class="upload-options-row">
+          <div class="upload-opt" id="optCamera">
+            <div class="icon">📸</div>
+            <h4>Chụp ảnh thô</h4>
+          </div>
+          <div class="upload-opt" id="optGallery">
+            <div class="icon">🖼️</div>
+            <h4>Tải ảnh lên</h4>
+          </div>
+        </div>
+
+        <div>
+          <span style="font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase;">Chọn mẫu Note ghim</span>
+          <div class="template-scroll-row" id="templateScroll">
+            <div class="tmpl-badge active" data-tmpl="Minimalist">Minimalist 🌿</div>
+            <div class="tmpl-badge" data-tmpl="Studygram">Studygram 🎨</div>
+            <div class="tmpl-badge" data-tmpl="Pastel Capy">Pastel Capy 🦫</div>
+            <div class="tmpl-badge" data-tmpl="Dark Mode">Màn đêm 🌙</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- Bottom Sheet: Tâm Sự Cùng Capy-Sensei 🦫 --- -->
+    <div class="bottom-sheet-overlay" id="capyChatOverlay">
+      <div class="bottom-sheet" style="height: 520px; bottom: -520px;">
+        <div class="bottom-sheet-notch"></div>
+        
+        <!-- Header Chat -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1.5px solid var(--line); padding-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <!-- Mini mascot avatar -->
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--creamy-yuzu); display:flex; align-items:center; justify-content:center; border:1.2px solid var(--ink-coffee); overflow:hidden;">
+              <span style="font-size:20px; margin-top:2px;">🦫</span>
+            </div>
+            <div>
+              <div style="font-family:var(--font-cute); font-size:14px; font-weight:700; color:var(--ink-coffee)">Capy-sensei 🍊</div>
+              <div style="font-size:10px; color:#517F47; display:flex; align-items:center; gap:4px;">
+                <span style="width:5px; height:5px; border-radius:50%; background:#517F47; display:inline-block;"></span>
+                Đang chill & sẵn sàng đáp...
+              </div>
+            </div>
+          </div>
+          <!-- Quota chat counter -->
+          <div style="font-size:11px; font-weight:700; color:var(--muted);" id="chatQuotaText">
+            Còn 10/10 câu hỏi
+          </div>
+        </div>
+
+        <!-- Chat messages history -->
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding: 10px 0;" id="capyChatMessages">
+          <div style="background:var(--creamy-yuzu); color:var(--ink-coffee); border:1.2px solid var(--line); align-self:flex-start; border-radius:18px; border-bottom-left-radius:2px; padding:10px 14px; font-size:12.5px; line-height:1.4; max-width:85%;">
+            Chào bạn! Hỏi tôi bất kỳ điều gì về từ vựng <b id="capyChatTargetWord">Keyboard</b> nhé. Tôi đã sẵn sàng rồi! 🦫☕
+          </div>
+        </div>
+        <!-- Quick Action Chips -->
+        <div style="display:flex; gap:6px; overflow-x:auto; padding:6px 0; border-top:1px dashed var(--line); margin-bottom: 2px;">
+          <button class="chat-action-chip" data-action="synonym" style="font-family:var(--font-cute); font-size:11px; background:var(--surface-aside); border:1.5px solid var(--line); border-radius:99px; padding:6px 12px; cursor:pointer; color:var(--ink-coffee); font-weight:700; white-space:nowrap;">💡 Tìm từ đồng nghĩa</button>
+          <button class="chat-action-chip" data-action="example" style="font-family:var(--font-cute); font-size:11px; background:var(--surface-aside); border:1.5px solid var(--line); border-radius:99px; padding:6px 12px; cursor:pointer; color:var(--ink-coffee); font-weight:700; white-space:nowrap;">📝 Cho thêm ví dụ</button>
+          <button class="chat-action-chip" data-action="diff" style="font-family:var(--font-cute); font-size:11px; background:var(--surface-aside); border:1.5px solid var(--line); border-radius:99px; padding:6px 12px; cursor:pointer; color:var(--ink-coffee); font-weight:700; white-space:nowrap;">🧐 Phân biệt cách dùng</button>
+        </div>
+
+        <!-- Chat Input field -->
+        <div style="display:flex; gap:10px; align-items:center; border-top:1.5px solid var(--line); padding-top:12px;">
+          <input type="text" id="capyChatInput" placeholder="Hỏi Capy-sensei..." style="flex:1; padding:10px 14px; border:1.5px solid var(--ink-coffee); border-radius:18px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+          <button id="capyChatSend" class="btn-cute primary" style="padding:9px 12px; border-radius:18px; box-shadow:0 3px 0 var(--ink-coffee);">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- Screen Mới: Màn Hình Chơi Game Sắp Xếp Thứ Tự (Photo Order Quiz) --- -->
+    <div class="bottom-sheet-overlay" id="orderGameOverlay" style="display:none; justify-content:center; align-items:center; z-index:2500;">
+      <!-- Main Game Window styled like a phone screen container -->
+      <div style="width:100%; max-width:430px; height:100%; max-height:920px; background:var(--bg-cloud); border:3px solid var(--ink-coffee); border-radius:24px; display:flex; flex-direction:column; position:relative; overflow:hidden; box-shadow:0 12px 0 var(--ink-coffee); margin: 0 10px;">
+        
+        <!-- Top Bar inside Game -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:15px; border-bottom:2.5px solid var(--ink-coffee); background:var(--surface);">
+          <button id="btnExitGame" class="btn-cute secondary" style="padding:6px 12px; font-size:14px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">✕</button>
+          
+          <!-- Progress bar -->
+          <div style="flex:1; margin:0 15px; height:18px; background:var(--surface-aside); border:2.5px solid var(--ink-coffee); border-radius:99px; overflow:hidden; position:relative; box-shadow:inset 0 2px 4px rgba(0,0,0,0.06);">
+            <div id="gameProgressBar" style="width:0%; height:100%; background:var(--duo-green); box-shadow:inset 0 -3px 0 var(--duo-green-shadow); transition:width 0.3s ease-out;"></div>
+          </div>
+          
+          <!-- Points Badge -->
+          <div style="display:flex; align-items:center; gap:4px; font-weight:800; font-size:13px; color:var(--ink-coffee); background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:12px; padding:4px 10px;">
+            <span id="gamePointsText">200</span> 🔥
+          </div>
+        </div>
+
+        <!-- Center Workspace (Photo Display & Numbered Pins) -->
+        <div style="flex:1; display:flex; flex-direction:column; padding:20px; align-items:center; justify-content:center; position:relative; overflow:hidden; background:var(--surface-aside);">
+          
+          <!-- Large visual canvas mockup card representing the Photo Note -->
+          <div id="gamePhotoCard" style="width:100%; aspect-ratio:1; background:var(--surface); border:2.5px solid var(--ink-coffee); border-radius:24px; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 6px 0 var(--line);">
+            
+            <!-- Styled large visual element indicating theme background -->
+            <div id="gamePhotoVisual" style="font-size:110px; transition:transform 0.5s ease; user-select:none;">💡</div>
+            
+            <!-- Blur overlay to make photo look blurred -->
+            <div style="position:absolute; inset:0; background:rgba(255,255,255,0.45); backdrop-filter:blur(3.5px); pointer-events:none;"></div>
+            
+            <!-- Numbered Pins container -->
+            <div id="gamePinsContainer" style="position:absolute; inset:0;">
+              <!-- Example dynamic pin format -->
+            </div>
+          </div>
+
+          <!-- Capy mascot comment speech bubble -->
+          <div style="margin-top:15px; display:flex; gap:12px; align-items:center; width:100%;">
+            <div id="gameMascotFace" style="width:50px; height:50px; flex-shrink:0;">
+              <!-- Dynamic pet SVG here -->
+            </div>
+            <!-- Duolingo style speech bubble pointing left -->
+            <div style="flex:1; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; padding:10px 14px; position:relative; box-shadow:0 4px 0 var(--ink-coffee);">
+              <!-- Arrow triangle -->
+              <div style="position:absolute; left:-10px; top:16px; width:0; height:0; border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:10px solid var(--ink-coffee);"></div>
+              <div style="position:absolute; left:-7px; top:16px; width:0; height:0; border-top:8px solid transparent; border-bottom:8px solid transparent; border-right:10px solid var(--surface);"></div>
+              <p id="gameBubbleText" style="font-size:12.5px; font-weight:700; color:var(--ink-coffee); margin:0; line-height:1.3;">
+                Bấm các từ ở dưới theo thứ tự xuất hiện (1 → 2 → 3) nhé! 🐾
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confetti Canvas overlay inside game window -->
+        <canvas id="gameConfettiCanvas" style="position:absolute; inset:0; pointer-events:none; z-index:10; display:none;"></canvas>
+
+        <!-- Bottom Word Block Bank area -->
+        <div style="background:var(--surface); border-top:2.5px solid var(--ink-coffee); padding:20px 15px; display:flex; flex-direction:column; gap:15px; justify-content:center;">
+          <div style="text-align:center; font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.5px;">
+            Ngân hàng từ vựng (Word Tiles)
+          </div>
+          
+          <!-- Word tiles container -->
+          <div id="gameWordTilesContainer" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center; align-items:center; min-height:80px;">
+            <!-- Dynamic blocks here -->
+          </div>
+
+          <!-- Next Button / Continue bottom bar -->
+          <div id="gameNextBar" style="display:none; justify-content:center; align-items:center; border-top:1.5px dashed var(--line); padding-top:12px;">
+            <button id="btnGameContinue" class="btn-cute primary" style="width:100%; padding:12px; border-radius:18px; font-size:14px; font-family:var(--font-cute); box-shadow:0 4px 0 var(--duo-green-shadow); background:var(--duo-green);">
+              Tiếp tục bài học! 🎉
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- --- Phone Navigation Bottom Bar --- -->
+    <div class="bottom-bar">
+      <button class="nav-tab active" data-view="home">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Trang chủ</span>
+      </button>
+
+      <button class="nav-tab" data-view="storage">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+        <span>Thư viện</span>
+      </button>
+
+      <!-- Pulse center FAB green with peeking mascot -->
+      <div class="fab-duo-wrapper">
+        <div class="fab-duo-capy-peek" id="fabDuoCapyPeek">
+          <!-- Tiny peeking Capybara SVG (Default) -->
+          <svg viewBox="0 0 100 100" width="36" height="36">
+            <path d="M28 80 C28 40, 72 40, 72 80" fill="#D2A374" stroke="#3A2E2B" stroke-width="3" />
+            <ellipse cx="32" cy="50" rx="6" ry="5" fill="#A67C52" stroke="#3A2E2B" stroke-width="2" />
+            <ellipse cx="68" cy="50" rx="6" ry="5" fill="#A67C52" stroke="#3A2E2B" stroke-width="2" />
+            <circle cx="42" cy="62" r="3.5" fill="#3A2E2B" />
+            <circle cx="58" cy="62" r="3.5" fill="#3A2E2B" />
+            <ellipse cx="50" cy="74" rx="10" ry="7" fill="#A67C52" stroke="#3A2E2B" stroke-width="2" />
+            <circle cx="50" cy="71" r="2" fill="#3A2E2B" />
+            <circle cx="36" cy="70" r="3" fill="#FFD1DC" />
+            <circle cx="64" cy="70" r="3" fill="#FFD1DC" />
+          </svg>
+        </div>
+        <div class="fab-duo-btn" id="fabBtn" title="Chụp/Upload từ vựng AI">
+          <span class="icon">📸</span>
+        </div>
+      </div>
+
+      <button class="nav-tab" data-view="petshop">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"></path><line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2.2"></line><path d="M16 10a4 4 0 0 1-8 0" fill="none" stroke="currentColor" stroke-width="2.2"></path></svg>
+        <span>Cửa hàng</span>
+      </button>
+
+      <button class="nav-tab" data-view="settings">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>Cài đặt</span>
+      </button>
+    </div>
+
+    <!-- --- Floating Desktop Draggable AI Chatbot --- -->
+    <button class="desktop-chatbot-toggle" id="desktopChatToggle" title="Trợ lý AI 🍊">
+      🦫
+    </button>
+    
+    <div class="desktop-chatbot-window" id="desktopChatWindow">
+      <div class="desktop-chat-header" id="desktopChatHeader">
+        <div class="desktop-chat-header-info">
+          <div class="desktop-chat-avatar">🦫</div>
+          <div class="desktop-chat-title-group">
+            <div class="desktop-chat-title">Capy-sensei AI 🍊</div>
+            <div class="desktop-chat-status">Đang online & sẵn sàng...</div>
+          </div>
+        </div>
+        <button class="desktop-chat-close" id="desktopChatClose" title="Đóng">×</button>
+      </div>
+      
+      <div class="desktop-chat-messages" id="desktopChatMessages">
+        <div class="desktop-chat-bubble bot">
+          Chào bạn! Tớ là <b>Capy-sensei AI</b> 🍊. Tớ có thể giúp bạn học từ vựng tiếng Anh, giải thích ngữ pháp hoặc trả lời các thắc mắc về ứng dụng Capy Vocab. Hãy kéo thả tớ đi bất kỳ đâu nhé! 🐾
+        </div>
+      </div>
+      
+      <div class="desktop-chat-suggestions">
+        <button class="desktop-chat-chip" data-prompt="Mẹo ghi nhớ từ vựng hiệu quả? 💡">Mẹo nhớ từ vựng 💡</button>
+        <button class="desktop-chat-chip" data-prompt="Giải thích thuật toán lặp lại ngắt quãng? 🔄">Thuật toán lặp lại? 🔄</button>
+        <button class="desktop-chat-chip" data-prompt="Bật chế độ tối 🌙">Chế độ tối 🌙</button>
+      </div>
+      
+      <div class="desktop-chat-input-area">
+        <input type="text" class="desktop-chat-input" id="desktopChatInput" placeholder="Hỏi Capy-sensei...">
+        <button class="desktop-chat-send" id="desktopChatSend">Gửi</button>
+      </div>
+    </div>
+
+    <!-- --- Custom 3D Dialog Overlay --- -->
+    <div class="custom-dialog-overlay" id="customDialogOverlay">
+      <div class="custom-dialog-box">
+        <div class="custom-dialog-title" id="customDialogTitle">Xác nhận mua</div>
+        <div class="custom-dialog-text" id="customDialogText">Bạn có chắc chắn muốn dùng xu Yuzu để mở khóa vật phẩm này không?</div>
+        <div class="custom-dialog-buttons">
+          <button class="btn-cute secondary" id="btnCustomDialogCancel" style="flex:1; border-radius:14px; padding: 8px; box-shadow:0 3px 0 var(--line); font-size:12px; font-family:var(--font-cute); font-weight:700;">Hủy</button>
+          <button class="btn-cute primary" id="btnCustomDialogConfirm" style="flex:1; border-radius:14px; padding: 8px; box-shadow:0 3px 0 var(--duo-green-shadow); font-size:12px; font-family:var(--font-cute); font-weight:700;">Đồng ý</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- --- Script block --- -->
+  <script>
+    // --- Global State variables ---
+    let studyPoints = 200;
+    let quotaScans = 3;
+    const unlockedItems = new Set(['yuzu']);
+    const activeItems = new Set(['yuzu']);
+    
+    // Pet Avatar System State
+    let avatarIconId = 'capy_yuzu';
+    
+    // Streak state
+    let isStreakCompleted = false;
+
+    // --- DOM Elements ---
+    const pointsText = document.getElementById('studyPointsText');
+    const quotaText = document.getElementById('quotaText');
+    const themeBtn = document.getElementById('themeBtn');
+
+    // Navigation Switcher
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const screenViews = document.querySelectorAll('.screen-view');
+
+    // FAB & Bottom Sheet Elements
+    const fabBtn = document.getElementById('fabBtn');
+    const bottomSheetOverlay = document.getElementById('bottomSheetOverlay');
+    const templateBadges = document.querySelectorAll('.tmpl-badge');
+    const optCamera = document.getElementById('optCamera');
+    const optGallery = document.getElementById('optGallery');
+
+    // Tab 1 Home Actions & Streak
+    const btnPlayDailyReview = document.getElementById('btnPlayDailyReview');
+    const btnClaimStreak = document.getElementById('btnClaimStreak');
+    const streakCount = document.getElementById('streakCount');
+
+    // Tab 2 Storage / Selection Drawer
+    const btnToggleBatch = document.getElementById('btnToggleBatch');
+    const albumItems = document.querySelectorAll('.album-item');
+    const selectionDrawer = document.getElementById('selectionDrawer');
+    const selectedCountText = document.getElementById('selectedCountText');
+    const btnBatchExtract = document.getElementById('btnBatchExtract');
+     let selectedPhotos = new Set();
+ 
+     // Active Elements
+     const btnBuyPro = document.getElementById('btnBuyPro');
+
+    // Tab 1 Game Elements
+    const orderGameOverlay = document.getElementById('orderGameOverlay');
+    const btnExitGame = document.getElementById('btnExitGame');
+    const gameProgressBar = document.getElementById('gameProgressBar');
+    const gamePointsText = document.getElementById('gamePointsText');
+    const gamePhotoVisual = document.getElementById('gamePhotoVisual');
+    const gamePinsContainer = document.getElementById('gamePinsContainer');
+    const gameMascotFace = document.getElementById('gameMascotFace');
+    const gameBubbleText = document.getElementById('gameBubbleText');
+    const gameWordTilesContainer = document.getElementById('gameWordTilesContainer');
+    const gameNextBar = document.getElementById('gameNextBar');
+    const btnGameContinue = document.getElementById('btnGameContinue');
+    const gameConfettiCanvas = document.getElementById('gameConfettiCanvas');
+
+    // --- Order Game Data & State ---
+    let activeGameLevel = 1;
+    let gameExpectedIndex = 1;
+    let gameTotalItems = 3;
+    let confettiIntervalId = null;
+
+    const ORDER_GAME_DATA = {
+      1: {
+        name: "Đèn học làm việc",
+        emoji: "💡",
+        items: [
+          { word: "Desk Lamp", vi: "Đèn học", index: 1, x: 50, y: 45 },
+          { word: "Bulb", vi: "Bóng đèn", index: 2, x: 50, y: 22 },
+          { word: "Switch", vi: "Công tắc", index: 3, x: 38, y: 68 }
+        ]
+      },
+      2: {
+        name: "Tách Cà phê",
+        emoji: "☕",
+        items: [
+          { word: "Coffee Mug", vi: "Ly cà phê", index: 1, x: 50, y: 55 },
+          { word: "Hot Steam", vi: "Hơi nước nóng", index: 2, x: 50, y: 26 },
+          { word: "Handle", vi: "Quai cầm", index: 3, x: 74, y: 60 }
+        ]
+      },
+      3: {
+        name: "Bàn phím cơ",
+        emoji: "💻",
+        items: [
+          { word: "Keyboard", vi: "Bàn phím", index: 1, x: 50, y: 62 },
+          { word: "Spacebar", vi: "Phím cách", index: 2, x: 50, y: 74 },
+          { word: "Esc Key", vi: "Phím Escape", index: 3, x: 26, y: 46 }
+        ]
+      },
+      4: {
+        name: "Ba lô du lịch",
+        emoji: "🎒",
+        items: [
+          { word: "Backpack", vi: "Ba lô", index: 1, x: 50, y: 52 },
+          { word: "Zipper", vi: "Khóa kéo", index: 2, x: 50, y: 32 },
+          { word: "Strap", vi: "Quai đeo", index: 3, x: 32, y: 65 }
+        ]
+      }
+    };
+
+    // --- Sound Synthesis Helpers ---
+    function playBeep(freq, type, duration) {
+      if (typeof window.AudioContext !== 'undefined' || typeof window.webkitAudioContext !== 'undefined') {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          const ctx = new AudioContext();
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, ctx.currentTime);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          osc.start();
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+          osc.stop(ctx.currentTime + duration);
+        } catch (e) {}
+      }
+    }
+
+    // --- Order Game Launcher ---
+    function launchOrderGame(level) {
+      const data = ORDER_GAME_DATA[level];
+      if (!data) return;
+
+      activeGameLevel = level;
+      gameExpectedIndex = 1;
+      gameTotalItems = data.items.length;
+      
+      // Update HUD
+      gamePointsText.textContent = studyPoints;
+      gameProgressBar.style.width = '0%';
+      gameNextBar.style.display = 'none';
+      gameBubbleText.textContent = `Bấm các từ ở dưới theo thứ tự xuất hiện (1 → 2 → 3) nhé! 🐾`;
+
+      // Set Mascot SVG
+      gameMascotFace.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 50);
+
+      // Set Photo visual
+      gamePhotoVisual.textContent = data.emoji;
+
+      // Draw numbered pins
+      gamePinsContainer.innerHTML = '';
+      data.items.forEach(item => {
+        const pin = document.createElement('div');
+        pin.className = 'game-pin-marker';
+        pin.id = `game-pin-${item.index}`;
+        pin.style.left = `${item.x}%`;
+        pin.style.top = `${item.y}%`;
+        if (item.index === 1) pin.classList.add('active');
+
+        pin.innerHTML = `
+          <div class="game-pin-circle">${item.index}</div>
+          <div class="game-pin-label">${item.word} (${item.vi})</div>
+        `;
+        gamePinsContainer.appendChild(pin);
+      });
+
+      // Render scrambled word tiles
+      gameWordTilesContainer.innerHTML = '';
+      
+      // Scramble words
+      const wordsList = data.items.map(item => item.word);
+      const scrambled = [...wordsList].sort(() => Math.random() - 0.5);
+
+      scrambled.forEach(word => {
+        const tile = document.createElement('button');
+        tile.className = 'word-tile-3d';
+        tile.textContent = word;
+        
+        tile.addEventListener('click', (e) => {
+          if (tile.classList.contains('correct') || tile.classList.contains('wrong')) return;
+          
+          // Validate selected word against expected orderIndex
+          const correctItem = data.items.find(item => item.index === gameExpectedIndex);
+          if (correctItem && correctItem.word === word) {
+            // Correct step
+            tile.classList.add('correct');
+            playBeep(880, 'sine', 0.2); // high beep
+
+            const pinMarker = document.getElementById(`game-pin-${gameExpectedIndex}`);
+            if (pinMarker) {
+              pinMarker.classList.remove('active');
+              pinMarker.classList.add('matched');
+            }
+
+            // Award points
+            triggerPointsAward(10, e);
+            gamePointsText.textContent = studyPoints;
+
+            // Increment expected sequence
+            gameExpectedIndex++;
+            
+            // Update progress bar
+            const percent = ((gameExpectedIndex - 1) / gameTotalItems) * 100;
+            gameProgressBar.style.width = `${percent}%`;
+
+            if (gameExpectedIndex > gameTotalItems) {
+              // Level Completed!
+              playBeep(987.77, 'sine', 0.15);
+              setTimeout(() => playBeep(1318.51, 'sine', 0.3), 150);
+              
+              gameBubbleText.innerHTML = `Chúc mừng bạn! Nhận ngay phần thưởng học tập thôi nào! 🐢🎉`;
+              
+              // Confetti
+              startConfetti();
+
+              // Show next button
+              gameNextBar.style.display = 'flex';
+            } else {
+              // Highlight next expected pin
+              const nextPin = document.getElementById(`game-pin-${gameExpectedIndex}`);
+              if (nextPin) nextPin.classList.add('active');
+              gameBubbleText.textContent = `Tuyệt vời! Tiếp tục tìm từ số (${gameExpectedIndex}) nào! ✨`;
+            }
+          } else {
+            // Wrong step
+            tile.classList.add('wrong');
+            playBeep(220, 'triangle', 0.35); // low buzz
+            gameBubbleText.textContent = `Sai mất rồi! Hãy nhìn số (${gameExpectedIndex}) trên hình và chọn lại nhé! 🐾`;
+            
+            setTimeout(() => {
+              tile.classList.remove('wrong');
+            }, 1000);
+          }
+        });
+
+        gameWordTilesContainer.appendChild(tile);
+      });
+
+      // Show overlay
+      orderGameOverlay.style.display = 'flex';
+      orderGameOverlay.classList.add('open');
+    }
+
+    // Confetti Engine
+    function startConfetti() {
+      const canvas = gameConfettiCanvas;
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      canvas.style.display = 'block';
+
+      const colors = ['#58CC02', '#FF9600', '#1CB0F6', '#FFC800', '#FF4B4B'];
+      const particles = [];
+      for (let i = 0; i < 60; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * canvas.height,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10 - 5,
+          tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+          tiltAngle: 0
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, idx) => {
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.x += Math.sin(p.tiltAngle);
+          p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+          ctx.beginPath();
+          ctx.lineWidth = p.r;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+          ctx.stroke();
+
+          // Reset fallen particles
+          if (p.y > canvas.height) {
+            particles[idx] = {
+              x: Math.random() * canvas.width,
+              y: -20,
+              r: p.r,
+              d: p.d,
+              color: p.color,
+              tilt: p.tilt,
+              tiltAngleIncremental: p.tiltAngleIncremental,
+              tiltAngle: 0
+            };
+          }
+        });
+      }
+
+      confettiIntervalId = setInterval(draw, 24);
+    }
+
+    function stopConfetti() {
+      if (confettiIntervalId) {
+        clearInterval(confettiIntervalId);
+        confettiIntervalId = null;
+      }
+      gameConfettiCanvas.style.display = 'none';
+    }
+
+    btnExitGame.addEventListener('click', () => {
+      stopConfetti();
+      orderGameOverlay.style.display = 'none';
+      orderGameOverlay.classList.remove('open');
+    });
+
+    btnGameContinue.addEventListener('click', () => {
+      stopConfetti();
+      orderGameOverlay.style.display = 'none';
+      orderGameOverlay.classList.remove('open');
+
+      // Mark the active level completed
+      const activeNode = document.querySelector(`.path-node[data-level="${activeGameLevel}"]`);
+      if (activeNode) {
+        activeNode.classList.remove('active');
+        activeNode.classList.add('completed');
+      }
+
+      // Unlock next level node
+      const nextLevel = activeGameLevel + 1;
+      const nextNode = document.querySelector(`.path-node[data-level="${nextLevel}"]`);
+      if (nextNode) {
+        nextNode.classList.remove('locked');
+        nextNode.classList.add('active');
+
+        // Move mascot avatar to the newly unlocked active node!
+        const mascotWrapper = document.getElementById('pathMascotAvatar');
+        if (mascotWrapper) {
+          nextNode.appendChild(mascotWrapper);
+        }
+      }
+
+      updateAvatarGlobally();
+    });
+
+    // --- Pet Vector SVG Helpers ---
+    function getMascotBaseSVG(avatarId) {
+      switch (avatarId) {
+        case 'capy_yuzu':
+          return `
+            <!-- Ears -->
+            <ellipse cx="32" cy="38" rx="5" ry="4" fill="#A67C52" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="32" cy="38" rx="2" ry="2" fill="#D2A374" />
+            <ellipse cx="68" cy="38" rx="5" ry="4" fill="#A67C52" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="68" cy="38" rx="2" ry="2" fill="#D2A374" />
+            <!-- Body -->
+            <rect x="28" y="36" width="44" height="44" rx="20" ry="20" fill="#D2A374" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Snout -->
+            <ellipse cx="50" cy="56" rx="16" ry="12" fill="#A67C52" stroke="#3A2E2B" stroke-width="1.5" />
+            <path d="M47,51 L53,51 C54,51 55,52 54,54 L51,57 C50,58 50,58 49,57 L46,54 C45,52 46,51 47,51 Z" fill="#3A2E2B" />
+            <path d="M48,60 C49,61 51,61 52,60" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Eyes -->
+            <path d="M37,48 C39,46 41,47 42,49" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <path d="M63,48 C61,46 59,47 58,49" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Blush -->
+            <circle cx="34" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="66" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands -->
+            <ellipse cx="38" cy="74" rx="4" ry="3" fill="#A67C52" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="62" cy="74" rx="4" ry="3" fill="#A67C52" stroke="#3A2E2B" stroke-width="1.5" />
+          `;
+        case 'shiba':
+          return `
+            <!-- Ears -->
+            <polygon points="26,38 32,24 40,32" fill="#E67E22" stroke="#3A2E2B" stroke-width="1.5" />
+            <polygon points="29,35 32,27 37,32" fill="#FFF2CC" />
+            <polygon points="74,38 68,24 60,32" fill="#E67E22" stroke="#3A2E2B" stroke-width="1.5" />
+            <polygon points="71,35 68,27 63,32" fill="#FFF2CC" />
+            <!-- Body/Head -->
+            <rect x="28" y="34" width="44" height="44" rx="20" ry="20" fill="#E67E22" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- White Cheeks/Chest -->
+            <path d="M29,54 C29,66 38,72 50,72 C62,72 71,66 71,54 C71,48 64,48 50,48 C36,48 29,48 29,54 Z" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Nose/Snout -->
+            <ellipse cx="50" cy="56" rx="8" ry="6" fill="#FFF2CC" stroke="#3A2E2B" stroke-width="1.5" />
+            <circle cx="50" cy="53" r="2.5" fill="#3A2E2B" />
+            <path d="M48,57 C49,58 51,58 52,57" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Eyes -->
+            <circle cx="41" cy="46" r="3" fill="#3A2E2B" />
+            <circle cx="59" cy="46" r="3" fill="#3A2E2B" />
+            <!-- White eyebrow spots -->
+            <circle cx="41" cy="40" r="2" fill="#FFFFFF" />
+            <circle cx="59" cy="40" r="2" fill="#FFFFFF" />
+            <!-- Blush -->
+            <circle cx="34" cy="52" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="66" cy="52" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands -->
+            <ellipse cx="38" cy="74" rx="4" ry="3" fill="#E67E22" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="62" cy="74" rx="4" ry="3" fill="#E67E22" stroke="#3A2E2B" stroke-width="1.5" />
+          `;
+        case 'panda':
+          return `
+            <!-- Ears -->
+            <circle cx="32" cy="34" r="9" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1.5" />
+            <circle cx="68" cy="34" r="9" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Body/Head -->
+            <rect x="28" y="34" width="44" height="44" rx="20" ry="20" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Black eye patches -->
+            <ellipse cx="40" cy="48" rx="7" ry="9" fill="#3A2E2B" transform="rotate(-15 40 48)" />
+            <ellipse cx="60" cy="48" rx="7" ry="9" fill="#3A2E2B" transform="rotate(15 60 48)" />
+            <!-- Eyes (White dot inside) -->
+            <circle cx="41" cy="47" r="2.5" fill="#FFFFFF" />
+            <circle cx="59" cy="47" r="2.5" fill="#FFFFFF" />
+            <!-- Nose/Snout -->
+            <ellipse cx="50" cy="58" rx="5" ry="3.5" fill="#3A2E2B" />
+            <path d="M48,62 C49,63 51,63 52,62" fill="none" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round" />
+            <!-- Blush -->
+            <circle cx="33" cy="56" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="67" cy="56" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands (Black paws) -->
+            <ellipse cx="38" cy="74" rx="4" ry="3" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="62" cy="74" rx="4" ry="3" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1.5" />
+          `;
+        case 'cat':
+          return `
+            <!-- Ears -->
+            <polygon points="26,38 28,22 38,32" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <polygon points="29,35 30,26 36,32" fill="#FFD1DC" />
+            <polygon points="74,38 72,22 62,32" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <polygon points="71,35 70,26 64,32" fill="#FFD1DC" />
+            <!-- Body/Head -->
+            <rect x="28" y="34" width="44" height="44" rx="20" ry="20" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Eyes -->
+            <circle cx="40" cy="48" r="3" fill="#3A2E2B" />
+            <circle cx="60" cy="48" r="3" fill="#3A2E2B" />
+            <!-- Whiskers -->
+            <line x1="22" y1="52" x2="30" y2="52" stroke="#3A2E2B" stroke-width="1.5" />
+            <line x1="22" y1="56" x2="29" y2="57" stroke="#3A2E2B" stroke-width="1.5" />
+            <line x1="78" y1="52" x2="70" y2="52" stroke="#3A2E2B" stroke-width="1.5" />
+            <line x1="78" y1="56" x2="71" y2="57" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Mouth/Nose -->
+            <path d="M47,54 C49,56 50,56 50,54 C50,56 51,56 53,54" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <circle cx="50" cy="51" r="1.5" fill="#FFD1DC" />
+            <!-- Blush -->
+            <circle cx="34" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="66" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands -->
+            <ellipse cx="38" cy="74" rx="4" ry="3" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="62" cy="74" rx="4" ry="3" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.5" />
+          `;
+        case 'otter':
+          return `
+            <!-- Ears -->
+            <circle cx="32" cy="38" r="4.5" fill="#A68060" stroke="#3A2E2B" stroke-width="1.5" />
+            <circle cx="68" cy="38" r="4.5" fill="#A68060" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Body/Head -->
+            <rect x="28" y="34" width="44" height="44" rx="20" ry="20" fill="#C29D7C" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- Lighter Chin/Mouth area -->
+            <ellipse cx="50" cy="58" rx="13" ry="9" fill="#EAD5C3" stroke="#3A2E2B" stroke-width="1.2" />
+            <!-- Nose/Mouth -->
+            <circle cx="50" cy="53" r="2.5" fill="#3A2E2B" />
+            <path d="M47,56 C49,58 50,58 50,56 C50,58 51,58 53,56" fill="none" stroke="#3A2E2B" stroke-width="1.5" stroke-linecap="round" />
+            <!-- Whiskers -->
+            <line x1="32" y1="58" x2="38" y2="58" stroke="#3A2E2B" stroke-width="1" />
+            <line x1="68" y1="58" x2="62" y2="58" stroke="#3A2E2B" stroke-width="1" />
+            <!-- Eyes -->
+            <circle cx="40" cy="47" r="2.5" fill="#3A2E2B" />
+            <circle cx="60" cy="47" r="2.5" fill="#3A2E2B" />
+            <!-- Blush -->
+            <circle cx="34" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="66" cy="54" r="3.5" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands -->
+            <ellipse cx="38" cy="74" rx="4" ry="3" fill="#A68060" stroke="#3A2E2B" stroke-width="1.5" />
+            <ellipse cx="62" cy="74" rx="4" ry="3" fill="#A68060" stroke="#3A2E2B" stroke-width="1.5" />
+          `;
+        case 'penguin':
+          return `
+            <!-- Body -->
+            <rect x="28" y="34" width="44" height="44" rx="20" ry="20" fill="#3C4858" stroke="#3A2E2B" stroke-width="1.5" />
+            <!-- White Tummy Face -->
+            <ellipse cx="50" cy="58" rx="14" ry="17" fill="#FFFFFF" stroke="#3A2E2B" stroke-width="1.2" />
+            <ellipse cx="43" cy="46" rx="8" ry="8" fill="#FFFFFF" />
+            <ellipse cx="57" cy="46" rx="8" ry="8" fill="#FFFFFF" />
+            <!-- Eyes -->
+            <circle cx="42" cy="46" r="2.5" fill="#3A2E2B" />
+            <circle cx="58" cy="46" r="2.5" fill="#3A2E2B" />
+            <!-- Beak -->
+            <polygon points="46,50 54,50 50,57" fill="#FFC107" stroke="#3A2E2B" stroke-width="1.2" />
+            <!-- Blush -->
+            <circle cx="35" cy="52" r="3" fill="#FFD1DC" opacity="0.8" />
+            <circle cx="65" cy="52" r="3" fill="#FFD1DC" opacity="0.8" />
+            <!-- Hands (Flippers) -->
+            <ellipse cx="26" cy="58" rx="3" ry="8" fill="#3C4858" stroke="#3A2E2B" stroke-width="1.5" transform="rotate(15 26 58)" />
+            <ellipse cx="74" cy="58" rx="3" ry="8" fill="#3C4858" stroke="#3A2E2B" stroke-width="1.5" transform="rotate(-15 74 58)" />
+          `;
+      }
+    }
+
+    function getMascotFullSVG(avatarId, activeAccsSet, size = 60) {
+      let accessoriesSvg = '';
+      if (activeAccsSet.has('yuzu')) {
+        accessoriesSvg += `
+          <g id="acc-yuzu-svg">
+            <circle cx="50" cy="27" r="7" fill="#FFE082" stroke="#3A2E2B" stroke-width="1.5" />
+            <path d="M52,21 C54,19 56,19 57,20 C57,21 56,23 54,23 Z" fill="#C2E2B8" stroke="#3A2E2B" stroke-width="1" />
+            <line x1="50" y1="21" x2="52" y2="21" stroke="#3A2E2B" stroke-width="1" />
+          </g>
+        `;
+      }
+      if (activeAccsSet.has('grad')) {
+        accessoriesSvg += `
+          <g id="acc-grad-svg">
+            <polygon points="34,26 50,21 66,26 50,31" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1.2" />
+            <rect x="42" y="29" width="16" height="5" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1" />
+            <path d="M50,26 C53,28 55,30 55,33 L54,36" fill="none" stroke="#FFE082" stroke-width="1" />
+            <circle cx="54" cy="37" r="1.2" fill="#FFE082" />
+          </g>
+        `;
+      }
+      if (activeAccsSet.has('glasses')) {
+        accessoriesSvg += `
+          <g id="acc-glasses-svg">
+            <circle cx="39" cy="48" r="6" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1" />
+            <circle cx="61" cy="48" r="6" fill="#3A2E2B" stroke="#3A2E2B" stroke-width="1" />
+            <path d="M45,48 L55,48" stroke="#3A2E2B" stroke-width="1.8" />
+          </g>
+        `;
+      }
+      if (activeAccsSet.has('leaf')) {
+        accessoriesSvg += `
+          <g id="acc-leaf-svg">
+            <path d="M50,35 C48,29 52,26 54,28 C56,30 53,35 50,35 Z" fill="#C2E2B8" stroke="#3A2E2B" stroke-width="1" />
+            <line x1="50" y1="35" x2="49" y2="38" stroke="#3A2E2B" stroke-width="1" />
+          </g>
+        `;
+      }
+
+      return `
+        <svg viewBox="0 0 100 100" width="${size}" height="${size}">
+          <g id="mascot-base">${getMascotBaseSVG(avatarId)}</g>
+          ${accessoriesSvg}
+        </svg>
+      `;
+    }
+
+    function updateAvatarGlobally() {
+      // 1. Home header avatar wrapper
+      const homeAvatarWrapper = document.getElementById('homeAvatarWrapper');
+      if (homeAvatarWrapper) {
+        homeAvatarWrapper.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 60);
+      }
+
+      // 2. Home winding path active node mascot
+      const pathMascot = document.getElementById('pathMascotAvatar');
+      if (pathMascot) {
+        pathMascot.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 36);
+      }
+
+      // 3. Pet Shop preview wrapper
+      const shopMascotWrapper = document.getElementById('shopMascotWrapper');
+      if (shopMascotWrapper) {
+        shopMascotWrapper.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 110);
+      }
+
+      // 4. Closet wardrobe main preview
+      const closetMascot = document.getElementById('closetCapyMascot');
+      if (closetMascot) {
+        // Redraw base
+        const baseG = closetMascot.querySelector('#mascot-base');
+        if (baseG) {
+          baseG.innerHTML = getMascotBaseSVG(avatarIconId);
+        }
+        
+        // Show/hide accessory tags
+        const svgAccYuzu = closetMascot.querySelector('#acc-yuzu-svg');
+        if (svgAccYuzu) svgAccYuzu.style.display = activeItems.has('yuzu') ? 'block' : 'none';
+
+        const svgAccGrad = closetMascot.querySelector('#acc-grad-svg');
+        if (svgAccGrad) svgAccGrad.style.display = activeItems.has('grad') ? 'block' : 'none';
+
+        const svgAccGlasses = closetMascot.querySelector('#acc-glasses-svg');
+        if (svgAccGlasses) svgAccGlasses.style.display = activeItems.has('glasses') ? 'block' : 'none';
+
+        const svgAccLeaf = closetMascot.querySelector('#acc-leaf-svg');
+        if (svgAccLeaf) svgAccLeaf.style.display = activeItems.has('leaf') ? 'block' : 'none';
+      }
+
+      // 4. Chatbot header mini avatar
+      const chatMiniAvatar = document.querySelector('#capyChatOverlay .bottom-sheet div div div[style*="width:36px"]');
+      if (chatMiniAvatar) {
+        chatMiniAvatar.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 36);
+        chatMiniAvatar.style.marginTop = '4px';
+      }
+
+      // 5. FAB peeking capy icon
+      const fabPeek = document.getElementById('fabDuoCapyPeek');
+      if (fabPeek) {
+        fabPeek.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 36);
+      }
+    }
+
+    // --- Toast / Floating Text effect ---
+    function spawnFloatingPoints(text, x, y) {
+      const el = document.createElement('div');
+      el.className = 'floating-points';
+      el.textContent = text;
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      document.body.appendChild(el);
+      
+      // Remove element when animation completes
+      setTimeout(() => {
+        el.remove();
+      }, 800);
+    }
+
+    function triggerPointsAward(pointsGained, event) {
+      studyPoints += pointsGained;
+      pointsText.textContent = studyPoints;
+      
+      // Calculate coordinates near pointer or absolute center of screen
+      let posX = window.innerWidth / 2;
+      let posY = window.innerHeight / 2;
+      if (event) {
+        posX = event.clientX - 10;
+        posY = event.clientY - 20;
+      }
+      spawnFloatingPoints(`+${pointsGained} 🔥`, posX, posY);
+    }
+
+    // --- Audio 發音 (TTS) ---
+    document.querySelectorAll('.btn-audio').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const word = btn.dataset.word;
+        if ('speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(word);
+          utterance.lang = 'en-US';
+          utterance.rate = 0.85;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          alert(`Phát âm từ vựng: ${word}`);
+        }
+      });
+    });
+
+    // --- Theme Toggling ---
+    themeBtn.addEventListener('click', () => {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      themeBtn.textContent = isDark ? '🌙' : '☀️';
+    });
+
+    // Initialize Theme symbol
+    themeBtn.textContent = document.documentElement.classList.contains('dark') ? '🌙' : '☀️';
+
+    // --- Tab Navigation Trigger ---
+    function activateView(viewId) {
+      screenViews.forEach(v => v.classList.add('hidden'));
+      navTabs.forEach(t => t.classList.remove('active'));
+
+      const targetView = document.getElementById(`view-${viewId}`);
+      if (targetView) targetView.classList.remove('hidden');
+
+      const targetTab = document.querySelector(`.nav-tab[data-view="${viewId}"]`);
+      if (targetTab) targetTab.classList.add('active');
+
+      // Close selections when switching tabs
+      if (viewId !== 'storage') {
+        clearSelections();
+      }
+    }
+
+    navTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        activateView(tab.dataset.view);
+      });
+    });
+
+    // --- TAB 1: HOME CONTROLLERS ---
+    // --- PHOTO VOCAB DATABASE (Offline Simulation) ---
+    const PHOTO_VOCAB_DB = {
+      "1": [
+        { word: "Desk Lamp", phonetic: "/dɛsk læmp/", meaning: "Đèn để bàn", emoji: "💻", exEn: "The desk lamp is bright.", exVi: "Đèn bàn rất sáng." },
+        { word: "Bulb", phonetic: "/bʌlb/", meaning: "Bóng đèn", emoji: "💡", exEn: "The light bulb is glowing.", exVi: "Bóng đèn đang phát sáng." },
+        { word: "Switch", phonetic: "/swɪtʃ/", meaning: "Công tắc điện", emoji: "🎛️", exEn: "Flip the switch to turn it on.", exVi: "Bật công tắc để mở đèn." }
+      ],
+      "2": [
+        { word: "Coffee Mug", phonetic: "/ˈkɔːfi mʌɡ/", meaning: "Ly cà phê lớn", emoji: "☕", exEn: "This coffee mug holds a lot of coffee.", exVi: "Chiếc cốc này chứa được rất nhiều cà phê." },
+        { word: "Hot Steam", phonetic: "/hɒt stiːm/", meaning: "Hơi nước nóng", emoji: "💨", exEn: "Steam is rising from the coffee.", exVi: "Hơi nước bốc lên từ cốc cà phê." },
+        { word: "Handle", phonetic: "/ˈhændl/", meaning: "Tay cầm", emoji: "✊", exEn: "Hold the mug by its handle.", exVi: "Cầm cốc bằng tay quai của nó." }
+      ],
+      "3": [
+        { word: "Tree", phonetic: "/triː/", meaning: "Cây xanh", emoji: "🌲", exEn: "The pine tree stands tall.", exVi: "Cây thông mọc cao vút." },
+        { word: "Leaf", phonetic: "/liːf/", meaning: "Lá cây", emoji: "🍃", exEn: "A green leaf fell to the ground.", exVi: "Một chiếc lá xanh rơi xuống đất." },
+        { word: "Grass", phonetic: "/ɡrɑːs/", meaning: "Thảm cỏ", emoji: "🌱", exEn: "Sit on the soft green grass.", exVi: "Ngồi trên thảm cỏ xanh mềm mại." }
+      ],
+      "4": [
+        { word: "Backpack", phonetic: "/ˈbækpæk/", meaning: "Ba lo đeo vai", emoji: "👜", exEn: "I pack my laptop into my backpack.", exVi: "Tôi cất máy tính vào ba lô." },
+        { word: "Zipper", phonetic: "/ˈzɪpər/", meaning: "Khóa kéo", emoji: "🔩", exEn: "Close the zipper of your bag.", exVi: "Kéo khóa túi của bạn lại." },
+        { word: "Strap", phonetic: "/stræp/", meaning: "Quai đeo", emoji: "🎗️", exEn: "Adjust the shoulder strap.", exVi: "Điều chỉnh quai đeo vai." }
+      ]
+    };
+
+    const DEFAULT_SRS_DECK = [
+      { word: "Desk Lamp", phonetic: "/dɛsk læmp/", meaning: "Đèn để bàn", emoji: "💻", exEn: "The desk lamp is bright.", exVi: "Đèn bàn rất sáng." },
+      { word: "Coffee Mug", phonetic: "/ˈkɔːfi mʌɡ/", meaning: "Ly cà phê lớn", emoji: "☕", exEn: "This coffee mug holds a lot of coffee.", exVi: "Chiếc cốc này chứa được rất nhiều cà phê." },
+      { word: "Tree", phonetic: "/triː/", meaning: "Cây xanh", emoji: "🌲", exEn: "The pine tree stands tall.", exVi: "Cây thông mọc cao vút." },
+      { word: "Backpack", phonetic: "/ˈbækpæk/", meaning: "Ba lo đeo vai", emoji: "👜", exEn: "I pack my laptop into my backpack.", exVi: "Tôi cất máy tính vào ba lô." }
+    ];
+
+    let currentSessionVocabList = [];
+    let srsSessionDeck = [];
+    let srsCurrentIndex = 0;
+    let isFlipped = false;
+
+    // --- TAB 1: HOME CONTROLLERS ---
+    btnPlayDailyReview.addEventListener('click', () => {
+      // Launch direct SRS deck from Home screen
+      srsSessionDeck = [...DEFAULT_SRS_DECK];
+      srsCurrentIndex = 0;
+      activateView('srs-gameplay');
+      loadSrsCard(0);
+    });
+
+    // --- GALLERY MULTI-SELECTION SYSTEM ---
+    function clearSelections() {
+      selectedPhotos.clear();
+      albumItems.forEach(item => item.classList.remove('selected'));
+      selectedCountText.textContent = 0;
+      selectionDrawer.classList.remove('open');
+      btnToggleBatch.textContent = "Chọn tất cả";
+    }
+
+    function selectAllSelections() {
+      albumItems.forEach(item => {
+        selectedPhotos.add(item.dataset.photo);
+        item.classList.add('selected');
+      });
+      selectedCountText.textContent = selectedPhotos.size;
+      selectionDrawer.classList.add('open');
+      btnToggleBatch.textContent = "Bỏ chọn";
+    }
+
+    btnToggleBatch.addEventListener('click', () => {
+      if (selectedPhotos.size > 0) {
+        clearSelections();
+      } else {
+        selectAllSelections();
+      }
+    });
+
+    albumItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const photoId = item.dataset.photo;
+        if (selectedPhotos.has(photoId)) {
+          selectedPhotos.delete(photoId);
+          item.classList.remove('selected');
+        } else {
+          selectedPhotos.add(photoId);
+          item.classList.add('selected');
+        }
+
+        selectedCountText.textContent = selectedPhotos.size;
+        
+        if (selectedPhotos.size > 0) {
+          selectionDrawer.classList.add('open');
+          btnToggleBatch.textContent = "Bỏ chọn";
+        } else {
+          selectionDrawer.classList.remove('open');
+          btnToggleBatch.textContent = "Chọn tất cả";
+        }
+      });
+    });
+
+    // --- SELECTED VOCAB COLLECTION CONTROLLER ---
+    btnBatchExtract.addEventListener('click', (e) => {
+      if (selectedPhotos.size === 0) return;
+      
+      // Aggregate vocabularies
+      currentSessionVocabList = [];
+      selectedPhotos.forEach(photoId => {
+        const words = PHOTO_VOCAB_DB[photoId] || [];
+        words.forEach(w => {
+          // Avoid duplicate words
+          if (!currentSessionVocabList.some(item => item.word === w.word)) {
+            currentSessionVocabList.push(w);
+          }
+        });
+      });
+      
+      // Render collection
+      renderSelectedVocabCollection();
+      
+      // Hide selection drawer and activate collection view
+      selectionDrawer.classList.remove('open');
+      activateView('selected-vocab');
+    });
+
+    document.getElementById('btnBackToStorage').addEventListener('click', () => {
+      activateView('storage');
+      // Keep selection active so they can adjust
+      selectionDrawer.classList.add('open');
+    });
+
+    function renderSelectedVocabCollection() {
+      const container = document.getElementById('selectedVocabList');
+      container.innerHTML = '';
+      
+      if (currentSessionVocabList.length === 0) {
+        container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--muted)">Chưa có từ vựng nào được chọn.</p>';
+        return;
+      }
+
+      currentSessionVocabList.forEach(vocab => {
+        const item = document.createElement('div');
+        item.className = 'capy-card';
+        item.style.padding = '12px';
+        item.style.border = '2px solid var(--ink-coffee)';
+        item.style.borderBottomWidth = '4px';
+        item.style.boxShadow = 'none';
+        item.style.display = 'flex';
+        item.style.alignItems = 'center';
+        item.style.gap = '12px';
+        
+        item.innerHTML = `
+          <div style="font-size:28px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:12px; width:45px; height:45px; display:flex; align-items:center; justify-content:center;">
+            ${vocab.emoji}
+          </div>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap: 8px;">
+              <h3 style="font-size:13.5px; font-weight:800; color:var(--ink-coffee); margin:0;">${vocab.word}</h3>
+              <span style="font-size:9.5px; font-family:var(--font-mono); color:var(--muted);">${vocab.phonetic}</span>
+            </div>
+            <p style="font-size:12px; font-weight:700; color:var(--primary); margin:2px 0 4px 0;">${vocab.meaning}</p>
+            <p style="font-size:10.5px; font-style:italic; color:var(--body); margin:0; line-height:1.2;">Ex: "${vocab.exEn}"</p>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    // --- FLASHCARD SRS GAMEPLAY CONTROLLER ---
+    document.getElementById('btnCreateFlashcards').addEventListener('click', () => {
+      if (currentSessionVocabList.length === 0) return;
+      srsSessionDeck = [...currentSessionVocabList];
+      srsCurrentIndex = 0;
+      activateView('srs-gameplay');
+      loadSrsCard(0);
+    });
+
+    document.getElementById('btnExitSrs').addEventListener('click', () => {
+      showCustomConfirm("Thoát phiên học 🎴", "Bạn có chắc muốn thoát phiên học hiện tại không? Tiến trình học tập của phiên này sẽ bị hủy.", () => {
+        clearSelections();
+        activateView('storage');
+      });
+    });
+
+    function loadSrsCard(index) {
+      if (index >= srsSessionDeck.length) {
+        finishSrsSession();
+        return;
+      }
+      
+      isFlipped = false;
+      const cardEl = document.getElementById('gameplaySrsCard');
+      cardEl.classList.remove('flipped');
+      
+      const vocab = srsSessionDeck[index];
+      
+      // Update UI elements
+      document.getElementById('gameplayFrontEmoji').textContent = vocab.emoji;
+      document.getElementById('gameplayFrontWord').textContent = vocab.word;
+      
+      document.getElementById('gameplayBackWord').textContent = vocab.word;
+      document.getElementById('gameplayBackPhonetic').textContent = vocab.phonetic;
+      document.getElementById('gameplayBackMeaning').textContent = vocab.meaning;
+      document.getElementById('gameplayBackExampleEn').textContent = `"${vocab.exEn}"`;
+      document.getElementById('gameplayBackExampleVi').textContent = `"${vocab.exVi}"`;
+      
+      // Update Progress Bar
+      const percent = ((index + 1) / srsSessionDeck.length) * 100;
+      document.getElementById('gameplaySrsProgressBar').style.width = `${percent}%`;
+      document.getElementById('gameplaySrsProgressText').textContent = `${index + 1}/${srsSessionDeck.length}`;
+      
+      // Update Coins Badges
+      updateSrsCoinsBadges();
+    }
+
+    document.getElementById('gameplaySrsCard').addEventListener('click', () => {
+      isFlipped = !isFlipped;
+      document.getElementById('gameplaySrsCard').classList.toggle('flipped', isFlipped);
+    });
+
+    // Speak / Pronounce
+    document.getElementById('btnGameplayPronounce').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const vocab = srsSessionDeck[srsCurrentIndex];
+      if (!vocab) return;
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(vocab.word);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.85;
+        window.speechSynthesis.speak(utterance);
+      } else {
+        alert(`🔊 ${vocab.word}`);
+      }
+    });
+
+    // Ask Capy AI
+    document.getElementById('btnGameplaySrsChat').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const vocab = srsSessionDeck[srsCurrentIndex];
+      if (!vocab) return;
+      if (window.askCapyAI) {
+        window.askCapyAI(vocab.word);
+      }
+    });
+
+    // SRS Grading buttons
+    document.querySelectorAll('.srs-grade-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const grade = parseInt(btn.dataset.grade);
+        
+        let rewardCoins = 0;
+        let msg = "";
+        
+        if (grade === 2) {
+          rewardCoins = 10;
+          msg = "+10 🍊 (Dễ ợt!)";
+        } else if (grade === 1) {
+          rewardCoins = 5;
+          msg = "+5 🍊 (Nhớ được)";
+        } else {
+          rewardCoins = 1;
+          msg = "+1 🍊 (Cố lên)";
+        }
+        
+        studyPoints += rewardCoins;
+        spawnFloatingPoints(msg, e.clientX, e.clientY);
+        
+        // Go to next card
+        setTimeout(() => {
+          srsCurrentIndex++;
+          loadSrsCard(srsCurrentIndex);
+        }, 300);
+      });
+    });
+
+    function updateSrsCoinsBadges() {
+      // Update global study points text
+      if (pointsText) pointsText.textContent = studyPoints;
+      // Update Pet Shop balance text
+      const shopYuzuText = document.getElementById('shopYuzuText');
+      if (shopYuzuText) shopYuzuText.textContent = studyPoints;
+      // Update Gameplay SRS badge
+      const srsCoinsText = document.getElementById('srsCoinsText');
+      if (srsCoinsText) srsCoinsText.textContent = studyPoints;
+    }
+
+    function finishSrsSession() {
+      alert("Chúc mừng! Bạn đã hoàn thành phiên ôn tập ngày hôm nay! Bé Capy thưởng cho bạn thêm 20 xu Yuzu! 🍊🎉");
+      studyPoints += 20;
+      updateSrsCoinsBadges();
+      clearSelections();
+      activateView('storage'); // Back to gallery
+    }
+
+    // --- TAB 3: FAB GREEN BUTTON & BOTTOM SHEET ---
+    fabBtn.addEventListener('click', () => {
+      bottomSheetOverlay.classList.add('open');
+    });
+
+    bottomSheetOverlay.addEventListener('click', (e) => {
+      if (e.target === bottomSheetOverlay) {
+        bottomSheetOverlay.classList.remove('open');
+      }
+    });
+
+    templateBadges.forEach(badge => {
+      badge.addEventListener('click', () => {
+        templateBadges.forEach(b => b.classList.remove('active'));
+        badge.classList.add('active');
+      });
+    });
+
+    function handleMockUploadScan(e) {
+      if (quotaScans <= 0) {
+        alert("Bạn đã hết lượt quét miễn phí hôm nay! Hãy nâng cấp PRO tại Cài đặt để quét không giới hạn.");
+        bottomSheetOverlay.classList.remove('open');
+        activateView('settings');
+        tabBtnPaywall.click();
+        return;
+      }
+
+      quotaScans--;
+      quotaText.textContent = `${quotaScans}/3`;
+      bottomSheetOverlay.classList.remove('open');
+      
+      alert("Đang phân tích hình ảnh bằng AI Vision...");
+      setTimeout(() => {
+        alert("Thành công! Trợ Lý AI đã phát hiện 4 từ vựng mới và tự động dán Note đè.");
+        triggerPointsAward(40, e);
+        activateView('storage');
+      }, 1000);
+    }
+
+    optCamera.addEventListener('click', handleMockUploadScan);
+    optGallery.addEventListener('click', handleMockUploadScan);
+
+    // --- TAB 4: WORKSHOP (Defunct, replaced by direct gameplay) ---
+
+    // --- Chatbot Spec Sync (Hỏi Bé Capy 🦫) ---
+    let dailyChatLeft = 10;
+    let activeChatWord = "Keyboard";
+    const capyChatOverlay = document.getElementById('capyChatOverlay');
+    const capyChatMessages = document.getElementById('capyChatMessages');
+    const capyChatTargetWord = document.getElementById('capyChatTargetWord');
+    const capyChatInput = document.getElementById('capyChatInput');
+    const capyChatSend = document.getElementById('capyChatSend');
+    const chatQuotaText = document.getElementById('chatQuotaText');
+
+    const CHAT_DATA_RESPONSES = {
+      "Desk Lamp": {
+        synonym: "Các từ đồng nghĩa với <b>Desk Lamp</b>:<br>1. <code>Table lamp</code> (Đèn để bàn)<br>2. <code>Study light</code> (Đèn học)<br>3. <code>Reading lamp</code> (Đèn đọc sách)<br><br>Capy khuyên dùng: <i>Table lamp</i> là từ phổ biến nhất khi nói về các loại đèn trang trí/chiếu sáng bàn làm việc chung.",
+        example: "Dưới đây là 2 ví dụ của từ <b>Desk Lamp</b>:<br><br>1. <i>'The desk lamp cast a warm glow over my notebook.'</i> (Chiếc đèn học tỏa ánh sáng ấm áp lên cuốn sổ tay của tôi.)<br><br>2. <i>'You should turn on your desk lamp to protect your eyes.'</i> (Bạn nên bật đèn để bàn để bảo vệ mắt.)",
+        diff: "<b>Desk Lamp vs. Floor Lamp</b>:<br><br>- <code>Desk Lamp</code>: Thiết kế nhỏ gọn để đặt trực tiếp trên mặt bàn, cung cấp ánh sáng tập trung (task lighting) cho học tập, làm việc.<br><br>- <code>Floor Lamp</code>: Đèn đứng cao, đặt trực tiếp trên sàn nhà, dùng để chiếu sáng toàn phòng hoặc làm đèn trang trí góc sofa."
+      },
+      "Coffee Mug": {
+        synonym: "Các từ đồng nghĩa với <b>Coffee Mug</b>:<br>1. <code>Coffee cup</code> (Ly/tách cà phê)<br>2. <code>Teacup</code> (Tách trà)<br>3. <code>Tankard</code> (Cốc vại lớn)<br><br>Capy khuyên dùng: <i>Coffee cup</i> thường nhỏ hơn và đi kèm đĩa lót, còn <i>Mug</i> là loại cốc to dày không cần đĩa.",
+        example: "Dưới đây là 2 ví dụ của từ <b>Coffee Mug</b>:<br><br>1. <i>'I accidentally spilled hot matcha milk from my coffee mug.'</i> (Tôi vô tình làm tràn sữa matcha nóng từ ly cà phê của mình.)<br><br>2. <i>'She held the warm coffee mug with both hands.'</i> (Cô ấy cầm chiếc ly cà phê ấm áp bằng cả hai tay.)",
+        diff: "<b>Coffee Mug vs. Coffee Cup</b>:<br><br>- <code>Coffee Mug</code>: Cốc to, thành dày, dung tích lớn (250-450ml), không có đĩa lót, giữ nhiệt tốt, dùng cho thức uống thông thường ở nhà/văn phòng.<br><br>- <code>Coffee Cup</code>: Nhỏ hơn (100-200ml), thành mỏng hơn, đi kèm đĩa lót, thường dùng trong các nhà hàng trang trọng hoặc uống Espresso."
+      },
+      "Keyboard": {
+        synonym: "Các từ đồng nghĩa với <b>Keyboard</b>:<br>1. <code>Keypad</code> (Bàn phím nhỏ)<br>2. <code>Input deck</code> (Bàn điều khiển nhập liệu)<br>3. <code>Keys</code> (Các phím bấm)<br><br>Capy khuyên dùng: <i>Keypad</i> chỉ dùng cho bàn phím số phụ hoặc bàn phím mã số khóa cửa.",
+        example: "Dưới đây là 2 ví dụ của từ <b>Keyboard</b>:<br><br>1. <i>'The mechanical keyboard typing sound is so satisfying.'</i> (Âm thanh gõ của bàn phím cơ nghe thật đã tai.)<br><br>2. <i>'He cleaned the dust underneath the keyboard keys.'</i> (Anh ấy lau sạch bụi bẩn bên dưới các phím bấm của bàn phím.)",
+        diff: "<b>Keyboard vs. Keypad</b>:<br><br>- <code>Keyboard</code>: Bàn phím đầy đủ ký tự chữ và số (như chuẩn QWERTY trên máy tính).<br><br>- <code>Keypad</code>: Bàn phím thu nhỏ chỉ có các số hoặc một cụm phím chuyên dụng (như bàn phím bấm máy tính bỏ túi, khóa số chung cư)."
+      },
+      "Backpack": {
+        synonym: "Các từ đồng nghĩa với <b>Backpack</b>:<br>1. <code>Rucksack</code> (Ba lô dã ngoại lớn)<br>2. <code>Knapsack</code> (Ba lô vải bạt nhỏ)<br>3. <code>Schoolbag</code> (Cặp sách học sinh)<br><br>Capy khuyên dùng: <i>Schoolbag</i> phù hợp nhất cho các bé học sinh đeo đi học tiểu học/trung học.",
+        example: "Dưới đây là 2 ví dụ của từ <b>Backpack</b>:<br><br>1. <i>'My backpack is stuffed with heavy English textbooks.'</i> (Chiếc ba lô của tôi nhồi đầy những cuốn sách giáo khoa tiếng Anh nặng trịch.)<br><br>2. <i>'He slung his backpack over one shoulder.'</i> (Anh ấy khoác chiếc ba lô lên một bên vai.)",
+        diff: "<b>Backpack vs. Rucksack</b>:<br><br>- <code>Backpack</code>: Từ chung cho tất cả các loại túi đeo hai vai sau lưng.<br><br>- <code>Rucksack</code>: Xuất phát từ tiếng Đức, thường chỉ loại ba lô chuyên dụng cỡ lớn, chống nước tốt, dùng đi phượt hoặc hành quân quân đội."
+      }
+    };
+
+    function appendCapyChatMessage(text, sender) {
+      const bubble = document.createElement('div');
+      if (sender === 'user') {
+        bubble.className = 'user-speech-bubble';
+        bubble.style.alignSelf = 'flex-end';
+        bubble.style.maxWidth = '85%';
+        bubble.style.margin = '4px 0';
+      } else {
+        bubble.className = 'capy-speech-bubble';
+        bubble.style.alignSelf = 'flex-start';
+        bubble.style.maxWidth = '85%';
+        bubble.style.margin = '4px 0';
+      }
+      bubble.innerHTML = text;
+      capyChatMessages.appendChild(bubble);
+      capyChatMessages.scrollTop = capyChatMessages.scrollHeight;
+    }
+
+    // Typing animation simulated
+    function showTypingIndicator() {
+      const indicator = document.createElement('div');
+      indicator.id = 'capyTypingIndicator';
+      indicator.className = 'capy-speech-bubble';
+      indicator.style.alignSelf = 'flex-start';
+      indicator.style.maxWidth = '85%';
+      indicator.style.margin = '4px 0';
+      indicator.innerHTML = `<i>Bạn Pet đang soạn bài giải thích... 🐾</i>`;
+      capyChatMessages.appendChild(indicator);
+      capyChatMessages.scrollTop = capyChatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const ind = document.getElementById('capyTypingIndicator');
+      if (ind) ind.remove();
+    }
+
+    function triggerCapyResponse(queryText) {
+      if (dailyChatLeft <= 0) {
+        alert("Bạn đã hết lượt đặt câu hỏi đàm thoại hôm nay! Hãy nâng cấp PRO tại Cài đặt.");
+        return;
+      }
+
+      dailyChatLeft--;
+      chatQuotaText.textContent = `Còn ${dailyChatLeft}/10 câu hỏi`;
+
+      appendCapyChatMessage(queryText, 'user');
+      showTypingIndicator();
+
+      setTimeout(() => {
+        removeTypingIndicator();
+        const msg = queryText.toLowerCase();
+        let reply = "";
+        
+        const responses = CHAT_DATA_RESPONSES[activeChatWord];
+        if (msg.includes("đồng nghĩa") || msg.includes("synonym")) {
+          reply = responses.synonym;
+        } else if (msg.includes("ví dụ") || msg.includes("example")) {
+          reply = responses.example;
+        } else if (msg.includes("khác") || msg.includes("phân biệt") || msg.includes("diff")) {
+          reply = responses.diff;
+        } else {
+          reply = `Pet-sensei nghe rõ câu hỏi của bạn về từ <b>${activeChatWord}</b>:<br><br><i>"${queryText}"</i>.<br><br>Hãy thử click các gợi ý ở dưới để xem giải thích đồng nghĩa, ví dụ hoặc so sánh nhé! 🐾🍊`;
+        }
+
+        appendCapyChatMessage(reply, 'bot');
+      }, 750);
+    }
+
+    // Register Chat button clicks
+    function setupChatTriggers() {
+      document.querySelectorAll('.btn-capy-chat').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const backWordEl = document.querySelector('#gameplaySrsCard .flip-card-back .flashcard-vocab-word');
+          activeChatWord = btn.dataset.word || (backWordEl ? backWordEl.textContent : "Keyboard");
+          capyChatTargetWord.textContent = activeChatWord;
+          
+          capyChatMessages.innerHTML = `
+            <div class="capy-speech-bubble" style="align-self: flex-start; max-width: 85%;">
+              Chào bạn! Hỏi tớ bất kỳ điều gì về từ vựng <b>${activeChatWord}</b> nhé. Tớ đã sẵn sàng giải đáp rồi! 🐾🍵
+            </div>
+          `;
+          
+          // Re-sync chatbot header avatar
+          const chatMiniAvatar = document.querySelector('#capyChatOverlay .bottom-sheet div div div[style*="width:36px"]');
+          if (chatMiniAvatar) {
+            chatMiniAvatar.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 36);
+          }
+
+          capyChatOverlay.classList.add('open');
+        });
+      });
+    }
+
+    // Call init chat triggers
+    setupChatTriggers();
+
+    // Close chat bottom sheet
+    capyChatOverlay.addEventListener('click', (e) => {
+      if (e.target === capyChatOverlay) {
+        capyChatOverlay.classList.remove('open');
+      }
+    });
+
+    // Send click
+    capyChatSend.addEventListener('click', () => {
+      const text = capyChatInput.value.trim();
+      if (text === '') return;
+      capyChatInput.value = '';
+      triggerCapyResponse(text);
+    });
+
+    capyChatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const text = capyChatInput.value.trim();
+        if (text === '') return;
+        capyChatInput.value = '';
+        triggerCapyResponse(text);
+      }
+    });
+
+    // Chips clicks
+    document.querySelectorAll('.chat-action-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const action = chip.dataset.action;
+        let query = "";
+        if (action === 'synonym') {
+          query = `Tìm từ đồng nghĩa của ${activeChatWord}`;
+        } else if (action === 'example') {
+          query = `Cho thêm 2 ví dụ khác về ${activeChatWord}`;
+        } else {
+          query = `Phân biệt cách dùng của ${activeChatWord}`;
+        }
+        triggerCapyResponse(query);
+      });
+    });
+
+
+    // --- TAB 4: PET SHOP CONTROLLER & SYSTEM ---
+    const SHOP_ITEMS = [
+      // Mascot Pets
+      { id: 'capy_yuzu', name: 'Capy Yuzu', category: 'mascot', price: 0, icon: '🦫', unlocked: true },
+      { id: 'shiba', name: 'Shiba Inu', category: 'mascot', price: 50, icon: '🐕', unlocked: false },
+      { id: 'panda', name: 'Gấu Panda', category: 'mascot', price: 80, icon: '🐼', unlocked: false },
+      { id: 'cat', name: 'Mochi Cat', category: 'mascot', price: 100, icon: '🐱', unlocked: false },
+      { id: 'otter', name: 'Rái Cá Otter', category: 'mascot', price: 120, icon: '🦦', unlocked: false },
+      { id: 'penguin', name: 'Chim Cánh Cụt', category: 'mascot', price: 150, icon: '🐧', unlocked: false },
+
+      // Outfits & Accessories
+      { id: 'yuzu', name: 'Quả chanh Yuzu', category: 'accessory', price: 0, icon: '🍊', unlocked: true },
+      { id: 'leaf', name: 'Cỏ bốn lá', category: 'accessory', price: 40, icon: '🌿', unlocked: false },
+      { id: 'grad', name: 'Mũ cử nhân', category: 'accessory', price: 75, icon: '🎓', unlocked: false },
+      { id: 'glasses', name: 'Kính râm ngầu', category: 'accessory', price: 100, icon: '🕶️', unlocked: false },
+
+      // Backgrounds
+      { id: 'bg_default', name: 'Thung Lũng', category: 'background', price: 0, icon: '🌲', val: '🌲', unlocked: true },
+      { id: 'bg_onsen', name: 'Suối Nước Nóng', category: 'background', price: 60, icon: '♨️', val: '♨️', unlocked: false },
+      { id: 'bg_cafe', name: 'Tiệm Cà Phê', category: 'background', price: 90, icon: '☕', val: '☕', unlocked: false },
+      { id: 'bg_beach', name: 'Bãi Biển Vàng', category: 'background', price: 130, icon: '🏖️', val: '🏖️', unlocked: false }
+    ];
+
+    let activeShopCategory = 'mascot';
+    let equippedBgId = 'bg_default';
+
+    function initPetShop() {
+      const tabMascots = document.getElementById('shopTabMascots');
+      const tabAccessories = document.getElementById('shopTabAccessories');
+      const tabBackgrounds = document.getElementById('shopTabBackgrounds');
+      
+      const updateSubTabs = (activeCategory) => {
+        activeShopCategory = activeCategory;
+        tabMascots.classList.toggle('active', activeCategory === 'mascot');
+        tabAccessories.classList.toggle('active', activeCategory === 'accessory');
+        tabBackgrounds.classList.toggle('active', activeCategory === 'background');
+        renderShopItems();
+      };
+
+      tabMascots.addEventListener('click', () => updateSubTabs('mascot'));
+      tabAccessories.addEventListener('click', () => updateSubTabs('accessory'));
+      tabBackgrounds.addEventListener('click', () => updateSubTabs('background'));
+
+      renderShopItems();
+    }
+
+    function renderShopItems() {
+      const container = document.getElementById('shopItemsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      const itemsToRender = SHOP_ITEMS.filter(item => item.category === activeShopCategory);
+      
+      itemsToRender.forEach(item => {
+        const isEquipped = (item.category === 'mascot' && avatarIconId === item.id) ||
+                           (item.category === 'accessory' && activeItems.has(item.id)) ||
+                           (item.category === 'background' && equippedBgId === item.id);
+                           
+        const card = document.createElement('div');
+        card.className = 'capy-card';
+        card.style.padding = '12px';
+        card.style.display = 'flex';
+        card.style.flexDirection = 'column';
+        card.style.alignItems = 'center';
+        card.style.justifyContent = 'space-between';
+        card.style.border = '2px solid var(--ink-coffee)';
+        card.style.borderBottomWidth = '6px';
+        card.style.boxShadow = 'none';
+        card.style.gap = '8px';
+        
+        let buttonHTML = '';
+        if (!item.unlocked) {
+          buttonHTML = `<button class="btn-cute primary shop-action-btn" data-action="buy" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--duo-green-shadow);">🍊 ${item.price}</button>`;
+        } else if (isEquipped) {
+          buttonHTML = `<button class="btn-cute secondary shop-action-btn active" data-action="unequip" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; background:#FF9600; color:white; border-color:var(--ink-coffee); box-shadow:0 3px 0 var(--ink-coffee);">Đang dùng</button>`;
+        } else {
+          buttonHTML = `<button class="btn-cute secondary shop-action-btn" data-action="equip" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--line);">Trang bị</button>`;
+        }
+        
+        card.innerHTML = `
+          <div style="font-size:38px; transform: scale(1.1); margin: 4px 0;">${item.icon}</div>
+          <div style="font-weight:800; font-size:12px; text-align:center; color:var(--ink-coffee); height:16px; overflow:hidden;">${item.name}</div>
+          ${buttonHTML}
+        `;
+        
+        container.appendChild(card);
+      });
+      
+      // Bind actions
+      container.querySelectorAll('.shop-action-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = btn.dataset.action;
+          const id = btn.dataset.id;
+          handleShopAction(action, id, e);
+        });
+      });
+    }
+
+    function showCustomConfirm(title, message, onConfirm) {
+      const overlay = document.getElementById('customDialogOverlay');
+      const titleEl = document.getElementById('customDialogTitle');
+      const textEl = document.getElementById('customDialogText');
+      const btnConfirm = document.getElementById('btnCustomDialogConfirm');
+      const btnCancel = document.getElementById('btnCustomDialogCancel');
+      
+      titleEl.textContent = title;
+      textEl.textContent = message;
+      overlay.classList.add('open');
+      
+      const close = () => {
+        overlay.classList.remove('open');
+      };
+      
+      // Setup fresh event listeners (clone node to clear previous event listeners)
+      const newConfirm = btnConfirm.cloneNode(true);
+      const newCancel = btnCancel.cloneNode(true);
+      btnConfirm.parentNode.replaceChild(newConfirm, btnConfirm);
+      btnCancel.parentNode.replaceChild(newCancel, btnCancel);
+      
+      newConfirm.addEventListener('click', () => {
+        close();
+        onConfirm();
+      });
+      newCancel.addEventListener('click', () => {
+        close();
+      });
+    }
+
+    function handleShopAction(action, id, event) {
+      const item = SHOP_ITEMS.find(x => x.id === id);
+      if (!item) return;
+      
+      if (action === 'buy') {
+        if (studyPoints >= item.price) {
+          // Custom 3D dialog instead of blocking native confirm
+          showCustomConfirm("Xác nhận mua 🛍️", `Bạn có chắc muốn dùng ${item.price} xu Yuzu để mở khóa [${item.name}] không? 🍊`, () => {
+            studyPoints -= item.price;
+            item.unlocked = true;
+            
+            // Auto equip
+            equipShopItem(item);
+            
+            // FX
+            triggerShopConfetti();
+            triggerMascotJump();
+            
+            // Render
+            updateSrsCoinsBadges();
+            renderShopItems();
+          });
+        } else {
+          alert(`Bạn cần thêm ${item.price - studyPoints} xu Yuzu để mua vật phẩm này! Hãy chăm chỉ học tập thêm nhé! 🍊`);
+        }
+      } else if (action === 'equip') {
+        equipShopItem(item);
+        triggerMascotJump();
+        renderShopItems();
+      } else if (action === 'unequip') {
+        if (item.category === 'accessory') {
+          activeItems.delete(item.id);
+          updateAvatarGlobally();
+          renderShopItems();
+        }
+      }
+    }
+
+    function equipShopItem(item) {
+      if (item.category === 'mascot') {
+        avatarIconId = item.id;
+        document.getElementById('shopMascotNameText').textContent = item.name;
+      } else if (item.category === 'accessory') {
+        activeItems.add(item.id);
+      } else if (item.category === 'background') {
+        equippedBgId = item.id;
+        const bgEl = document.getElementById('shopPreviewBgText');
+        if (bgEl) bgEl.textContent = item.val || '🌲';
+        
+        const cardEl = document.getElementById('shopMascotCard');
+        if (cardEl) {
+          if (item.id === 'bg_default') {
+            cardEl.style.background = 'radial-gradient(circle, var(--creamy-yuzu) 40%, var(--surface) 100%)';
+          } else if (item.id === 'bg_onsen') {
+            cardEl.style.background = 'radial-gradient(circle, #E0F7FA 40%, #B2EBF2 100%)';
+          } else if (item.id === 'bg_cafe') {
+            cardEl.style.background = 'radial-gradient(circle, #FFE0B2 40%, #D7CCC8 100%)';
+          } else if (item.id === 'bg_beach') {
+            cardEl.style.background = 'radial-gradient(circle, #FFF9C4 40%, #FFE082 100%)';
+          }
+        }
+      }
+      updateAvatarGlobally();
+    }
+
+    function triggerShopConfetti() {
+      const canvas = document.getElementById('shopConfettiCanvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      
+      let particles = [];
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -30,
+          vx: (Math.random() - 0.5) * 4,
+          vy: Math.random() * 4 + 3,
+          color: ['#FF9600', '#58CC02', '#1CB0F6', '#FFD200', '#FF3366'][Math.floor(Math.random() * 5)],
+          size: Math.random() * 5 + 4,
+          rot: Math.random() * Math.PI,
+          rotV: Math.random() * 0.1 - 0.05
+        });
+      }
+      
+      let startTime = Date.now();
+      function draw() {
+        if (Date.now() - startTime > 1500) {
+          canvas.style.display = 'none';
+          return;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.rotV;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+          ctx.restore();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function triggerMascotJump() {
+      const wrapper = document.getElementById('shopMascotWrapper');
+      if (!wrapper) return;
+      wrapper.style.transform = 'translateY(-20px) scale(1.1)';
+      setTimeout(() => {
+        wrapper.style.transform = 'translateY(5px) scale(0.95, 1.05)';
+        setTimeout(() => {
+          wrapper.style.transform = 'none';
+        }, 150);
+      }, 200);
+      
+      // Floating hearts
+      const heartsContainer = document.getElementById('shopMascotHearts');
+      if (heartsContainer) {
+        heartsContainer.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+          const heart = document.createElement('div');
+          heart.textContent = '❤️';
+          heart.style.position = 'absolute';
+          heart.style.left = `${Math.random() * 60 + 20}%`;
+          heart.style.bottom = '40px';
+          heart.style.fontSize = `${Math.random() * 12 + 10}px`;
+          heart.style.opacity = '1';
+          heart.style.transition = 'all 1s ease-out';
+          heartsContainer.appendChild(heart);
+          setTimeout(() => {
+            heart.style.transform = `translateY(-60px) translateX(${(Math.random() - 0.5) * 40}px)`;
+            heart.style.opacity = '0';
+          }, 20);
+        }
+      }
+    }
+
+    // Pro Paywall trigger
+    btnBuyPro.addEventListener('click', () => {
+      alert("Đã kết nối với thanh toán cổng RevenueCat thành công! Chào mừng PRO member.");
+      quotaScans = 999;
+      quotaText.textContent = "Vô hạn";
+    });
+
+    // --- INITIALIZATION ---
+    initPetShop();
+    updateAvatarGlobally();
+
+    // --- Floating Desktop Draggable AI Chatbot Logic ---
+    (function() {
+      const desktopChatToggle = document.getElementById('desktopChatToggle');
+      const desktopChatWindow = document.getElementById('desktopChatWindow');
+      const desktopChatClose = document.getElementById('desktopChatClose');
+      const desktopChatHeader = document.getElementById('desktopChatHeader');
+      const desktopChatMessages = document.getElementById('desktopChatMessages');
+      const desktopChatInput = document.getElementById('desktopChatInput');
+      const desktopChatSend = document.getElementById('desktopChatSend');
+      const themeBtn = document.getElementById('themeBtn');
+
+      let isDraggingToggle = false;
+      let startX = 0, startY = 0;
+
+      // Toggle Chat Window
+      desktopChatToggle.addEventListener('mousedown', (e) => {
+        isDraggingToggle = false;
+        startX = e.clientX;
+        startY = e.clientY;
+      });
+
+      desktopChatToggle.addEventListener('click', (e) => {
+        if (isDraggingToggle) {
+          e.preventDefault();
+          return;
+        }
+        desktopChatWindow.classList.toggle('open');
+        if (desktopChatWindow.classList.contains('open')) {
+          desktopChatInput.focus();
+          
+          // Re-position chat window near the toggle button if not moved yet
+          if (!desktopChatWindow.style.left && !desktopChatWindow.style.top) {
+            desktopChatWindow.style.right = '15px';
+            desktopChatWindow.style.bottom = '145px';
+            desktopChatWindow.style.left = 'auto';
+            desktopChatWindow.style.top = 'auto';
+          }
+        }
+      });
+
+      desktopChatClose.addEventListener('click', () => {
+        desktopChatWindow.classList.remove('open');
+      });
+
+      // Drag and Drop Utility
+      function makeElementDraggable(elmnt, dragHandle) {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        const handle = dragHandle || elmnt;
+
+        handle.addEventListener('mousedown', dragMouseDown, { passive: false });
+        handle.addEventListener('touchstart', dragTouchStart, { passive: false });
+
+        function dragMouseDown(e) {
+          // Skip dragging if user clicked a button or input inside the handle
+          if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.closest('button')) {
+            return;
+          }
+          e.preventDefault();
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+          document.addEventListener('mouseup', closeDragElement);
+          document.addEventListener('mousemove', elementDrag);
+          handle.style.cursor = 'grabbing';
+        }
+
+        function elementDrag(e) {
+          pos1 = pos3 - e.clientX;
+          pos2 = pos4 - e.clientY;
+          pos3 = e.clientX;
+          pos4 = e.clientY;
+
+          // Check if it's the toggle button to set dragging flag
+          if (elmnt === desktopChatToggle) {
+            if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5) {
+              isDraggingToggle = true;
+            }
+          }
+
+          let newTop = elmnt.offsetTop - pos2;
+          let newLeft = elmnt.offsetLeft - pos1;
+
+          const parent = elmnt.offsetParent || elmnt.parentElement;
+          const parentWidth = parent.clientWidth;
+          const parentHeight = parent.clientHeight;
+          const rect = elmnt.getBoundingClientRect();
+
+          // Bounds enforcement relative to offsetParent (phone-container)
+          if (newLeft < 0) newLeft = 0;
+          if (newTop < 0) newTop = 0;
+          if (newLeft + rect.width > parentWidth) newLeft = parentWidth - rect.width;
+          if (newTop + rect.height > parentHeight) newTop = parentHeight - rect.height;
+
+          elmnt.style.top = newTop + 'px';
+          elmnt.style.left = newLeft + 'px';
+          elmnt.style.bottom = 'auto';
+          elmnt.style.right = 'auto';
+        }
+
+        function closeDragElement() {
+          document.removeEventListener('mouseup', closeDragElement);
+          document.removeEventListener('mousemove', elementDrag);
+          handle.style.cursor = 'grab';
+        }
+
+        // Touch drag support
+        let isTouchDragging = false;
+        function dragTouchStart(e) {
+          if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.closest('button')) {
+            return;
+          }
+          isTouchDragging = false;
+          const touch = e.touches[0];
+          pos3 = touch.clientX;
+          pos4 = touch.clientY;
+          startX = touch.clientX;
+          startY = touch.clientY;
+          document.addEventListener('touchend', closeDragTouch);
+          document.addEventListener('touchmove', elementTouchDrag, { passive: false });
+        }
+
+        function elementTouchDrag(e) {
+          const touch = e.touches[0];
+          pos1 = pos3 - touch.clientX;
+          pos2 = pos4 - touch.clientY;
+          pos3 = touch.clientX;
+          pos4 = touch.clientY;
+
+          if (Math.abs(touch.clientX - startX) > 5 || Math.abs(touch.clientY - startY) > 5) {
+            isTouchDragging = true;
+            if (elmnt === desktopChatToggle) {
+              isDraggingToggle = true;
+            }
+          }
+
+          if (isTouchDragging) {
+            e.preventDefault(); // prevent screen scrolling when dragging chatbot
+          }
+
+          let newTop = elmnt.offsetTop - pos2;
+          let newLeft = elmnt.offsetLeft - pos1;
+
+          const parent = elmnt.offsetParent || elmnt.parentElement;
+          const parentWidth = parent.clientWidth;
+          const parentHeight = parent.clientHeight;
+          const rect = elmnt.getBoundingClientRect();
+
+          if (newLeft < 0) newLeft = 0;
+          if (newTop < 0) newTop = 0;
+          if (newLeft + rect.width > parentWidth) newLeft = parentWidth - rect.width;
+          if (newTop + rect.height > parentHeight) newTop = parentHeight - rect.height;
+
+          elmnt.style.top = newTop + 'px';
+          elmnt.style.left = newLeft + 'px';
+          elmnt.style.bottom = 'auto';
+          elmnt.style.right = 'auto';
+        }
+
+        // Close Touch Drag
+        function closeDragTouch() {
+          document.removeEventListener('touchend', closeDragTouch);
+          document.removeEventListener('touchmove', elementTouchDrag);
+        }
+      }
+
+      // Initialize dragging
+      makeElementDraggable(desktopChatToggle);
+      makeElementDraggable(desktopChatWindow, desktopChatHeader);
+
+      // --- Chatbot Logic & Message Sending ---
+      function appendDesktopMessage(text, sender) {
+        const bubble = document.createElement('div');
+        bubble.className = `desktop-chat-bubble ${sender}`;
+        bubble.innerHTML = text;
+        desktopChatMessages.appendChild(bubble);
+        desktopChatMessages.scrollTop = desktopChatMessages.scrollHeight;
+      }
+
+      function showTypingIndicator() {
+        const indicator = document.createElement('div');
+        indicator.id = 'desktopTypingIndicator';
+        indicator.className = 'desktop-chat-bubble bot';
+        indicator.innerHTML = '<i>Capy-sensei đang gõ... 🐾</i>';
+        desktopChatMessages.appendChild(indicator);
+        desktopChatMessages.scrollTop = desktopChatMessages.scrollHeight;
+      }
+
+      function removeTypingIndicator() {
+        const ind = document.getElementById('desktopTypingIndicator');
+        if (ind) ind.remove();
+      }
+
+      function getChatbotResponse(query) {
+        const text = query.toLowerCase().trim();
+        
+        // Theme commands
+        if (text.includes("tối") || text.includes("dark") || text.includes("sáng") || text.includes("light") || text.includes("giao diện") || text.includes("theme")) {
+          setTimeout(() => {
+            if (themeBtn) themeBtn.click();
+            const isDark = document.documentElement.classList.contains('dark');
+            appendDesktopMessage(`Đã chuyển đổi giao diện sang chế độ <b>${isDark ? 'Tối 🌙' : 'Sáng ☀️'}</b> theo yêu cầu của bạn!`, 'bot');
+          }, 300);
+          return;
+        }
+
+        // Specific questions responses
+        if (text.includes("mẹo") || text.includes("ghi nhớ") || text.includes("remember") || text.includes("học từ")) {
+          return `<b>Mẹo nhớ từ vựng cùng Capy-sensei 🍊:</b><br><br>
+          1. <b>Học qua hình ảnh:</b> Chụp và ghim trực tiếp nghĩa tiếng Việt đè lên ảnh. Trí não của bạn ghi nhớ hình ảnh nhanh gấp 60.000 lần chữ viết!<br>
+          2. <b>Lặp lại ngắt quãng (SRS):</b> Đừng cố nhồi nhét. Hãy dùng tab <b>Sổ từ/SRS</b> để ôn lại thẻ flashcard vào các ngày 1, 3, 6 để từ vựng khắc sâu vào trí nhớ dài hạn.<br>
+          3. <b>Thời điểm vàng:</b> Hãy ôn tập vào buổi sáng khi ngủ dậy hoặc buổi tối trước khi đi ngủ nhé! 🦫🍵`;
+        }
+
+        if (text.includes("lặp lại") || text.includes("ngắt quãng") || text.includes("srs") || text.includes("sm-2") || text.includes("thuật toán")) {
+          return `<b>Thuật toán lặp lại ngắt quãng SM-2 🔄:</b><br><br>
+          Hệ thống sẽ tự động tính toán thời gian ôn tập lý tưởng cho mỗi từ vựng của bạn:<br>
+          - 🔴 <b>Quên hoàn toàn (Grade 0):</b> Sẽ cần học lại ngay lập tức (1 ngày).<br>
+          - 🟡 <b>Tàm tạm (Grade 1):</b> Ôn lại sau 3 ngày.<br>
+          - 🟢 <b>Nhớ tốt (Grade 2):</b> Ôn lại sau 6 ngày.<br>
+          Mỗi lần bạn trả lời đúng, khoảng cách ngày ôn sẽ được nhân lên dựa trên <i>Easiness Factor</i> giúp giảm số lần phải ôn các từ đã thuộc!`;
+        }
+
+        if (text.includes("chào") || text.includes("hello") || text.includes("hi") || text.includes("hey")) {
+          return `Chào bạn! Tớ là Capy-sensei, rất vui được trò chuyện với bạn! 🦫🍊 Bạn cần tớ hỗ trợ gì về từ vựng tiếng Anh hay cách sử dụng app hôm nay?`;
+        }
+        
+        if (text.includes("keyboard") || text.includes("bàn phím")) {
+          return `<b>Keyboard</b> (Bàn phím):<br>
+          - Nghĩa: Bàn phím máy tính hoặc nhạc cụ.<br>
+          - Ví dụ: <i>'The mechanical keyboard typing sound is satisfying.'</i> (Tiếng gõ bàn phím cơ nghe rất đã tai.)<br>
+          - Phân biệt với <b>Keypad</b>: Keypad là cụm phím phụ hoặc bàn phím nhỏ chỉ có số (như ở cửa mã số).`;
+        }
+
+        if (text.includes("coffee") || text.includes("cà phê") || text.includes("mug")) {
+          return `<b>Coffee Mug</b> (Cốc cà phê):<br>
+          - Nghĩa: Loại cốc lớn, dày, có quai cầm để uống cà phê, trà nóng.<br>
+          - Ví dụ: <i>'She held the warm coffee mug with both hands.'</i> (Cô ấy áp hai tay vào chiếc cốc cà phê ấm áp.)`;
+        }
+
+        // Generic fallback response
+        return `Capy-sensei đã nghe rõ câu hỏi của bạn về <i>"${query}"</i>.<br><br>
+        Tớ là một AI chuyên về từ vựng. Bạn có thể hỏi tớ cách phân biệt các từ, dịch nghĩa hoặc mẹo học tập. Hãy thử gõ các từ như <code>Keyboard</code>, <code>Coffee Mug</code> hoặc click vào các gợi ý ở dưới nhé! 🐾🍊`;
+      }
+
+      function handleSendMessage(userMsgText) {
+        if (!userMsgText) return;
+        appendDesktopMessage(userMsgText, 'user');
+        showTypingIndicator();
+
+        setTimeout(() => {
+          removeTypingIndicator();
+          const botReply = getChatbotResponse(userMsgText);
+          if (botReply) {
+            appendDesktopMessage(botReply, 'bot');
+          }
+        }, 800);
+      }
+
+      desktopChatSend.addEventListener('click', () => {
+        const val = desktopChatInput.value.trim();
+        if (val) {
+          desktopChatInput.value = '';
+          handleSendMessage(val);
+        }
+      });
+
+      desktopChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const val = desktopChatInput.value.trim();
+          if (val) {
+            desktopChatInput.value = '';
+            handleSendMessage(val);
+          }
+        }
+      });
+
+      // Quick Chips triggers
+      document.querySelectorAll('.desktop-chat-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const prompt = chip.dataset.prompt;
+          handleSendMessage(prompt);
+        });
+      });
+
+      // Expose globally for gameplay screens
+      window.askCapyAI = function(word) {
+        desktopChatWindow.classList.add('open');
+        handleSendMessage("Giải thích từ: " + word);
+      };
+    })();
+
+  </script>
+</body>
+</html>
