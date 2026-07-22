@@ -2514,97 +2514,7 @@
       </div>
     </div>
 
-    <!-- --- P2P CHAT HUB SCREEN / MODAL (#chatHubOverlay) --- -->
-    <div class="bottom-sheet-overlay" id="chatHubOverlay">
-      <div class="bottom-sheet" style="max-height:88vh; display:flex; flex-direction:column;">
-        <div class="bottom-sheet-handle"></div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:2px solid var(--line); padding-bottom:8px;">
-          <h3 style="font-family:var(--font-cute); font-weight:800; font-size:17px; color:var(--ink-coffee); margin:0;">Trò Chuyện & Học Tập 💬</h3>
-          <span style="font-size:11px; font-weight:700; color:var(--muted);">3 Bạn Bè Online</span>
-        </div>
 
-        <!-- Search Friends Input -->
-        <div style="position:relative; margin-bottom:12px;">
-          <input type="text" id="p2pSearchInput" placeholder="Tìm kiếm bạn bè trò chuyện..." style="width:100%; padding:8px 12px 8px 34px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:12.5px; background:var(--surface); color:var(--ink-coffee);">
-          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px;">🔍</span>
-        </div>
-
-        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding-right:2px;">
-          
-          <!-- FIXED TOP ITEM: CAPY AI ASSISTANT CARD -->
-          <div id="btnOpenCapyAiTopCard" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--creamy-yuzu); border:2.5px solid var(--duo-orange); border-radius:18px; box-shadow:0 4px 0 var(--duo-orange-shadow); cursor:pointer; position:relative; transition:transform 0.1s ease;">
-            <div style="position:relative; width:46px; height:46px; border-radius:50%; background:var(--duo-blue); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
-              🦫
-              <span style="position:absolute; bottom:0; right:0; width:12px; height:12px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
-            </div>
-            <div style="flex:1;">
-              <div style="display:flex; align-items:center; gap:6px;">
-                <div style="font-weight:800; font-size:13.5px; color:var(--ink-coffee);">Capy-sensei 🦫 (Trợ lý AI)</div>
-                <span style="font-size:9.5px; font-weight:800; background:var(--duo-orange); color:white; padding:1px 6px; border-radius:8px; border:1px solid var(--ink-coffee);">PINNED AI</span>
-              </div>
-              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Sẵn sàng đáp mọi câu hỏi từ vựng & giải thích ngữ cảnh của bạn!</div>
-            </div>
-            <span style="font-size:18px; color:var(--duo-orange-shadow);">➔</span>
-          </div>
-
-          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.5px; margin-top:6px;">
-            Trò chuyện với Bạn Bè (Direct Chats)
-          </div>
-
-          <!-- P2P FRIEND CHAT LIST -->
-          <div id="p2pFriendsChatList" style="display:flex; flex-direction:column; gap:10px;">
-            
-            <!-- Friend Chat Item 1: Capy Mây -->
-            <div class="p2p-chat-item" data-friend-id="capy_may" data-friend-name="Capy Mây (Google User)" data-friend-avatar="🍵" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
-              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-green); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
-                🍵
-                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
-              </div>
-              <div style="flex:1; overflow:hidden;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Mây (Google User)</div>
-                  <span style="font-size:10px; color:var(--muted); font-weight:700;">10m</span>
-                </div>
-                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bạn: Cậu thuộc từ 'Mantis' chưa? 🎴</div>
-              </div>
-              <span style="background:#FF4B4B; color:white; font-size:10.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 6px; min-width:18px; text-align:center;">2</span>
-            </div>
-
-            <!-- Friend Chat Item 2: Alex -->
-            <div class="p2p-chat-item" data-friend-id="alex" data-friend-name="Alex (Top 1 Leaderboard)" data-friend-avatar="👑" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
-              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-purple); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
-                👑
-                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
-              </div>
-              <div style="flex:1; overflow:hidden;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Alex (Top 1 Leaderboard)</div>
-                  <span style="font-size:10px; color:var(--muted); font-weight:700;">30m</span>
-                </div>
-                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Đã chia sẻ 1 Photo Note 🖼️: Study Desk Setup</div>
-              </div>
-              <span style="background:#FF4B4B; color:white; font-size:10.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 6px; min-width:18px; text-align:center;">1</span>
-            </div>
-
-            <!-- Friend Chat Item 3: Capy Cam -->
-            <div class="p2p-chat-item" data-friend-id="capy_cam" data-friend-name="Capy Cam (Study Buddy)" data-friend-avatar="🍊" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
-              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-orange); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
-                🍊
-                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#CCCCCC; border:2px solid white;"></span>
-              </div>
-              <div style="flex:1; overflow:hidden;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Cam (Study Buddy)</div>
-                  <span style="font-size:10px; color:var(--muted); font-weight:700;">1d</span>
-                </div>
-                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Hôm nay mình vừa vượt mốc 200 PTS nè! 🍊</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- --- DIRECT FRIEND CHAT ROOM (1V1 P2P CHAT MODAL) --- -->
     <div class="bottom-sheet-overlay" id="directChatOverlay">
@@ -4253,10 +4163,8 @@
       }, 1000);
     }
 
-    optCamera.addEventListener('click', handleMockUploadScan);
-    optGallery.addEventListener('click', handleMockUploadScan);
-
-    // --- TAB 4: WORKSHOP (Defunct, replaced by direct gameplay) ---
+    if (optCamera) optCamera.addEventListener('click', handleMockUploadScan);
+    if (optGallery) optGallery.addEventListener('click', handleMockUploadScan);
 
     // --- Chatbot Spec Sync (Hỏi Bé Capy 🦫) ---
     let dailyChatLeft = 10;
@@ -4268,338 +4176,35 @@
     const capyChatSend = document.getElementById('capyChatSend');
     const chatQuotaText = document.getElementById('chatQuotaText');
 
-    const CHAT_DATA_RESPONSES = {
-      "Desk Lamp": {
-        synonym: "Các từ đồng nghĩa với <b>Desk Lamp</b>:<br>1. <code>Table lamp</code> (Đèn để bàn)<br>2. <code>Study light</code> (Đèn học)<br>3. <code>Reading lamp</code> (Đèn đọc sách)<br><br>Capy khuyên dùng: <i>Table lamp</i> là từ phổ biến nhất khi nói về các loại đèn trang trí/chiếu sáng bàn làm việc chung.",
-        example: "Dưới đây là 2 ví dụ của từ <b>Desk Lamp</b>:<br><br>1. <i>'The desk lamp cast a warm glow over my notebook.'</i> (Chiếc đèn học tỏa ánh sáng ấm áp lên cuốn sổ tay của tôi.)<br><br>2. <i>'You should turn on your desk lamp to protect your eyes.'</i> (Bạn nên bật đèn để bàn để bảo vệ mắt.)",
-        diff: "<b>Desk Lamp vs. Floor Lamp</b>:<br><br>- <code>Desk Lamp</code>: Thiết kế nhỏ gọn để đặt trực tiếp trên mặt bàn, cung cấp ánh sáng tập trung (task lighting) cho học tập, làm việc.<br><br>- <code>Floor Lamp</code>: Đèn đứng cao, đặt trực tiếp trên sàn nhà, dùng để chiếu sáng toàn phòng hoặc làm đèn trang trí góc sofa."
-      },
-      "Coffee Mug": {
-        synonym: "Các từ đồng nghĩa với <b>Coffee Mug</b>:<br>1. <code>Coffee cup</code> (Ly/tách cà phê)<br>2. <code>Teacup</code> (Tách trà)<br>3. <code>Tankard</code> (Cốc vại lớn)<br><br>Capy khuyên dùng: <i>Coffee cup</i> thường nhỏ hơn và đi kèm đĩa lót, còn <i>Mug</i> là loại cốc to dày không cần đĩa.",
-        example: "Dưới đây là 2 ví dụ của từ <b>Coffee Mug</b>:<br><br>1. <i>'I accidentally spilled hot matcha milk from my coffee mug.'</i> (Tôi vô tình làm tràn sữa matcha nóng từ ly cà phê của mình.)<br><br>2. <i>'She held the warm coffee mug with both hands.'</i> (Cô ấy cầm chiếc ly cà phê ấm áp bằng cả hai tay.)",
-        diff: "<b>Coffee Mug vs. Coffee Cup</b>:<br><br>- <code>Coffee Mug</code>: Cốc to, thành dày, dung tích lớn (250-450ml), không có đĩa lót, giữ nhiệt tốt, dùng cho thức uống thông thường ở nhà/văn phòng.<br><br>- <code>Coffee Cup</code>: Nhỏ hơn (100-200ml), thành mỏng hơn, đi kèm đĩa lót, thường dùng trong các nhà hàng trang trọng hoặc uống Espresso."
-      },
-      "Keyboard": {
-        synonym: "Các từ đồng nghĩa với <b>Keyboard</b>:<br>1. <code>Keypad</code> (Bàn phím nhỏ)<br>2. <code>Input deck</code> (Bàn điều khiển nhập liệu)<br>3. <code>Keys</code> (Các phím bấm)<br><br>Capy khuyên dùng: <i>Keypad</i> chỉ dùng cho bàn phím số phụ hoặc bàn phím mã số khóa cửa.",
-        example: "Dưới đây là 2 ví dụ của từ <b>Keyboard</b>:<br><br>1. <i>'The mechanical keyboard typing sound is so satisfying.'</i> (Âm thanh gõ của bàn phím cơ nghe thật đã tai.)<br><br>2. <i>'He cleaned the dust underneath the keyboard keys.'</i> (Anh ấy lau sạch bụi bẩn bên dưới các phím bấm của bàn phím.)",
-        diff: "<b>Keyboard vs. Keypad</b>:<br><br>- <code>Keyboard</code>: Bàn phím đầy đủ ký tự chữ và số (như chuẩn QWERTY trên máy tính).<br><br>- <code>Keypad</code>: Bàn phím thu nhỏ chỉ có các số hoặc một cụm phím chuyên dụng (như bàn phím bấm máy tính bỏ túi, khóa số chung cư)."
-      },
-      "Backpack": {
-        synonym: "Các từ đồng nghĩa với <b>Backpack</b>:<br>1. <code>Rucksack</code> (Ba lô dã ngoại lớn)<br>2. <code>Knapsack</code> (Ba lô vải bạt nhỏ)<br>3. <code>Schoolbag</code> (Cặp sách học sinh)<br><br>Capy khuyên dùng: <i>Schoolbag</i> phù hợp nhất cho các bé học sinh đeo đi học tiểu học/trung học.",
-        example: "Dưới đây là 2 ví dụ của từ <b>Backpack</b>:<br><br>1. <i>'My backpack is stuffed with heavy English textbooks.'</i> (Chiếc ba lô của tôi nhồi đầy những cuốn sách giáo khoa tiếng Anh nặng trịch.)<br><br>2. <i>'He slung his backpack over one shoulder.'</i> (Anh ấy khoác chiếc ba lô lên một bên vai.)",
-        diff: "<b>Backpack vs. Rucksack</b>:<br><br>- <code>Backpack</code>: Từ chung cho tất cả các loại túi đeo hai vai sau lưng.<br><br>- <code>Rucksack</code>: Xuất phát từ tiếng Đức, thường chỉ loại ba lô chuyên dụng cỡ lớn, chống nước tốt, dùng đi phượt hoặc hành quân quân đội."
-      }
-    };
-
-    function appendCapyChatMessage(text, sender) {
-      const bubble = document.createElement('div');
-      if (sender === 'user') {
-        bubble.className = 'user-speech-bubble';
-        bubble.style.alignSelf = 'flex-end';
-        bubble.style.maxWidth = '85%';
-        bubble.style.margin = '4px 0';
-      } else {
-        bubble.className = 'capy-speech-bubble';
-        bubble.style.alignSelf = 'flex-start';
-        bubble.style.maxWidth = '85%';
-        bubble.style.margin = '4px 0';
-      }
-      bubble.innerHTML = text;
-      capyChatMessages.appendChild(bubble);
-      capyChatMessages.scrollTop = capyChatMessages.scrollHeight;
-    }
-
-    // Typing animation simulated
-    function showTypingIndicator() {
-      const indicator = document.createElement('div');
-      indicator.id = 'capyTypingIndicator';
-      indicator.className = 'capy-speech-bubble';
-      indicator.style.alignSelf = 'flex-start';
-      indicator.style.maxWidth = '85%';
-      indicator.style.margin = '4px 0';
-      indicator.innerHTML = `<i>Bạn Pet đang soạn bài giải thích... 🐾</i>`;
-      capyChatMessages.appendChild(indicator);
-      capyChatMessages.scrollTop = capyChatMessages.scrollHeight;
-    }
-
-    function removeTypingIndicator() {
-      const ind = document.getElementById('capyTypingIndicator');
-      if (ind) ind.remove();
-    }
-
-    function triggerCapyResponse(queryText) {
-      if (dailyChatLeft <= 0) {
-        alert("Bạn đã hết lượt đặt câu hỏi đàm thoại hôm nay! Hãy nâng cấp PRO tại Cài đặt.");
-        return;
-      }
-
-      dailyChatLeft--;
-      chatQuotaText.textContent = `Còn ${dailyChatLeft}/10 câu hỏi`;
-
-      appendCapyChatMessage(queryText, 'user');
-      showTypingIndicator();
-
-      setTimeout(() => {
-        removeTypingIndicator();
-        const msg = queryText.toLowerCase();
-        let reply = "";
-        
-        const responses = CHAT_DATA_RESPONSES[activeChatWord];
-        if (msg.includes("đồng nghĩa") || msg.includes("synonym")) {
-          reply = responses.synonym;
-        } else if (msg.includes("ví dụ") || msg.includes("example")) {
-          reply = responses.example;
-        } else if (msg.includes("khác") || msg.includes("phân biệt") || msg.includes("diff")) {
-          reply = responses.diff;
-        } else {
-          reply = `Pet-sensei nghe rõ câu hỏi của bạn về từ <b>${activeChatWord}</b>:<br><br><i>"${queryText}"</i>.<br><br>Hãy thử click các gợi ý ở dưới để xem giải thích đồng nghĩa, ví dụ hoặc so sánh nhé! 🐾🍊`;
-        }
-
-        appendCapyChatMessage(reply, 'bot');
-      }, 750);
-    }
-
-    // Register Chat button clicks
-    function setupChatTriggers() {
-      document.querySelectorAll('.btn-capy-chat').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const backWordEl = document.querySelector('#gameplaySrsCard .flip-card-back .flashcard-vocab-word');
-          activeChatWord = btn.dataset.word || (backWordEl ? backWordEl.textContent : "Keyboard");
-          capyChatTargetWord.textContent = activeChatWord;
-          
-          capyChatMessages.innerHTML = `
-            <div class="capy-speech-bubble" style="align-self: flex-start; max-width: 85%;">
-              Chào bạn! Hỏi tớ bất kỳ điều gì về từ vựng <b>${activeChatWord}</b> nhé. Tớ đã sẵn sàng giải đáp rồi! 🐾🍵
-            </div>
-          `;
-          
-          // Re-sync chatbot header avatar
-          const chatMiniAvatar = document.querySelector('#capyChatOverlay .bottom-sheet div div div[style*="width:36px"]');
-          if (chatMiniAvatar) {
-            chatMiniAvatar.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 36);
-          }
-
-          capyChatOverlay.classList.add('open');
-        });
-      });
-    }
-
-    // Call init chat triggers
-    setupChatTriggers();
-
-    // Close chat bottom sheet
-    capyChatOverlay.addEventListener('click', (e) => {
-      if (e.target === capyChatOverlay) {
-        capyChatOverlay.classList.remove('open');
-      }
-    });
-
-    // --- CHAT HUB & DIRECT P2P FRIEND CHAT LOGIC ---
-    const chatHubOverlay = document.getElementById('chatHubOverlay');
-    const directChatOverlay = document.getElementById('directChatOverlay');
-    const desktopChatToggle = document.getElementById('desktopChatToggle');
-    const btnOpenCapyAiTopCard = document.getElementById('btnOpenCapyAiTopCard');
-    const btnBackToChatHub = document.getElementById('btnBackToChatHub');
-    const p2pSearchInput = document.getElementById('p2pSearchInput');
-    const p2pChatItems = document.querySelectorAll('.p2p-chat-item');
-    
-    const directChatFriendAvatar = document.getElementById('directChatFriendAvatar');
-    const directChatFriendName = document.getElementById('directChatFriendName');
-    const directChatMessages = document.getElementById('directChatMessages');
-    const directChatInput = document.getElementById('directChatInput');
-    const btnDirectChatSend = document.getElementById('btnDirectChatSend');
-    const btnAttachVocabCard = document.getElementById('btnAttachVocabCard');
-
-    // Desktop Chat Toggle opens Chat Hub Modal
-    if (desktopChatToggle && chatHubOverlay) {
-      desktopChatToggle.addEventListener('click', () => {
-        chatHubOverlay.classList.add('open');
-      });
-
-      chatHubOverlay.addEventListener('click', (e) => {
-        if (e.target === chatHubOverlay) {
-          chatHubOverlay.classList.remove('open');
-        }
-      });
-    }
-
-    // Pinned Top Item: Capy AI Assistant -> Opens Capy AI Chat overlay
-    if (btnOpenCapyAiTopCard && capyChatOverlay) {
-      btnOpenCapyAiTopCard.addEventListener('click', () => {
-        if (chatHubOverlay) chatHubOverlay.classList.remove('open');
-        capyChatOverlay.classList.add('open');
-      });
-    }
-
-    // Friend list search filter
-    if (p2pSearchInput) {
-      p2pSearchInput.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-        p2pChatItems.forEach(item => {
-          const name = (item.getAttribute('data-friend-name') || '').toLowerCase();
-          if (name.includes(query)) {
-            item.style.display = 'flex';
-          } else {
-            item.style.display = 'none';
-          }
-        });
-      });
-    }
-
-    // Open Direct 1v1 Chat with Friend
-    p2pChatItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const fName = item.getAttribute('data-friend-name') || 'Capy Mây';
-        const fAvatar = item.getAttribute('data-friend-avatar') || '🍵';
-        
-        if (directChatFriendName) directChatFriendName.textContent = fName;
-        if (directChatFriendAvatar) directChatFriendAvatar.textContent = fAvatar;
-        
-        // Clear unread badge on click
-        const badge = item.querySelector('span[style*="background:#FF4B4B"]');
-        if (badge) badge.remove();
-
-        if (chatHubOverlay) chatHubOverlay.classList.remove('open');
-        if (directChatOverlay) directChatOverlay.classList.add('open');
-      });
-    });
-
-    if (directChatOverlay) {
-      directChatOverlay.addEventListener('click', (e) => {
-        if (e.target === directChatOverlay) {
-          directChatOverlay.classList.remove('open');
-        }
-      });
-    }
-
-    if (btnBackToChatHub) {
-      btnBackToChatHub.addEventListener('click', () => {
-        if (directChatOverlay) directChatOverlay.classList.remove('open');
-        if (chatHubOverlay) chatHubOverlay.classList.add('open');
-      });
-    }
-
-    // Direct 1v1 Message Send
-    function sendDirectUserMessage() {
-      if (!directChatInput || !directChatMessages) return;
-      const text = directChatInput.value.trim();
-      if (text === '') return;
-      directChatInput.value = '';
-
-      const myBubble = document.createElement('div');
-      myBubble.style.background = 'var(--duo-blue)';
-      myBubble.style.color = '#FFFFFF';
-      myBubble.style.border = '1.5px solid var(--ink-coffee)';
-      myBubble.style.alignSelf = 'flex-end';
-      myBubble.style.borderRadius = '18px';
-      myBubble.style.borderBottomRightRadius = '2px';
-      myBubble.style.padding = '9px 13px';
-      myBubble.style.fontSize = '12.5px';
-      myBubble.style.lineHeight = '1.4';
-      myBubble.style.maxWidth = '82%';
-      myBubble.style.boxShadow = '0 3px 0 #1899D6';
-      myBubble.style.fontWeight = '700';
-      myBubble.textContent = text;
-
-      directChatMessages.appendChild(myBubble);
-      directChatMessages.scrollTop = directChatMessages.scrollHeight;
-
-      // Auto mock response from friend
-      setTimeout(() => {
-        const friendBubble = document.createElement('div');
-        friendBubble.style.background = '#FFFFFF';
-        friendBubble.style.color = 'var(--ink-coffee)';
-        friendBubble.style.border = '1.5px solid var(--ink-coffee)';
-        friendBubble.style.alignSelf = 'flex-start';
-        friendBubble.style.borderRadius = '18px';
-        friendBubble.style.borderBottomLeftRadius = '2px';
-        friendBubble.style.padding = '9px 13px';
-        friendBubble.style.fontSize = '12.5px';
-        friendBubble.style.lineHeight = '1.4';
-        friendBubble.style.maxWidth = '82%';
-        friendBubble.style.boxShadow = '0 3px 0 var(--ink-coffee)';
-        friendBubble.textContent = "Tuyệt vời quá! Tớ vừa lưu bài của cậu rồi nè 🍊🎉";
-
-        directChatMessages.appendChild(friendBubble);
-        directChatMessages.scrollTop = directChatMessages.scrollHeight;
-      }, 1000);
-    }
-
-    if (btnDirectChatSend) {
-      btnDirectChatSend.addEventListener('click', sendDirectUserMessage);
-    }
-    if (directChatInput) {
-      directChatInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendDirectUserMessage();
-      });
-    }
-
-    // Vocab Attachment button
-    if (btnAttachVocabCard) {
-      btnAttachVocabCard.addEventListener('click', () => {
-        const cardBubble = document.createElement('div');
-        cardBubble.style.background = '#FFF2CC';
-        cardBubble.style.border = '2px solid var(--ink-coffee)';
-        cardBubble.style.alignSelf = 'flex-end';
-        cardBubble.style.borderRadius = '18px';
-        cardBubble.style.padding = '10px';
-        cardBubble.style.width = '85%';
-        cardBubble.style.boxShadow = '0 3.5px 0 var(--ink-coffee)';
-        cardBubble.innerHTML = `
-          <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px;">📤 Đã chia sẻ thẻ từ vựng</div>
-          <div style="display:flex; gap:10px; align-items:center; background:white; border:1.5px solid var(--ink-coffee); border-radius:12px; padding:8px;">
-            <span style="font-size:28px;">💻</span>
-            <div>
-              <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Desk Lamp / Đèn học</div>
-              <div style="font-size:11px; color:var(--muted);">Study Desk Setup · 3 từ vựng</div>
-            </div>
-          </div>
-        `;
-        directChatMessages.appendChild(cardBubble);
-        directChatMessages.scrollTop = directChatMessages.scrollHeight;
-      });
-    }
-
     window.openDirectChat = function(name, avatar) {
-      if (directChatFriendName) directChatFriendName.textContent = name;
-      if (directChatFriendAvatar) directChatFriendAvatar.textContent = avatar;
-      if (chatHubOverlay) chatHubOverlay.classList.remove('open');
-      if (directChatOverlay) directChatOverlay.classList.add('open');
+      const desktopChatWindow = document.getElementById('desktopChatWindow');
+      if (desktopChatWindow) {
+        desktopChatWindow.classList.add('open');
+        const desktopChatInboxView = document.getElementById('desktopChatInboxView');
+        const desktopChatDetailView = document.getElementById('desktopChatDetailView');
+        const btnDesktopChatBack = document.getElementById('btnDesktopChatBack');
+        const desktopChatAvatar = document.getElementById('desktopChatAvatar');
+        const desktopChatTitle = document.getElementById('desktopChatTitle');
+        const desktopChatStatus = document.getElementById('desktopChatStatus');
+        const desktopChatSuggestions = document.getElementById('desktopChatSuggestions');
+        const btnDesktopAttachVocab = document.getElementById('btnDesktopAttachVocab');
+        const desktopChatInput = document.getElementById('desktopChatInput');
+
+        if (desktopChatInboxView && desktopChatDetailView) {
+          desktopChatInboxView.style.display = 'none';
+          desktopChatDetailView.style.display = 'flex';
+          if (btnDesktopChatBack) btnDesktopChatBack.style.display = 'inline-block';
+          if (desktopChatAvatar) desktopChatAvatar.textContent = avatar;
+          if (desktopChatTitle) desktopChatTitle.textContent = name;
+          if (desktopChatStatus) desktopChatStatus.textContent = 'Đang online 🟢';
+          if (desktopChatSuggestions) desktopChatSuggestions.style.display = 'none';
+          if (btnDesktopAttachVocab) btnDesktopAttachVocab.style.display = 'inline-block';
+          if (desktopChatInput) desktopChatInput.placeholder = `Nhập tin nhắn cho ${name.split(' ')[0]}...`;
+        }
+      }
     };
 
-    // Send click
-    capyChatSend.addEventListener('click', () => {
-      const text = capyChatInput.value.trim();
-      if (text === '') return;
-      capyChatInput.value = '';
-      triggerCapyResponse(text);
-    });
 
-    capyChatInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const text = capyChatInput.value.trim();
-        if (text === '') return;
-        capyChatInput.value = '';
-        triggerCapyResponse(text);
-      }
-    });
-
-    // Chips clicks
-    document.querySelectorAll('.chat-action-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const action = chip.dataset.action;
-        let query = "";
-        if (action === 'synonym') {
-          query = `Tìm từ đồng nghĩa của ${activeChatWord}`;
-        } else if (action === 'example') {
-          query = `Cho thêm 2 ví dụ khác về ${activeChatWord}`;
-        } else {
-          query = `Phân biệt cách dùng của ${activeChatWord}`;
-        }
-        triggerCapyResponse(query);
-      });
-    });
 
 
     // --- TAB 4: PET SHOP CONTROLLER & SYSTEM ---
