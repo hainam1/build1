@@ -1028,7 +1028,7 @@
   <div class="bar">
     <div class="brand">
       <h1>Class Diagram Explorer</h1>
-      <div class="sub">AI Vocabulary Photo Note · 15 Classes · 3 Packages</div>
+      <div class="sub">AI Vocabulary Photo Note · 18 Classes · 3 Packages</div>
     </div>
     
     <!-- Filter Chips -->
@@ -1090,7 +1090,7 @@
 
         <!-- Class Quick Navigation -->
         <div>
-          <div class="section-title">Danh sách các lớp (<span id="class-count">15</span>)</div>
+          <div class="section-title">Danh sách các lớp (<span id="class-count">18</span>)</div>
           <div class="class-list" id="classList">
             <!-- Dynamically populated -->
           </div>
@@ -2264,6 +2264,97 @@
         ],
         relationships: [
           { target: "AppNotification", type: "Dependency (manages)", desc: "Quản lý truy vấn và cập nhật trạng thái các bản ghi thông báo trong SQLite." }
+        ]
+      },
+      ChatConversation: {
+        name: "ChatConversation",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "chat_conversations",
+        description: "Đại diện cho cuộc trò chuyện 1v1 P2P giữa hai bạn bè trong ứng dụng.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính UUID định danh hội thoại." },
+          { field: "participant1_id", desc: "Khóa ngoại tham chiếu người dùng 1." },
+          { field: "participant2_id", desc: "Khóa ngoại tham chiếu người dùng 2." },
+          { field: "last_message", desc: "Nội dung tin nhắn mới nhất hiển thị trên danh sách." },
+          { field: "last_message_at", desc: "Thời điểm gửi tin nhắn cuối." },
+          { field: "unread_count_p1", desc: "Số tin chưa đọc của người dùng 1." },
+          { field: "unread_count_p2", desc: "Số tin chưa đọc của người dùng 2." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "UUID cuộc hội thoại." },
+          { name: "participant1Id", type: "string", desc: "ID người dùng 1." },
+          { name: "participant2Id", type: "string", desc: "ID người dùng 2." },
+          { name: "lastMessage", type: "string", desc: "Xem trước tin nhắn cuối." },
+          { name: "lastMessageAt", type: "Date", desc: "Thời điểm tin nhắn cuối." },
+          { name: "unreadCountUser1", type: "number", desc: "Số tin chưa đọc User 1." },
+          { name: "unreadCountUser2", type: "number", desc: "Số tin chưa đọc User 2." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Conversation Indexing", desc: "Lưu giữ thông tin xem trước và unread counter giúp render danh sách Chat Hub siêu tốc." }
+        ],
+        relationships: [
+          { target: "User", type: "Association N → 2", desc: "Hội thoại liên kết 2 thành viên User bạn bè." },
+          { target: "DirectChatMessage", type: "Composition 1 → N", desc: "Một cuộc hội thoại chứa lịch sử tin nhắn P2P." }
+        ]
+      },
+      DirectChatMessage: {
+        name: "DirectChatMessage",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "direct_chat_messages",
+        description: "Đại diện cho một tin nhắn 1v1 bao gồm văn bản hoặc thẻ từ vựng/ảnh được chia sẻ.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính UUID tin nhắn." },
+          { field: "conversation_id", desc: "Khóa ngoại tham chiếu cuộc hội thoại." },
+          { field: "sender_id", desc: "ID người gửi." },
+          { field: "receiver_id", desc: "ID người nhận." },
+          { field: "message_type", desc: "Loại: TEXT, SHARED_VOCAB, SHARED_PHOTO." },
+          { field: "text_content", desc: "Nội dung văn bản tin nhắn." },
+          { field: "attached_vocab_id", desc: "ID từ vựng đính kèm (nếu có)." },
+          { field: "is_read", desc: "Cờ trạng thái đã đọc." },
+          { field: "created_at", desc: "Thời điểm gửi (ISO8601)." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "UUID tin nhắn." },
+          { name: "conversationId", type: "string", desc: "ID hội thoại." },
+          { name: "senderId", type: "string", desc: "ID người gửi." },
+          { name: "receiverId", type: "string", desc: "ID người nhận." },
+          { name: "messageType", type: "MessageType", desc: "Loại tin nhắn." },
+          { name: "textContent", type: "string", desc: "Văn bản tin nhắn." },
+          { name: "attachedVocabId", type: "string", desc: "ID thẻ từ vựng đính kèm." },
+          { name: "isRead", type: "boolean", desc: "Cờ đã đọc." },
+          { name: "createdAt", type: "Date", desc: "Thời điểm tạo." }
+        ],
+        methods: [],
+        principles: [
+          { title: "Peer Vocab Exchange", desc: "Hỗ trợ đính kèm từ vựng đút thẳng vào Sổ cá nhân của bạn bè." }
+        ],
+        relationships: [
+          { target: "ChatConversation", type: "Composition N → 1", desc: "Thuộc sở hữu của ChatConversation." },
+          { target: "Vocabulary", type: "Association N → 0..1", desc: "Tham chiếu thẻ từ vựng được chia sẻ." }
+        ]
+      },
+      PeerChatService: {
+        name: "PeerChatService",
+        package: "Batch & SRS",
+        stereotype: "service",
+        dbTable: "N/A",
+        description: "Dịch vụ quản lý gửi nhận tin nhắn 1v1 P2P, tải lịch sử trò chuyện và đồng bộ trạng thái đọc.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "fetchConversations(userId)", desc: "Truy vấn danh sách các cuộc trò chuyện bạn bè từ SQLite." },
+          { name: "sendDirectMessage(receiverId, content, vocabId)", desc: "Gửi tin nhắn hoặc đính kèm thẻ từ vựng cho bạn bè." },
+          { name: "markConversationAsRead(conversationId)", desc: "Đánh dấu tất cả tin nhắn trong hội thoại là đã đọc." }
+        ],
+        principles: [
+          { title: "Real-time P2P Sync", desc: "Xử lý kết nối WebSocket và đẩy thông báo bạn bè khi có tin nhắn mới." }
+        ],
+        relationships: [
+          { target: "ChatConversation", type: "Dependency (manages)", desc: "Quản lý dữ liệu hội thoại bạn bè." },
+          { target: "DirectChatMessage", type: "Dependency (creates)", desc: "Khởi tạo và lưu trữ các tin nhắn P2P." }
         ]
       }
     };

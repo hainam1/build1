@@ -770,21 +770,21 @@
       <div class="stat-card">
         <div class="stat-icon-wrapper" style="background: var(--primary-light); color: var(--primary-dark);">📊</div>
         <div>
-          <div class="stat-val">9 Tables</div>
+          <div class="stat-val">11 Tables</div>
           <div class="stat-lbl">Core Local Schemas</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon-wrapper" style="background: var(--orange-light); color: var(--orange-dark);">⚡</div>
         <div>
-          <div class="stat-val">11 Indexes</div>
+          <div class="stat-val">13 Indexes</div>
           <div class="stat-lbl">High-Performance B-Trees</div>
         </div>
       </div>
       <div class="stat-card">
         <div class="stat-icon-wrapper" style="background: var(--blue-light); color: var(--blue-dark);">🔗</div>
         <div>
-          <div class="stat-val">9 Foreign Keys</div>
+          <div class="stat-val">11 Foreign Keys</div>
           <div class="stat-lbl">Cascading Constraints</div>
         </div>
       </div>
@@ -801,10 +801,10 @@
     <div class="controls-card">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" id="schemaSearch" placeholder="Filter by table name or column (e.g., srs_cards, photo_notes, app_notifications)..." oninput="filterTables()">
+        <input type="text" id="schemaSearch" placeholder="Filter by table name or column (e.g., chat_conversations, direct_chat_messages, srs_cards)..." oninput="filterTables()">
       </div>
       <div class="filter-pills">
-        <button class="pill active" onclick="filterCategory('all', this)">All Tables (9)</button>
+        <button class="pill active" onclick="filterCategory('all', this)">All Tables (11)</button>
         <button class="pill" onclick="filterCategory('user', this)">User & Auth</button>
         <button class="pill" onclick="filterCategory('photo', this)">Photos & Skia Notes</button>
         <button class="pill" onclick="filterCategory('srs', this)">SRS & Vocab</button>
@@ -1724,6 +1724,194 @@ CREATE INDEX idx_notif_created ON app_notifications(user_id, created_at DESC);</
         </div>
       </div>
 
+      <!-- Table 10: chat_conversations -->
+      <div class="schema-card" data-category="gamification">
+        <div class="schema-card-header">
+          <div class="schema-title-group">
+            <span class="table-icon">💬</span>
+            <div>
+              <div class="table-name">chat_conversations</div>
+              <div class="table-desc">Lưu trữ danh sách các cuộc trò chuyện 1v1 P2P giữa hai người dùng bạn bè</div>
+            </div>
+          </div>
+          <span class="badge badge-primary">7 Columns</span>
+        </div>
+        <div class="card-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Type</th>
+                  <th>Constraints</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-name">id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-pk">PRIMARY KEY</span></td>
+                  <td>-</td>
+                  <td>UUID cuộc trò chuyện.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">participant1_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → users.id</span></td>
+                  <td>-</td>
+                  <td>ID người dùng 1.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">participant2_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → users.id</span></td>
+                  <td>-</td>
+                  <td>ID người dùng 2.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">last_message</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td>-</td>
+                  <td>NULL</td>
+                  <td>Nội dung tin nhắn mới nhất.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">last_message_at</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td>-</td>
+                  <td>NULL</td>
+                  <td>Thời điểm gửi tin nhắn cuối (ISO8601).</td>
+                </tr>
+                <tr>
+                  <td class="col-name">unread_count_p1</td>
+                  <td><span class="type-badge type-integer">INTEGER</span></td>
+                  <td>-</td>
+                  <td>0</td>
+                  <td>Số tin chưa đọc của người dùng 1.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">unread_count_p2</td>
+                  <td><span class="type-badge type-integer">INTEGER</span></td>
+                  <td>-</td>
+                  <td>0</td>
+                  <td>Số tin chưa đọc của người dùng 2.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="index-box">
+            <div class="index-box-header">
+              <div class="index-title">⚡ OPTIMIZED INDEX</div>
+              <div class="index-purpose">Tối ưu tốc độ tìm kiếm cuộc trò chuyện 1v1 giữa 2 bạn bè</div>
+            </div>
+            <div class="sql-code">CREATE INDEX idx_conv_user ON chat_conversations(participant1_id, participant2_id);</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table 11: direct_chat_messages -->
+      <div class="schema-card" data-category="gamification">
+        <div class="schema-card-header">
+          <div class="schema-title-group">
+            <span class="table-icon">📩</span>
+            <div>
+              <div class="table-name">direct_chat_messages</div>
+              <div class="table-desc">Lưu trữ lịch sử tin nhắn 1v1 bao gồm văn bản và thẻ từ vựng đính kèm</div>
+            </div>
+          </div>
+          <span class="badge badge-primary">9 Columns</span>
+        </div>
+        <div class="card-body">
+          <div class="table-wrapper">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Type</th>
+                  <th>Constraints</th>
+                  <th>Default</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="col-name">id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-pk">PRIMARY KEY</span></td>
+                  <td>-</td>
+                  <td>UUID định danh tin nhắn.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">conversation_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → chat_conversations.id</span></td>
+                  <td>-</td>
+                  <td>ID cuộc trò chuyện.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">sender_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → users.id</span></td>
+                  <td>-</td>
+                  <td>ID người gửi tin nhắn.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">receiver_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → users.id</span></td>
+                  <td>-</td>
+                  <td>ID người nhận tin nhắn.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">message_type</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-notnull">NOT NULL</span></td>
+                  <td>'TEXT'</td>
+                  <td>Loại: TEXT, SHARED_VOCAB, SHARED_PHOTO.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">text_content</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-notnull">NOT NULL</span></td>
+                  <td>-</td>
+                  <td>Nội dung văn bản tin nhắn.</td>
+                </tr>
+                <tr>
+                  <td class="col-name">attached_vocab_id</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-fk">FK → vocabularies.id</span></td>
+                  <td>NULL</td>
+                  <td>ID thẻ từ vựng đính kèm (nếu có).</td>
+                </tr>
+                <tr>
+                  <td class="col-name">is_read</td>
+                  <td><span class="type-badge type-integer">INTEGER</span></td>
+                  <td>-</td>
+                  <td>0</td>
+                  <td>Cờ đã đọc: 0 (Unread), 1 (Read).</td>
+                </tr>
+                <tr>
+                  <td class="col-name">created_at</td>
+                  <td><span class="type-badge type-text">TEXT</span></td>
+                  <td><span class="key-badge badge-notnull">NOT NULL</span></td>
+                  <td>-</td>
+                  <td>Thời điểm gửi tin nhắn (ISO8601).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="index-box">
+            <div class="index-box-header">
+              <div class="index-title">⚡ OPTIMIZED INDEX</div>
+              <div class="index-purpose">Tải siêu tốc lịch sử tin nhắn hội thoại sắp xếp theo thời gian tăng dần</div>
+            </div>
+            <div class="sql-code">CREATE INDEX idx_direct_chat_conv ON direct_chat_messages(conversation_id, created_at ASC);</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -1869,7 +2057,34 @@ CREATE TABLE IF NOT EXISTS app_notifications (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS idx_notif_unread ON app_notifications(user_id, is_read) WHERE is_read = 0;
-CREATE INDEX IF NOT EXISTS idx_notif_created ON app_notifications(user_id, created_at DESC);</div>
+CREATE INDEX IF NOT EXISTS idx_notif_created ON app_notifications(user_id, created_at DESC);
+
+-- 10. Chat Conversations Table (P2P Friend Direct Chat)
+CREATE TABLE IF NOT EXISTS chat_conversations (
+    id TEXT PRIMARY KEY,
+    participant1_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    participant2_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    last_message TEXT NULLABLE,
+    last_message_at TEXT ISO8601,
+    unread_count_p1 INTEGER DEFAULT 0,
+    unread_count_p2 INTEGER DEFAULT 0,
+    UNIQUE(participant1_id, participant2_id)
+);
+CREATE INDEX IF NOT EXISTS idx_conv_user ON chat_conversations(participant1_id, participant2_id);
+
+-- 11. Direct Chat Messages Table (P2P History & Vocab Sharing)
+CREATE TABLE IF NOT EXISTS direct_chat_messages (
+    id TEXT PRIMARY KEY,
+    conversation_id TEXT NOT NULL REFERENCES chat_conversations(id) ON DELETE CASCADE,
+    sender_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    receiver_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    message_type TEXT DEFAULT 'TEXT', -- 'TEXT' | 'SHARED_VOCAB' | 'SHARED_PHOTO'
+    text_content TEXT NOT NULL,
+    attached_vocab_id TEXT NULLABLE REFERENCES vocabularies(id) ON DELETE SET NULL,
+    is_read INTEGER DEFAULT 0,
+    created_at TEXT ISO8601 NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_direct_chat_conv ON direct_chat_messages(conversation_id, created_at ASC);</div>
       </div>
     </div>
   </div>

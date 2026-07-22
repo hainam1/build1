@@ -710,6 +710,14 @@
           <div style="font-size: 11px; font-weight:600; opacity:0.8;">SRSEngine -> Expo Push -> NotifCenter -> DeepLink</div>
         </div>
       </button>
+
+      <button class="tab-btn" id="tabBtn7" onclick="switchTab(7)">
+        <div class="tab-badge">💬</div>
+        <div>
+          <div>7. Direct Friend Chat & Vocab Sharing Flow</div>
+          <div style="font-size: 11px; font-weight:600; opacity:0.8;">ChatHub -> P2P Direct Chat -> Share Vocab Card</div>
+        </div>
+      </button>
     </div>
 
     <!-- TAB 1: Scan & Skia Canvas Render Flow -->
@@ -1277,6 +1285,88 @@ sequenceDiagram
                 <div class="step-title">Deep Link Navigation</div>
               </div>
               <div class="step-desc">Chuyển trực tiếp người học vào phiên lật thẻ SRS hoặc màn hình Cửa Hàng Pet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 7: Direct Friend Chat & Vocab Card Sharing Flow -->
+    <div class="tab-pane" id="tabPane7">
+      <div class="diagram-layout">
+        <!-- Visual Diagram Container -->
+        <div class="mermaid-card">
+          <div class="mermaid-card-header">
+            <div class="flow-title">
+              <span>💬 P2P Direct Friend Chat & Vocab Card Exchange Flow</span>
+            </div>
+            <div class="flow-actions">
+              <span style="font-size: 12px; font-weight:700; color:var(--blue-dark); background:var(--blue-light); padding:4px 12px; border-radius:12px;">WebSocket & P2P</span>
+            </div>
+          </div>
+          <div class="mermaid-viewport">
+            <div class="mermaid" id="mermaid7">
+sequenceDiagram
+    autonumber
+    actor User as 👤 Người Học (User)
+    participant Hub as 💬 Chat Hub Screen
+    participant ChatRoom as 📱 Direct Chat Screen
+    participant Service as ⚡ PeerChatService
+    participant DB as 🗄️ Expo SQLite DB
+    actor Friend as 👥 Bạn Bè (Friend)
+
+    Note over User, Hub: Phase 1: Mở Chat Hub & Xem Capy AI Pinned Top
+    User->>Hub: Mở Chat Hub (Icon 🦫 / Tab Trò chuyện)
+    Hub->>Hub: Hiển thị Capy-sensei 🦫 PINNED TOP ở vị trí cố định trên cùng
+    Hub->>DB: SELECT * FROM chat_conversations ORDER BY last_message_at DESC
+    DB-->>Hub: Trả về danh sách hội thoại P2P bạn bè & unread counters
+
+    Note over User, ChatRoom: Phase 2: Mở Phòng Chat 1v1 & Tải Lịch Sử
+    User->>Hub: Bấm vào thẻ hội thoại của Bạn Bè (e.g. Capy Mây)
+    Hub->>ChatRoom: Chuyển sang Màn hình Chat 1v1
+    ChatRoom->>Service: fetchDirectMessages(conversationId)
+    Service->>DB: SELECT * FROM direct_chat_messages WHERE conversation_id = ? ORDER BY created_at ASC
+    DB-->>Service: Trả về danh sách tin nhắn văn bản & thẻ từ vựng đính kèm
+    Service-->>ChatRoom: Render bong bóng chat 3D (Phải: Xanh da trời, Trái: Trắng)
+
+    Note over User, Friend: Phase 3: Chia Sẻ Thẻ Từ Vựng & Đút Vào Sổ Bạn Bè
+    User->>ChatRoom: Bấm nút "Gửi Thẻ Từ Vựng 🎴" -> Chọn thẻ (Matcha Tea)
+    ChatRoom->>Service: sendDirectMessage(receiverId, text="", vocabId="v_matcha")
+    Service->>DB: INSERT INTO direct_chat_messages (id, conversation_id, sender_id, receiver_id, message_type, attached_vocab_id)
+    Service->>Friend: Gửi tin nhắn P2P chứa thẻ từ vựng qua WebSocket
+    Friend->>ChatRoom: Hiển thị Thẻ từ vựng đính kèm với nút 3D "Lưu từ này về Sổ 📥"
+    Friend->>DB: INSERT INTO user_vocabularies (user_id, vocab_id) -> Đút vào Sổ cá nhân
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Specification Card -->
+        <div class="spec-card">
+          <div class="spec-title">
+            <span>⚙️ P2P Direct Chat Technical Architecture</span>
+          </div>
+
+          <div class="step-list">
+            <div class="step-item">
+              <div class="step-head">
+                <div class="step-num">2</div>
+                <div class="step-title">Fixed Top Capy AI</div>
+              </div>
+              <div class="step-desc">Ghim cố định Capy-sensei AI ở vị trí trên cùng của Chat Hub giúp người học hỏi từ vựng bất cứ lúc nào.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-head">
+                <div class="step-num">4</div>
+                <div class="step-title">Indexed History Query</div>
+              </div>
+              <div class="step-desc">Truy vấn nhanh lịch sử tin nhắn bằng index <code>idx_direct_chat_conv</code>.</div>
+            </div>
+            <div class="step-item">
+              <div class="step-head">
+                <div class="step-num">7</div>
+                <div class="step-title">Inline Card Sharing</div>
+              </div>
+              <div class="step-desc">Chia sẻ thẻ từ vựng trực tiếp trong đoạn chat kèm nút 1-click lưu về sổ cá nhân.</div>
             </div>
           </div>
         </div>

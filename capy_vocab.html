@@ -2439,7 +2439,7 @@
               </div>
             </div>
             <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Mây')">💬 Chat</button>
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Mây (Google User)', '🍵')">💬 Chat</button>
               <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="document.getElementById('btnAlbumFriends').click(); activateView('storage');">🖼️ Xem</button>
             </div>
           </div>
@@ -2455,7 +2455,7 @@
               </div>
             </div>
             <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Cam')">💬 Chat</button>
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Cam (Study Buddy)', '🍊')">💬 Chat</button>
             </div>
           </div>
 
@@ -2470,7 +2470,7 @@
               </div>
             </div>
             <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Nấm')">💬 Chat</button>
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Nấm', '🦫')">💬 Chat</button>
             </div>
           </div>
         </div>
@@ -2510,6 +2510,156 @@
             <div class="tmpl-badge" data-tmpl="Pastel Capy">Pastel Capy 🦫</div>
             <div class="tmpl-badge" data-tmpl="Dark Mode">Màn đêm 🌙</div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- P2P CHAT HUB SCREEN / MODAL (#chatHubOverlay) --- -->
+    <div class="bottom-sheet-overlay" id="chatHubOverlay">
+      <div class="bottom-sheet" style="max-height:88vh; display:flex; flex-direction:column;">
+        <div class="bottom-sheet-handle"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:2px solid var(--line); padding-bottom:8px;">
+          <h3 style="font-family:var(--font-cute); font-weight:800; font-size:17px; color:var(--ink-coffee); margin:0;">Trò Chuyện & Học Tập 💬</h3>
+          <span style="font-size:11px; font-weight:700; color:var(--muted);">3 Bạn Bè Online</span>
+        </div>
+
+        <!-- Search Friends Input -->
+        <div style="position:relative; margin-bottom:12px;">
+          <input type="text" id="p2pSearchInput" placeholder="Tìm kiếm bạn bè trò chuyện..." style="width:100%; padding:8px 12px 8px 34px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:12.5px; background:var(--surface); color:var(--ink-coffee);">
+          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:14px;">🔍</span>
+        </div>
+
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding-right:2px;">
+          
+          <!-- FIXED TOP ITEM: CAPY AI ASSISTANT CARD -->
+          <div id="btnOpenCapyAiTopCard" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--creamy-yuzu); border:2.5px solid var(--duo-orange); border-radius:18px; box-shadow:0 4px 0 var(--duo-orange-shadow); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="position:relative; width:46px; height:46px; border-radius:50%; background:var(--duo-blue); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
+              🦫
+              <span style="position:absolute; bottom:0; right:0; width:12px; height:12px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div style="font-weight:800; font-size:13.5px; color:var(--ink-coffee);">Capy-sensei 🦫 (Trợ lý AI)</div>
+                <span style="font-size:9.5px; font-weight:800; background:var(--duo-orange); color:white; padding:1px 6px; border-radius:8px; border:1px solid var(--ink-coffee);">PINNED AI</span>
+              </div>
+              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Sẵn sàng đáp mọi câu hỏi từ vựng & giải thích ngữ cảnh của bạn!</div>
+            </div>
+            <span style="font-size:18px; color:var(--duo-orange-shadow);">➔</span>
+          </div>
+
+          <div style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.5px; margin-top:6px;">
+            Trò chuyện với Bạn Bè (Direct Chats)
+          </div>
+
+          <!-- P2P FRIEND CHAT LIST -->
+          <div id="p2pFriendsChatList" style="display:flex; flex-direction:column; gap:10px;">
+            
+            <!-- Friend Chat Item 1: Capy Mây -->
+            <div class="p2p-chat-item" data-friend-id="capy_may" data-friend-name="Capy Mây (Google User)" data-friend-avatar="🍵" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-green); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
+                🍵
+                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
+              </div>
+              <div style="flex:1; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Mây (Google User)</div>
+                  <span style="font-size:10px; color:var(--muted); font-weight:700;">10m</span>
+                </div>
+                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bạn: Cậu thuộc từ 'Mantis' chưa? 🎴</div>
+              </div>
+              <span style="background:#FF4B4B; color:white; font-size:10.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 6px; min-width:18px; text-align:center;">2</span>
+            </div>
+
+            <!-- Friend Chat Item 2: Alex -->
+            <div class="p2p-chat-item" data-friend-id="alex" data-friend-name="Alex (Top 1 Leaderboard)" data-friend-avatar="👑" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-purple); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
+                👑
+                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#46A302; border:2px solid white;"></span>
+              </div>
+              <div style="flex:1; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Alex (Top 1 Leaderboard)</div>
+                  <span style="font-size:10px; color:var(--muted); font-weight:700;">30m</span>
+                </div>
+                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Đã chia sẻ 1 Photo Note 🖼️: Study Desk Setup</div>
+              </div>
+              <span style="background:#FF4B4B; color:white; font-size:10.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 6px; min-width:18px; text-align:center;">1</span>
+            </div>
+
+            <!-- Friend Chat Item 3: Capy Cam -->
+            <div class="p2p-chat-item" data-friend-id="capy_cam" data-friend-name="Capy Cam (Study Buddy)" data-friend-avatar="🍊" style="display:flex; gap:12px; align-items:center; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 3.5px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+              <div style="position:relative; width:44px; height:44px; border-radius:50%; background:var(--duo-orange); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
+                🍊
+                <span style="position:absolute; bottom:0; right:0; width:11px; height:11px; border-radius:50%; background:#CCCCCC; border:2px solid white;"></span>
+              </div>
+              <div style="flex:1; overflow:hidden;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Cam (Study Buddy)</div>
+                  <span style="font-size:10px; color:var(--muted); font-weight:700;">1d</span>
+                </div>
+                <div style="font-size:11.5px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Hôm nay mình vừa vượt mốc 200 PTS nè! 🍊</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- DIRECT FRIEND CHAT ROOM (1V1 P2P CHAT MODAL) --- -->
+    <div class="bottom-sheet-overlay" id="directChatOverlay">
+      <div class="bottom-sheet" style="height: 540px; bottom: -540px; display:flex; flex-direction:column;">
+        <div class="bottom-sheet-notch"></div>
+        
+        <!-- Header Direct Chat -->
+        <div style="display:flex; align-items:center; justify-content:space-between; border-bottom:1.5px solid var(--line); padding-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <button id="btnBackToChatHub" class="btn-cute secondary" style="font-size:12px; padding:4px 8px; border-radius:10px;">✕</button>
+            <div id="directChatFriendAvatar" style="width:36px; height:36px; border-radius:50%; background:var(--duo-green); display:flex; align-items:center; justify-content:center; border:1.5px solid var(--ink-coffee); font-size:20px;">🍵</div>
+            <div>
+              <div style="font-family:var(--font-cute); font-size:13.5px; font-weight:800; color:var(--ink-coffee)" id="directChatFriendName">Capy Mây</div>
+              <div style="font-size:10px; color:#517F47; display:flex; align-items:center; gap:4px;">
+                <span style="width:6px; height:6px; border-radius:50%; background:#46A302; display:inline-block;"></span>
+                Đang online
+              </div>
+            </div>
+          </div>
+          <button class="btn-cute secondary" style="font-size:11.5px; padding:4px 10px; border-radius:10px;" onclick="alert('Đã xem hồ sơ của bạn bè! 👥')">Hồ sơ 👤</button>
+        </div>
+
+        <!-- Direct Chat Messages area -->
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding:10px 0;" id="directChatMessages">
+          <!-- Friend message (Left - White) -->
+          <div style="background:#FFFFFF; color:var(--ink-coffee); border:1.5px solid var(--ink-coffee); align-self:flex-start; border-radius:18px; border-bottom-left-radius:2px; padding:9px 13px; font-size:12.5px; line-height:1.4; max-width:82%; box-shadow:0 3px 0 var(--ink-coffee);">
+            Chào bạn! Cậu đã ôn xong bài Flashcard hôm nay chưa? 🍊
+          </div>
+          
+          <!-- My message (Right - Sky Blue) -->
+          <div style="background:var(--duo-blue); color:#FFFFFF; border:1.5px solid var(--ink-coffee); align-self:flex-end; border-radius:18px; border-bottom-right-radius:2px; padding:9px 13px; font-size:12.5px; line-height:1.4; max-width:82%; box-shadow:0 3px 0 #1899D6; font-weight:700;">
+            Tớ vừa học xong bộ Matcha Tea! Cậu thuộc từ 'Mantis' chưa? 🎴
+          </div>
+
+          <!-- Friend Shared Vocab Card Bubble -->
+          <div style="background:#FFF2CC; border:2px solid var(--ink-coffee); align-self:flex-start; border-radius:18px; padding:10px; width:85%; box-shadow:0 3.5px 0 var(--ink-coffee);">
+            <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px;">📥 Thẻ từ vựng được chia sẻ</div>
+            <div style="display:flex; gap:10px; align-items:center; background:white; border:1.5px solid var(--ink-coffee); border-radius:12px; padding:8px;">
+              <span style="font-size:28px;">🍵</span>
+              <div>
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Matcha / Trà xanh</div>
+                <div style="font-size:11px; color:var(--muted);">Whisk / Cây đánh trà</div>
+              </div>
+            </div>
+            <button class="btn-cute primary" style="width:100%; margin-top:8px; padding:6px; font-size:11px; border-radius:10px; box-shadow:0 3px 0 var(--duo-green-shadow);" onclick="alert('Đã lưu thẻ từ vựng Matcha về Sổ cá nhân thành công! 📥')">
+              Lưu từ này về Sổ 📥
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat Input & Attachment Bar -->
+        <div style="display:flex; gap:8px; align-items:center; border-top:1.5px solid var(--line); padding-top:10px;">
+          <button id="btnAttachVocabCard" class="btn-cute secondary" title="Gửi thẻ từ vựng 🎴" style="padding:9px; border-radius:16px; font-size:14px; box-shadow:0 3px 0 var(--ink-coffee);">🎴</button>
+          <input type="text" id="directChatInput" placeholder="Nhập tin nhắn..." style="flex:1; padding:10px 12px; border:1.5px solid var(--ink-coffee); border-radius:18px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+          <button id="btnDirectChatSend" class="btn-cute primary" style="padding:9px 14px; border-radius:18px; box-shadow:0 3px 0 var(--duo-green-shadow);">Gửi</button>
         </div>
       </div>
     </div>
@@ -4157,6 +4307,179 @@
         capyChatOverlay.classList.remove('open');
       }
     });
+
+    // --- CHAT HUB & DIRECT P2P FRIEND CHAT LOGIC ---
+    const chatHubOverlay = document.getElementById('chatHubOverlay');
+    const directChatOverlay = document.getElementById('directChatOverlay');
+    const desktopChatToggle = document.getElementById('desktopChatToggle');
+    const btnOpenCapyAiTopCard = document.getElementById('btnOpenCapyAiTopCard');
+    const btnBackToChatHub = document.getElementById('btnBackToChatHub');
+    const p2pSearchInput = document.getElementById('p2pSearchInput');
+    const p2pChatItems = document.querySelectorAll('.p2p-chat-item');
+    
+    const directChatFriendAvatar = document.getElementById('directChatFriendAvatar');
+    const directChatFriendName = document.getElementById('directChatFriendName');
+    const directChatMessages = document.getElementById('directChatMessages');
+    const directChatInput = document.getElementById('directChatInput');
+    const btnDirectChatSend = document.getElementById('btnDirectChatSend');
+    const btnAttachVocabCard = document.getElementById('btnAttachVocabCard');
+
+    // Desktop Chat Toggle opens Chat Hub Modal
+    if (desktopChatToggle && chatHubOverlay) {
+      desktopChatToggle.addEventListener('click', () => {
+        chatHubOverlay.classList.add('open');
+      });
+
+      chatHubOverlay.addEventListener('click', (e) => {
+        if (e.target === chatHubOverlay) {
+          chatHubOverlay.classList.remove('open');
+        }
+      });
+    }
+
+    // Pinned Top Item: Capy AI Assistant -> Opens Capy AI Chat overlay
+    if (btnOpenCapyAiTopCard && capyChatOverlay) {
+      btnOpenCapyAiTopCard.addEventListener('click', () => {
+        if (chatHubOverlay) chatHubOverlay.classList.remove('open');
+        capyChatOverlay.classList.add('open');
+      });
+    }
+
+    // Friend list search filter
+    if (p2pSearchInput) {
+      p2pSearchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        p2pChatItems.forEach(item => {
+          const name = (item.getAttribute('data-friend-name') || '').toLowerCase();
+          if (name.includes(query)) {
+            item.style.display = 'flex';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    // Open Direct 1v1 Chat with Friend
+    p2pChatItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const fName = item.getAttribute('data-friend-name') || 'Capy Mây';
+        const fAvatar = item.getAttribute('data-friend-avatar') || '🍵';
+        
+        if (directChatFriendName) directChatFriendName.textContent = fName;
+        if (directChatFriendAvatar) directChatFriendAvatar.textContent = fAvatar;
+        
+        // Clear unread badge on click
+        const badge = item.querySelector('span[style*="background:#FF4B4B"]');
+        if (badge) badge.remove();
+
+        if (chatHubOverlay) chatHubOverlay.classList.remove('open');
+        if (directChatOverlay) directChatOverlay.classList.add('open');
+      });
+    });
+
+    if (directChatOverlay) {
+      directChatOverlay.addEventListener('click', (e) => {
+        if (e.target === directChatOverlay) {
+          directChatOverlay.classList.remove('open');
+        }
+      });
+    }
+
+    if (btnBackToChatHub) {
+      btnBackToChatHub.addEventListener('click', () => {
+        if (directChatOverlay) directChatOverlay.classList.remove('open');
+        if (chatHubOverlay) chatHubOverlay.classList.add('open');
+      });
+    }
+
+    // Direct 1v1 Message Send
+    function sendDirectUserMessage() {
+      if (!directChatInput || !directChatMessages) return;
+      const text = directChatInput.value.trim();
+      if (text === '') return;
+      directChatInput.value = '';
+
+      const myBubble = document.createElement('div');
+      myBubble.style.background = 'var(--duo-blue)';
+      myBubble.style.color = '#FFFFFF';
+      myBubble.style.border = '1.5px solid var(--ink-coffee)';
+      myBubble.style.alignSelf = 'flex-end';
+      myBubble.style.borderRadius = '18px';
+      myBubble.style.borderBottomRightRadius = '2px';
+      myBubble.style.padding = '9px 13px';
+      myBubble.style.fontSize = '12.5px';
+      myBubble.style.lineHeight = '1.4';
+      myBubble.style.maxWidth = '82%';
+      myBubble.style.boxShadow = '0 3px 0 #1899D6';
+      myBubble.style.fontWeight = '700';
+      myBubble.textContent = text;
+
+      directChatMessages.appendChild(myBubble);
+      directChatMessages.scrollTop = directChatMessages.scrollHeight;
+
+      // Auto mock response from friend
+      setTimeout(() => {
+        const friendBubble = document.createElement('div');
+        friendBubble.style.background = '#FFFFFF';
+        friendBubble.style.color = 'var(--ink-coffee)';
+        friendBubble.style.border = '1.5px solid var(--ink-coffee)';
+        friendBubble.style.alignSelf = 'flex-start';
+        friendBubble.style.borderRadius = '18px';
+        friendBubble.style.borderBottomLeftRadius = '2px';
+        friendBubble.style.padding = '9px 13px';
+        friendBubble.style.fontSize = '12.5px';
+        friendBubble.style.lineHeight = '1.4';
+        friendBubble.style.maxWidth = '82%';
+        friendBubble.style.boxShadow = '0 3px 0 var(--ink-coffee)';
+        friendBubble.textContent = "Tuyệt vời quá! Tớ vừa lưu bài của cậu rồi nè 🍊🎉";
+
+        directChatMessages.appendChild(friendBubble);
+        directChatMessages.scrollTop = directChatMessages.scrollHeight;
+      }, 1000);
+    }
+
+    if (btnDirectChatSend) {
+      btnDirectChatSend.addEventListener('click', sendDirectUserMessage);
+    }
+    if (directChatInput) {
+      directChatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') sendDirectUserMessage();
+      });
+    }
+
+    // Vocab Attachment button
+    if (btnAttachVocabCard) {
+      btnAttachVocabCard.addEventListener('click', () => {
+        const cardBubble = document.createElement('div');
+        cardBubble.style.background = '#FFF2CC';
+        cardBubble.style.border = '2px solid var(--ink-coffee)';
+        cardBubble.style.alignSelf = 'flex-end';
+        cardBubble.style.borderRadius = '18px';
+        cardBubble.style.padding = '10px';
+        cardBubble.style.width = '85%';
+        cardBubble.style.boxShadow = '0 3.5px 0 var(--ink-coffee)';
+        cardBubble.innerHTML = `
+          <div style="font-size:11px; font-weight:800; color:var(--muted); margin-bottom:4px;">📤 Đã chia sẻ thẻ từ vựng</div>
+          <div style="display:flex; gap:10px; align-items:center; background:white; border:1.5px solid var(--ink-coffee); border-radius:12px; padding:8px;">
+            <span style="font-size:28px;">💻</span>
+            <div>
+              <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Desk Lamp / Đèn học</div>
+              <div style="font-size:11px; color:var(--muted);">Study Desk Setup · 3 từ vựng</div>
+            </div>
+          </div>
+        `;
+        directChatMessages.appendChild(cardBubble);
+        directChatMessages.scrollTop = directChatMessages.scrollHeight;
+      });
+    }
+
+    window.openDirectChat = function(name, avatar) {
+      if (directChatFriendName) directChatFriendName.textContent = name;
+      if (directChatFriendAvatar) directChatFriendAvatar.textContent = avatar;
+      if (chatHubOverlay) chatHubOverlay.classList.remove('open');
+      if (directChatOverlay) directChatOverlay.classList.add('open');
+    };
 
     // Send click
     capyChatSend.addEventListener('click', () => {
