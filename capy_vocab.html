@@ -12,7 +12,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (!urlParams.has('v')) {
         urlParams.set('v', 'fresh-' + Date.now());
-        window.location.search = urlParams.toString();
+        window.history.replaceState(null, '', '?' + urlParams.toString());
         return;
       }
       const saved = localStorage.getItem('theme');
@@ -101,7 +101,9 @@
     /* --- Phone Simulator Shell --- */
     .phone-container {
       width: 410px;
+      max-width: 95vw;
       height: 840px;
+      max-height: 90vh;
       background: var(--surface);
       border: 8px solid var(--ink-coffee);
       border-radius: 40px;
@@ -531,7 +533,7 @@
       background: var(--surface);
       border-top: 2px solid var(--ink-coffee);
       padding: 16px 24px;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: space-between;
       z-index: 15;
@@ -539,6 +541,7 @@
       transition: bottom 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.1);
     }
     .selection-drawer.open {
+      display: flex !important;
       bottom: 74px; /* sits right above bottom bar */
     }
     .selection-drawer-info {
@@ -560,9 +563,11 @@
       z-index: 25;
       opacity: 0;
       pointer-events: none;
+      display: none;
       transition: opacity 0.2s ease;
     }
     .bottom-sheet-overlay.open {
+      display: flex !important;
       opacity: 1;
       pointer-events: all;
     }
@@ -1384,46 +1389,52 @@
     /* --- Floating View Mode Switcher --- */
     .view-mode-switcher {
       position: fixed;
-      top: 16px;
+      top: 14px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(8px);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid #E8DCD1;
       border-radius: 99px;
-      padding: 4px;
-      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.08);
-      z-index: 9999;
+      padding: 5px;
+      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.12);
+      z-index: 99999;
       user-select: none;
+      max-width: 95vw;
+      overflow-x: auto;
     }
     html.dark .view-mode-switcher {
-      background: rgba(45, 39, 35, 0.85);
+      background: rgba(45, 39, 35, 0.92);
       border-color: #3E342F;
     }
     .view-mode-switcher a {
       font-family: 'Fredoka', 'Nunito', sans-serif;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #5C4F4B;
       text-decoration: none;
-      padding: 8px 18px;
+      padding: 7px 15px;
       border-radius: 99px;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
     html.dark .view-mode-switcher a {
       color: #D8CECA;
     }
     .view-mode-switcher a.active {
-      background: #D2A374;
+      background: #FF9600;
       color: #FFFFFF !important;
+      box-shadow: 0 3px 0 #E58700;
     }
     .view-mode-switcher a:hover:not(.active) {
-      background: rgba(210, 163, 116, 0.15);
-      color: #D2A374;
+      background: rgba(255, 150, 0, 0.12);
+      color: #E58700;
     }
 
     /* --- Word Sorting 3D Game Styles --- */
@@ -1566,7 +1577,7 @@
       border: 3px solid var(--ink-coffee);
       border-radius: 20px;
       box-shadow: 0 8px 0 var(--ink-coffee), 0 10px 25px rgba(58, 46, 43, 0.1);
-      display: flex;
+      display: none;
       flex-direction: column;
       overflow: hidden;
       z-index: 99;
@@ -1577,6 +1588,7 @@
       font-family: var(--font-body);
     }
     .desktop-chatbot-window.open {
+      display: flex !important;
       opacity: 1;
       transform: scale(1) translateY(0);
       pointer-events: all;
@@ -1770,7 +1782,7 @@
       inset: 0;
       background: rgba(0, 0, 0, 0.45);
       z-index: 1000;
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       opacity: 0;
@@ -1779,6 +1791,7 @@
       padding: 24px;
     }
     .custom-dialog-overlay.open {
+      display: flex !important;
       opacity: 1;
       pointer-events: auto;
     }
@@ -1818,10 +1831,12 @@
 </head>
 <body>
 
-  <!-- --- Floating View Mode Switcher --- -->
+  <!-- --- Floating View Mode Switcher (4 Pages) --- -->
   <div class="view-mode-switcher">
-    <a href="index.html" onclick="location.href='index.html?v=fresh-' + Date.now(); return false;" class="switch-btn">📊 Class Diagram UML</a>
-    <a href="capy_vocab.html" onclick="location.href='capy_vocab.html?v=fresh-' + Date.now(); return false;" class="switch-btn active">📱 Giao diện App (Capybara)</a>
+    <a href="index.html" class="switch-btn">📊 Class Diagram UML</a>
+    <a href="capy_vocab.html" class="switch-btn active">📱 App UI (Capybara)</a>
+    <a href="database_schema.html" class="switch-btn">🗄️ Database Schema</a>
+    <a href="sequence_diagrams.html" class="switch-btn">🔄 Sequence Diagrams</a>
   </div>
 
   <!-- --- Phone Simulator Shell --- -->
@@ -1843,8 +1858,13 @@
         🍊 <span id="studyPointsText">200</span> <span class="accent">PTS</span>
       </button>
       
-      <div style="display:flex; gap:8px;">
-        <button class="theme-toggle-btn" id="themeBtn" title="Giao diện">☀️</button>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <!-- 3D Bell Icon button with Red Unread Badge Pill -->
+        <button id="btnNotifBell" title="Thông Báo 🔔" style="position:relative; width:38px; height:38px; border-radius:50%; background:var(--surface); border:2.5px solid var(--ink-coffee); box-shadow:0 3px 0 var(--ink-coffee); cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center; transition:transform 0.1s ease;">
+          🔔
+          <span id="notifBadgePill" style="position:absolute; top:-4px; right:-4px; background:#FF4B4B; color:white; font-size:10px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 5px; min-width:16px; text-align:center; box-shadow:0 2px 0 var(--ink-coffee);">3</span>
+        </button>
+        <button class="theme-toggle-btn" id="btnSettingsHeader" title="Cài đặt ⚙️" style="width:38px; height:38px; border-radius:50%; background:var(--surface); border:2.5px solid var(--ink-coffee); box-shadow:0 3px 0 var(--ink-coffee); cursor:pointer; font-size:17px; display:flex; align-items:center; justify-content:center; transition:transform 0.1s ease;" onclick="activateView('settings')">⚙️</button>
       </div>
     </div>
 
@@ -1885,9 +1905,47 @@
               <div style="font-size:10px; color:var(--muted)">Đừng để ngọn lửa vụt tắt nhé!</div>
             </div>
           </div>
-          <button class="btn-cute primary" id="btnClaimStreak">
+          <button class="btn-cute primary" id="btnClaimStreak" onclick="window.claimStreakBonus(event)">
             Thắp Lửa 🔥
           </button>
+        </div>
+
+        <!-- Friends Rank 3D Podium Widget -->
+        <div class="capy-card friends-podium-card" style="border: 2.5px solid var(--ink-coffee); border-bottom-width: 6px; background: linear-gradient(180deg, #FFF9F0 0%, #FAF8F5 100%); padding: 14px; margin-bottom: 14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <div class="card-title" style="margin:0; font-size:14px;">🏆 Bảng Xếp Hạng Bạn Bè</div>
+            <span style="font-size:11px; font-weight:700; color:var(--duo-orange); background:var(--surface); border:1px solid var(--ink-coffee); padding:2px 8px; border-radius:10px;">Tuần này 🍊</span>
+          </div>
+          
+          <!-- 3D Capybara Podium -->
+          <div style="display:flex; justify-content:center; align-items:flex-end; gap:10px; height:95px; margin-top:6px;">
+            <!-- Top 2 -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
+              <div style="font-size:10px; font-weight:800; color:var(--ink-coffee);">Capy Mây</div>
+              <div style="font-size:16px;">🥈🦫</div>
+              <div style="width:100%; height:45px; background:#E5E5E5; border:2px solid var(--ink-coffee); border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:12px; color:var(--ink-coffee); box-shadow:0 3px 0 #CCCCCC;">
+                420 🍊
+              </div>
+            </div>
+            
+            <!-- Top 1 (Center Winner) -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:75px;">
+              <div style="font-size:11px; font-weight:800; color:#E58700;">Bạn (Alex)</div>
+              <div style="font-size:22px;">👑🦫</div>
+              <div style="width:100%; height:62px; background:#FFD166; border:2.5px solid var(--ink-coffee); border-radius:12px 12px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:13px; color:var(--ink-coffee); box-shadow:0 4px 0 #E58700;">
+                580 🍊
+              </div>
+            </div>
+
+            <!-- Top 3 -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
+              <div style="font-size:10px; font-weight:800; color:var(--ink-coffee);">Capy Cam</div>
+              <div style="font-size:16px;">🥉🦫</div>
+              <div style="width:100%; height:32px; background:#D2A374; border:2px solid var(--ink-coffee); border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:11px; color:white; box-shadow:0 3px 0 #84603B;">
+                310 🍊
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Lesson Map Winding Path -->
@@ -1901,17 +1959,17 @@
             </svg>
             
             <!-- Nodes -->
-            <div class="path-node completed" style="left: 135px; top: 10px;" data-level="1">
+            <div class="path-node completed" style="left: 135px; top: 10px;" data-level="1" onclick="window.launchOrderGame(1)">
               <span class="node-icon">💡</span>
               <div class="node-tooltip">Bài 1: Đèn làm việc (Ôn tập)</div>
             </div>
             
-            <div class="path-node completed" style="left: 55px; top: 90px;" data-level="2">
+            <div class="path-node completed" style="left: 55px; top: 90px;" data-level="2" onclick="window.launchOrderGame(2)">
               <span class="node-icon">☕</span>
               <div class="node-tooltip">Bài 2: Tách Cà Phê (Ôn tập)</div>
             </div>
 
-            <div class="path-node active" style="left: 135px; top: 170px;" data-level="3">
+            <div class="path-node active" style="left: 135px; top: 170px;" data-level="3" onclick="window.launchOrderGame(3)">
               <span class="node-icon">💻</span>
               <div class="node-tooltip">Bài 3: Bàn phím cơ (Chơi game 🎮)</div>
               <!-- Floating Mascot Wrapper -->
@@ -1920,12 +1978,12 @@
               </div>
             </div>
 
-            <div class="path-node locked" style="left: 215px; top: 250px;" data-level="4">
+            <div class="path-node locked" style="left: 215px; top: 250px;" data-level="4" onclick="window.launchOrderGame(4)">
               <span class="node-icon">🔒</span>
               <div class="node-tooltip">Bài 4: Ba lô du lịch (Khóa)</div>
             </div>
 
-            <div class="path-node locked" style="left: 135px; top: 330px;" data-level="5">
+            <div class="path-node locked" style="left: 135px; top: 330px;" data-level="5" onclick="alert('Bài học 5 đang bị khóa! Hãy mở khóa các bài học trước nhé 🔒')">
               <span class="node-icon">🔒</span>
               <div class="node-tooltip">Bài 5: Sổ học tập (Khóa)</div>
             </div>
@@ -1994,7 +2052,15 @@
           </button>
         </div>
 
-        <p style="font-size: 12px; color: var(--muted); margin-top: -8px;">Sổ lưu giữ hình ảnh học từ vựng thủ công như scrapbook dán nhãn.</p>
+        <!-- Sub-tabs: Personal vs Friends Feed -->
+        <div style="display:flex; gap:8px; margin-bottom:12px; border-bottom:2px solid var(--line); padding-bottom:8px;">
+          <button class="btn-cute primary" id="btnAlbumPersonal" onclick="window.switchAlbumSubtab('personal')" style="flex:1; font-size:12px; padding:6px 10px; border-radius:12px; box-shadow:0 3px 0 var(--duo-green-shadow);">Sổ Ảnh Cá Nhân 🖼️</button>
+          <button class="btn-cute secondary" id="btnAlbumFriends" onclick="window.switchAlbumSubtab('friends')" style="flex:1; font-size:12px; padding:6px 10px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee);">Nhật Ký Bạn Bè 👥</button>
+        </div>
+
+        <!-- Container 1: Personal Photos -->
+        <div id="containerAlbumPersonal">
+          <p style="font-size: 12px; color: var(--muted); margin-top: -4px; margin-bottom: 10px;">Sổ lưu giữ hình ảnh học từ vựng cá nhân của bạn.</p>
 
         <div class="album-grid">
           
@@ -2053,14 +2119,43 @@
             </div>
             <div class="album-item-tag">🏷️ 3 từ vựng</div>
           </div>
+        </div>
+      </div>
 
+        <!-- Container 2: Friends Feed (Public Shared Photos) -->
+        <div id="containerAlbumFriends" style="display:none;">
+          <p style="font-size: 12px; color: var(--muted); margin-top: -4px; margin-bottom: 10px;">Ảnh từ vựng công khai do bạn bè chia sẻ.</p>
+
+          <div style="display:flex; flex-direction:column; gap:14px;">
+            <!-- Friend Feed Item 1 -->
+            <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:5px; padding:12px; background:white;">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <span style="font-size:22px; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:50%; padding:4px;">🦫</span>
+                <div>
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Mây (Google User)</div>
+                  <div style="font-size:10.5px; color:var(--muted);">Chia sẻ 3 giờ trước · 🌐 Public</div>
+                </div>
+              </div>
+              <div class="recent-note-img" style="height:110px; font-size:36px;">🍵</div>
+              <div style="margin-top:8px;">
+                <div style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Matcha Tea Ceremony</div>
+                <div style="display:flex; gap:6px; margin-top:4px;">
+                  <span class="preview-chip">Matcha / Trà xanh</span>
+                  <span class="preview-chip">Whisk / Cây đánh trà</span>
+                </div>
+                <button class="btn-cute primary" style="width:100%; margin-top:8px; padding:6px; font-size:11.5px; border-radius:10px; box-shadow:0 3px 0 var(--duo-green-shadow);" onclick="alert('Đã lưu 2 từ vựng từ bạn Capy Mây về Sổ cá nhân! 📥')">
+                  Lưu từ này về Sổ cá nhân 📥
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
 
       <!-- ================== TAB 4: PET SHOP 🛍️ ================== -->
-      <div class="screen-view hidden" id="view-petshop" style="display:flex; flex-direction:column; height:100%;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+      <div class="screen-view hidden" id="view-petshop">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
           <div class="card-title">Cửa Hàng Pet 🛍️</div>
           <div style="font-family:var(--font-cute); font-weight:800; font-size:14px; color:#E67E22; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:12px; padding:4px 10px; box-shadow:0 3px 0 var(--line);" id="shopYuzuBalance">
             🍊 <span id="shopYuzuText">200</span> xu
@@ -2068,7 +2163,7 @@
         </div>
 
         <!-- Live Pet Avatar Preview (Top Area) -->
-        <div class="capy-card" id="shopMascotCard" style="display:flex; flex-direction:column; align-items:center; justify-content:center; background: radial-gradient(circle, var(--creamy-yuzu) 40%, var(--surface) 100%); border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; height:180px; margin-bottom:14px; overflow:hidden; position:relative; transition: background 0.3s ease;">
+        <div class="capy-card" id="shopMascotCard" style="display:flex; flex-direction:column; align-items:center; justify-content:center; background: radial-gradient(circle, var(--creamy-yuzu) 40%, var(--surface) 100%); border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; height:180px; margin-bottom:4px; overflow:hidden; position:relative; transition: background 0.3s ease;">
           <!-- Real-time dynamic Background of the preview -->
           <div id="shopPreviewBgText" style="position:absolute; inset:0; z-index:1; opacity:0.1; font-size: 80px; display:flex; align-items:center; justify-content:center; user-select:none;">♨️</div>
           
@@ -2087,21 +2182,21 @@
         <canvas id="shopConfettiCanvas" style="position:absolute; width:100%; height:180px; top:36px; left:0; pointer-events:none; z-index:10; display:none;"></canvas>
 
         <!-- Horizontal sub-tabs for categories -->
-        <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:12px; scrollbar-width:none;" class="shop-sub-tabs">
-          <button class="btn-cute secondary active" id="shopTabMascots" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🐾 Linh Vật</button>
+        <div style="display:flex; gap:6px; overflow-x:auto; margin-bottom:4px; scrollbar-width:none;" class="shop-sub-tabs">
+          <button class="btn-cute primary" id="shopTabMascots" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🐾 Linh Vật</button>
           <button class="btn-cute secondary" id="shopTabAccessories" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🎩 Trang Phục</button>
           <button class="btn-cute secondary" id="shopTabBackgrounds" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🖼️ Hình Nền</button>
         </div>
 
         <!-- Grid container for cards -->
-        <div id="shopItemsContainer" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; height:340px; overflow-y:auto; padding-bottom:40px; scrollbar-width:none;">
+        <div id="shopItemsContainer" style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; padding-bottom:20px;">
            <!-- Populated by JavaScript dynamically based on category tab -->
         </div>
       </div>
 
       <!-- ================== SELECTED VOCAB COLLECTION ================== -->
-      <div class="screen-view hidden" id="view-selected-vocab" style="display:flex; flex-direction:column; height:100%;">
-        <div style="flex: 1; overflow-y: auto; display:flex; flex-direction:column; gap:12px; scrollbar-width:none;">
+      <div class="screen-view hidden" id="view-selected-vocab">
+        <div style="display:flex; flex-direction:column; gap:12px;">
           <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 4px;">
             <div class="card-title">Giỏ từ vựng đã chọn 🧺</div>
             <button class="btn-cute secondary" id="btnBackToStorage" style="padding: 5px 12px; font-size: 12px; border-radius: 12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">✕ Đóng</button>
@@ -2121,7 +2216,7 @@
       </div>
 
       <!-- ================== FLASHCARD SRS GAMEPLAY ================== -->
-      <div class="screen-view hidden" id="view-srs-gameplay" style="display:flex; flex-direction:column; height:100%;">
+      <div class="screen-view hidden" id="view-srs-gameplay">
         <div style="flex:1; display:flex; flex-direction:column; gap:12px;">
           <!-- Top bar with progress and exit -->
           <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -2200,15 +2295,29 @@
 
 
       <!-- ================== TAB 5: SETTINGS ================== -->
-      <div class="screen-view hidden" id="view-settings" style="display:flex; flex-direction:column; gap:16px;">
-        <div class="card-title">Cài đặt hệ thống ⚙️</div>
+      <div class="screen-view hidden" id="view-settings">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+          <div class="card-title" style="margin:0;">Cài đặt hệ thống ⚙️</div>
+          <button class="btn-cute secondary" onclick="activateView('home')" style="padding:4px 12px; font-size:12px; border-radius:12px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;">✕ Trở về</button>
+        </div>
         
+        <!-- Google Social Login Button -->
+        <button class="btn-cute" id="btnGoogleLogin" style="background:#1CB0F6; color:white; border:2.5px solid #1899D6; border-bottom-width:6px; width:100%; padding:12px; font-size:14px; font-weight:800; border-radius:18px; box-shadow:0 4px 0 #1899D6; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="alert('Đăng nhập Google OAuth thành công! 🌐 Sync Cloud Data đã bật.')">
+          🌐 CONTINUE WITH GOOGLE
+        </button>
+
         <!-- Account preferences list -->
         <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none;">
           <div style="display:flex; flex-direction:column; gap:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
-              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Tài khoản học tập</span>
-              <span style="font-size:12px; color:var(--muted);">user@example.com</span>
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Giao diện (Theme Mode)</span>
+              <button class="btn-cute secondary" id="themeBtn" title="Chuyển chế độ Sáng / Tối" style="padding:4px 12px; font-size:12px; font-weight:800; border-radius:12px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;">
+                <span id="themeText">Sáng ☀️</span>
+              </button>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Google Profile</span>
+              <span style="font-size:12px; color:#1CB0F6; font-weight:800;">Alex Capy 🌐</span>
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
               <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Mục tiêu hàng ngày</span>
@@ -2252,6 +2361,118 @@
           <button class="btn-cute primary" id="btnBuyPro" style="width:100%;">
             Nâng cấp lên PRO ngay 🚀
           </button>
+        </div>
+      </div>
+
+      <!-- ================== TAB 5: FRIENDS (BẠN BÈ & LEADERBOARD) ================== -->
+      <div class="screen-view hidden" id="view-friends">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="card-title" style="margin:0;">Bạn Bè & Xếp Hạng 👥</div>
+          <span style="font-size:11px; font-weight:800; color:#E58700; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:12px; padding:4px 10px;">
+            🍊 Tuần này
+          </span>
+        </div>
+
+        <!-- Top 3D Friends Leaderboard / Podium -->
+        <div class="capy-card friends-podium-card" style="border: 2.5px solid var(--ink-coffee); border-bottom-width: 6px; background: linear-gradient(180deg, #FFF9F0 0%, #FAF8F5 100%); padding: 14px; margin: 0;">
+          <div style="display:flex; justify-content:center; align-items:flex-end; gap:10px; height:100px; margin-top:4px;">
+            <!-- Top 2 -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
+              <div style="font-size:10px; font-weight:800; color:var(--ink-coffee);">Capy Mây</div>
+              <div style="font-size:16px;">🥈🦫</div>
+              <div style="width:100%; height:48px; background:#E5E5E5; border:2px solid var(--ink-coffee); border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:12px; color:var(--ink-coffee); box-shadow:0 3px 0 #CCCCCC;">
+                420 🍊
+              </div>
+            </div>
+            
+            <!-- Top 1 (Center Winner) -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:75px;">
+              <div style="font-size:11px; font-weight:800; color:#E58700;">Bạn (Alex)</div>
+              <div style="font-size:22px;">👑🦫</div>
+              <div style="width:100%; height:65px; background:#FFD166; border:2.5px solid var(--ink-coffee); border-radius:12px 12px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:13px; color:var(--ink-coffee); box-shadow:0 4px 0 #E58700;">
+                580 🍊
+              </div>
+            </div>
+
+            <!-- Top 3 -->
+            <div style="display:flex; flex-direction:column; align-items:center; width:65px;">
+              <div style="font-size:10px; font-weight:800; color:var(--ink-coffee);">Capy Cam</div>
+              <div style="font-size:16px;">🥉🦫</div>
+              <div style="width:100%; height:34px; background:#D2A374; border:2px solid var(--ink-coffee); border-radius:10px 10px 0 0; display:flex; align-items:center; justify-content:center; font-family:var(--font-cute); font-weight:800; font-size:11px; color:white; box-shadow:0 3px 0 #84603B;">
+                310 🍊
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Friends List Section Header & Search -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:2px;">
+          <div style="font-weight:800; font-size:13.5px; color:var(--ink-coffee);">Danh sách Bạn Bè (4)</div>
+          <button class="btn-cute secondary" style="padding:4px 10px; font-size:11.5px; border-radius:10px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;" onclick="alert('Đã gửi lời mời kết bạn mới!')">
+            + Thêm bạn
+          </button>
+        </div>
+
+        <!-- Scrollable Friends List Grid/Items -->
+        <div style="display:flex; flex-direction:column; gap:10px; padding-bottom:20px;">
+          <!-- Friend Item 1 (User) -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:4px; padding:10px 12px; background:var(--primary-light); display:flex; align-items:center; justify-content:space-between; box-shadow:none;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="font-weight:800; font-size:14px; color:#E58700;">#1</div>
+              <span style="font-size:24px; background:white; border:1.5px solid var(--ink-coffee); border-radius:50%; padding:3px;">👑</span>
+              <div>
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Bạn (Alex Capy) <span style="font-size:10px; color:var(--primary); font-weight:700;">(Đang truy cập)</span></div>
+                <div style="font-size:11px; color:var(--muted);">🔥 7 ngày streak · 580 🍊 xu</div>
+              </div>
+            </div>
+            <span style="font-size:11px; font-weight:800; color:var(--primary); background:white; border:1px solid var(--primary); padding:3px 8px; border-radius:10px;">Hạng 1 🏆</span>
+          </div>
+
+          <!-- Friend Item 2 -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:4px; padding:10px 12px; background:white; display:flex; align-items:center; justify-content:space-between; box-shadow:none;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="font-weight:800; font-size:14px; color:var(--muted);">#2</div>
+              <span style="font-size:24px; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:50%; padding:3px;">🥈</span>
+              <div>
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Mây (Google)</div>
+                <div style="font-size:11px; color:var(--muted);">🔥 5 ngày streak · 420 🍊 xu</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Mây')">💬 Chat</button>
+              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="document.getElementById('btnAlbumFriends').click(); activateView('storage');">🖼️ Xem</button>
+            </div>
+          </div>
+
+          <!-- Friend Item 3 -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:4px; padding:10px 12px; background:white; display:flex; align-items:center; justify-content:space-between; box-shadow:none;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="font-weight:800; font-size:14px; color:var(--muted);">#3</div>
+              <span style="font-size:24px; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:50%; padding:3px;">🥉</span>
+              <div>
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Cam</div>
+                <div style="font-size:11px; color:var(--muted);">🔥 3 ngày streak · 310 🍊 xu</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Cam')">💬 Chat</button>
+            </div>
+          </div>
+
+          <!-- Friend Item 4 -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:4px; padding:10px 12px; background:white; display:flex; align-items:center; justify-content:space-between; box-shadow:none;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="font-weight:800; font-size:14px; color:var(--muted);">#4</div>
+              <span style="font-size:24px; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:50%; padding:3px;">🦫</span>
+              <div>
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Nấm</div>
+                <div style="font-size:11px; color:var(--muted);">🔥 2 ngày streak · 210 🍊 xu</div>
+              </div>
+            </div>
+            <div style="display:flex; gap:4px;">
+              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.askCapyAI('Hello Capy Nấm')">💬 Chat</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2336,6 +2557,81 @@
         <div style="display:flex; gap:10px; align-items:center; border-top:1.5px solid var(--line); padding-top:12px;">
           <input type="text" id="capyChatInput" placeholder="Hỏi Capy-sensei..." style="flex:1; padding:10px 14px; border:1.5px solid var(--ink-coffee); border-radius:18px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
           <button id="capyChatSend" class="btn-cute primary" style="padding:9px 12px; border-radius:18px; box-shadow:0 3px 0 var(--ink-coffee);">Gửi</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- --- Notification Center Modal (Thông Báo 🔔) --- -->
+    <div class="bottom-sheet-overlay" id="notifCenterOverlay">
+      <div class="bottom-sheet" style="max-height:85vh; display:flex; flex-direction:column;">
+        <div class="bottom-sheet-handle"></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:2px solid var(--line); padding-bottom:10px;">
+          <h3 style="font-family:var(--font-cute); font-weight:800; font-size:17px; color:var(--ink-coffee); margin:0;">Thông Báo 🔔</h3>
+          <button id="btnMarkAllRead" class="btn-cute secondary" style="font-size:11px; padding:4px 10px; border-radius:10px; box-shadow:0 2.5px 0 var(--ink-coffee);">Đánh dấu tất cả đã đọc</button>
+        </div>
+
+        <!-- Filter tabs: All, SRS, Friends, System -->
+        <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:10px;" id="notifFilterBar">
+          <button class="notif-filter-tab active" data-filter="all" style="padding:5px 12px; font-size:11.5px; font-weight:800; border-radius:12px; border:2px solid var(--ink-coffee); background:var(--duo-green); color:white; cursor:pointer; white-space:nowrap; box-shadow:0 3px 0 var(--duo-green-shadow);">Tất Cả 🔔</button>
+          <button class="notif-filter-tab" data-filter="SRS_REMINDER" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:12px; border:2px solid var(--ink-coffee); background:var(--surface); color:var(--ink-coffee); cursor:pointer; white-space:nowrap; box-shadow:0 3px 0 var(--ink-coffee);">Nhắc Học SRS 🎴</button>
+          <button class="notif-filter-tab" data-filter="FRIEND_REQUEST" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:12px; border:2px solid var(--ink-coffee); background:var(--surface); color:var(--ink-coffee); cursor:pointer; white-space:nowrap; box-shadow:0 3px 0 var(--ink-coffee);">Bạn Bè 👥</button>
+          <button class="notif-filter-tab" data-filter="SYSTEM_REWARD" style="padding:5px 12px; font-size:11.5px; font-weight:700; border-radius:12px; border:2px solid var(--ink-coffee); background:var(--surface); color:var(--ink-coffee); cursor:pointer; white-space:nowrap; box-shadow:0 3px 0 var(--ink-coffee);">Hệ Thống 🎁</button>
+        </div>
+
+        <!-- Notification List -->
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; padding-right:2px;" id="notifListContainer">
+          
+          <!-- Notif 1: SRS Reminder (Unread) -->
+          <div class="notif-card unread" data-type="SRS_REMINDER" data-target="srs-gameplay" style="display:flex; gap:12px; padding:12px; background:#FFF2CC; border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 4px 0 var(--ink-coffee); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="width:42px; height:42px; border-radius:50%; background:var(--duo-orange); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">🎴</div>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Bé Capy nhắc học SRS 🍊</div>
+                <div style="width:8px; height:8px; border-radius:50%; background:#FF4B4B; margin-top:4px;" class="unread-dot"></div>
+              </div>
+              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Bạn có 5 từ vựng cần lật thẻ hôm nay! Hãy giữ chuỗi Streak nhé.</div>
+              <div style="font-size:10px; color:var(--muted); font-weight:700; margin-top:6px;">5 phút trước</div>
+            </div>
+          </div>
+
+          <!-- Notif 2: Friend Request (Unread) -->
+          <div class="notif-card unread" data-type="FRIEND_REQUEST" data-target="friends" style="display:flex; gap:12px; padding:12px; background:#FFF2CC; border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 4px 0 var(--ink-coffee); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="width:42px; height:42px; border-radius:50%; background:var(--duo-blue); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">👥</div>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Lời mời kết bạn từ Capy Mây</div>
+                <div style="width:8px; height:8px; border-radius:50%; background:#FF4B4B; margin-top:4px;" class="unread-dot"></div>
+              </div>
+              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Capy Mây (Google User) vừa gửi lời mời kết bạn và chia sẻ bộ từ Matcha Tea!</div>
+              <div style="font-size:10px; color:var(--muted); font-weight:700; margin-top:6px;">30 phút trước</div>
+            </div>
+          </div>
+
+          <!-- Notif 3: System Reward (Unread) -->
+          <div class="notif-card unread" data-type="SYSTEM_REWARD" data-target="petshop" style="display:flex; gap:12px; padding:12px; background:#FFF2CC; border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 4px 0 var(--ink-coffee); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="width:42px; height:42px; border-radius:50%; background:var(--creamy-yuzu); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">🎁</div>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Phần thưởng đăng nhập hàng ngày 🍊</div>
+                <div style="width:8px; height:8px; border-radius:50%; background:#FF4B4B; margin-top:4px;" class="unread-dot"></div>
+              </div>
+              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Bạn đã nhận được +50 xu Yuzu! Ghé Cửa Hàng Pet để mua Mascot mới nhé.</div>
+              <div style="font-size:10px; color:var(--muted); font-weight:700; margin-top:6px;">2 giờ trước</div>
+            </div>
+          </div>
+
+          <!-- Notif 4: System Leaderboard (Read) -->
+          <div class="notif-card" data-type="SYSTEM_REWARD" data-target="friends" style="display:flex; gap:12px; padding:12px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:18px; box-shadow:0 4px 0 var(--ink-coffee); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="width:42px; height:42px; border-radius:50%; background:var(--duo-purple); border:2.5px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">👑</div>
+            <div style="flex:1;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Thăng hạng Bảng Xếp Hạng tuần!</div>
+              </div>
+              <div style="font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Chúc mừng! Bạn đã vươn lên vị trí Top 2 trong Bảng Xếp Hạng Bạn Bè.</div>
+              <div style="font-size:10px; color:var(--muted); font-weight:700; margin-top:6px;">1 ngày trước</div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -2458,9 +2754,9 @@
         <span>Cửa hàng</span>
       </button>
 
-      <button class="nav-tab" data-view="settings">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06-.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        <span>Cài đặt</span>
+      <button class="nav-tab" data-view="friends">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 1-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        <span>Bạn bè</span>
       </button>
     </div>
 
@@ -3153,18 +3449,29 @@
       });
     });
 
-    // --- Theme Toggling ---
-    themeBtn.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      themeBtn.textContent = isDark ? '🌙' : '☀️';
-    });
+    // --- Theme Toggling inside Settings ---
+    const themeText = document.getElementById('themeText');
 
-    // Initialize Theme symbol
-    themeBtn.textContent = document.documentElement.classList.contains('dark') ? '🌙' : '☀️';
+    function updateThemeUI() {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (themeText) {
+        themeText.textContent = isDark ? 'Tối 🌙' : 'Sáng ☀️';
+      }
+    }
 
-    // --- Tab Navigation Trigger ---
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        updateThemeUI();
+      });
+      updateThemeUI();
+    }
+
     function activateView(viewId) {
+      const screenViews = document.querySelectorAll('.screen-view');
+      const navTabs = document.querySelectorAll('.nav-tab');
+
       screenViews.forEach(v => v.classList.add('hidden'));
       navTabs.forEach(t => t.classList.remove('active'));
 
@@ -3174,17 +3481,74 @@
       const targetTab = document.querySelector(`.nav-tab[data-view="${viewId}"]`);
       if (targetTab) targetTab.classList.add('active');
 
+      if (viewId === 'petshop' && typeof renderShopItems === 'function') {
+        renderShopItems();
+      }
+
       // Close selections when switching tabs
       if (viewId !== 'storage') {
-        clearSelections();
+        if (typeof clearSelections === 'function') clearSelections();
       }
     }
+    window.activateView = activateView;
+
+    window.claimStreakBonus = function(e) {
+      if (!isStreakCompleted) {
+        isStreakCompleted = true;
+        const streakCountEl = document.getElementById('streakCount');
+        if (streakCountEl) {
+          let count = parseInt(streakCountEl.textContent) || 3;
+          streakCountEl.textContent = count + 1;
+        }
+        const btn = document.getElementById('btnClaimStreak');
+        if (btn) {
+          btn.textContent = "Đã Thắp Lửa 🔥";
+          btn.style.background = "var(--duo-green)";
+        }
+        triggerPointsAward(20, e);
+        alert("Tuyệt vời! Bạn đã duy trì chuỗi Streak học tập thành công và nhận +20 Xu! 🔥🍊");
+      } else {
+        alert("Hôm nay bạn đã thắp lửa Streak rồi! Quay lại vào ngày mai nhé ✨");
+      }
+    };
+
+    window.switchAlbumSubtab = function(type) {
+      const btnPersonal = document.getElementById('btnAlbumPersonal');
+      const btnFriends = document.getElementById('btnAlbumFriends');
+      const containerPersonal = document.getElementById('containerAlbumPersonal');
+      const containerFriends = document.getElementById('containerAlbumFriends');
+
+      if (type === 'personal') {
+        if (btnPersonal) { btnPersonal.classList.add('primary'); btnPersonal.classList.remove('secondary'); }
+        if (btnFriends) { btnFriends.classList.add('secondary'); btnFriends.classList.remove('primary'); }
+        if (containerPersonal) containerPersonal.style.display = 'block';
+        if (containerFriends) containerFriends.style.display = 'none';
+      } else {
+        if (btnPersonal) { btnPersonal.classList.add('secondary'); btnPersonal.classList.remove('primary'); }
+        if (btnFriends) { btnFriends.classList.add('primary'); btnFriends.classList.remove('secondary'); }
+        if (containerPersonal) containerPersonal.style.display = 'none';
+        if (containerFriends) containerFriends.style.display = 'block';
+      }
+    };
+
+    window.launchOrderGame = launchOrderGame;
 
     navTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        activateView(tab.dataset.view);
+      tab.addEventListener('click', (e) => {
+        const view = tab.getAttribute('data-view');
+        if (view) {
+          window.activateView(view);
+        }
       });
     });
+
+    const btnSettingsHeader = document.getElementById('btnSettingsHeader');
+    if (btnSettingsHeader) {
+      btnSettingsHeader.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.activateView('settings');
+      });
+    }
 
     // --- TAB 1: HOME CONTROLLERS ---
     // --- PHOTO VOCAB DATABASE (Offline Simulation) ---
@@ -3224,12 +3588,44 @@
     let isFlipped = false;
 
     // --- TAB 1: HOME CONTROLLERS ---
-    btnPlayDailyReview.addEventListener('click', () => {
-      // Launch direct SRS deck from Home screen
-      srsSessionDeck = [...DEFAULT_SRS_DECK];
-      srsCurrentIndex = 0;
-      activateView('srs-gameplay');
-      loadSrsCard(0);
+    if (btnPlayDailyReview) {
+      btnPlayDailyReview.addEventListener('click', () => {
+        srsSessionDeck = [...DEFAULT_SRS_DECK];
+        srsCurrentIndex = 0;
+        window.activateView('srs-gameplay');
+        loadSrsCard(0);
+      });
+    }
+
+    if (btnClaimStreak) {
+      btnClaimStreak.addEventListener('click', (e) => {
+        if (!isStreakCompleted) {
+          isStreakCompleted = true;
+          const streakCountEl = document.getElementById('streakCount');
+          if (streakCountEl) {
+            let count = parseInt(streakCountEl.textContent) || 3;
+            streakCountEl.textContent = count + 1;
+          }
+          btnClaimStreak.textContent = "Đã Thắp Lửa 🔥";
+          btnClaimStreak.style.background = "var(--duo-green)";
+          triggerPointsAward(20, e);
+          alert("Tuyệt vời! Bạn đã duy trì chuỗi Streak học tập thành công và nhận +20 Xu! 🔥🍊");
+        } else {
+          alert("Hôm nay bạn đã thắp lửa Streak rồi! Quay lại vào ngày mai nhé ✨");
+        }
+      });
+    }
+
+    // Bind Lesson Path Nodes to 3D Order Game
+    document.querySelectorAll('.path-node').forEach(node => {
+      node.addEventListener('click', () => {
+        const level = parseInt(node.dataset.level);
+        if (node.classList.contains('locked')) {
+          alert(`Bài học ${level} đang bị khóa! Hãy hoàn thành các bài học trước để mở khóa nhé 🔒`);
+        } else {
+          launchOrderGame(level);
+        }
+      });
     });
 
     // --- GALLERY MULTI-SELECTION SYSTEM ---
@@ -3283,37 +3679,52 @@
     });
 
     // --- SELECTED VOCAB COLLECTION CONTROLLER ---
-    btnBatchExtract.addEventListener('click', (e) => {
-      if (selectedPhotos.size === 0) return;
-      
-      // Aggregate vocabularies
-      currentSessionVocabList = [];
-      selectedPhotos.forEach(photoId => {
-        const words = PHOTO_VOCAB_DB[photoId] || [];
-        words.forEach(w => {
-          // Avoid duplicate words
-          if (!currentSessionVocabList.some(item => item.word === w.word)) {
-            currentSessionVocabList.push(w);
-          }
+    if (btnBatchExtract) {
+      btnBatchExtract.addEventListener('click', (e) => {
+        if (selectedPhotos.size === 0) {
+          // Auto-select photos if none selected yet
+          albumItems.forEach(item => {
+            if (item.dataset.photo) selectedPhotos.add(item.dataset.photo);
+          });
+        }
+        
+        // Aggregate vocabularies
+        currentSessionVocabList = [];
+        selectedPhotos.forEach(photoId => {
+          const words = PHOTO_VOCAB_DB[photoId] || [];
+          words.forEach(w => {
+            // Avoid duplicate words
+            if (!currentSessionVocabList.some(item => item.word === w.word)) {
+              currentSessionVocabList.push(w);
+            }
+          });
         });
+        
+        if (currentSessionVocabList.length === 0) {
+          currentSessionVocabList = PHOTO_VOCAB_DB['p1'] || [];
+        }
+        
+        // Render collection
+        renderSelectedVocabCollection();
+        
+        // Hide selection drawer and activate collection view
+        if (selectionDrawer) selectionDrawer.classList.remove('open');
+        window.activateView('selected-vocab');
       });
-      
-      // Render collection
-      renderSelectedVocabCollection();
-      
-      // Hide selection drawer and activate collection view
-      selectionDrawer.classList.remove('open');
-      activateView('selected-vocab');
-    });
+    }
 
-    document.getElementById('btnBackToStorage').addEventListener('click', () => {
-      activateView('storage');
-      // Keep selection active so they can adjust
-      selectionDrawer.classList.add('open');
-    });
+    const btnBackToStorage = document.getElementById('btnBackToStorage');
+    if (btnBackToStorage) {
+      btnBackToStorage.addEventListener('click', () => {
+        window.activateView('storage');
+        // Keep selection active so they can adjust
+        if (selectionDrawer) selectionDrawer.classList.add('open');
+      });
+    }
 
     function renderSelectedVocabCollection() {
       const container = document.getElementById('selectedVocabList');
+      if (!container) return;
       container.innerHTML = '';
       
       if (currentSessionVocabList.length === 0) {
@@ -3350,20 +3761,28 @@
     }
 
     // --- FLASHCARD SRS GAMEPLAY CONTROLLER ---
-    document.getElementById('btnCreateFlashcards').addEventListener('click', () => {
-      if (currentSessionVocabList.length === 0) return;
-      srsSessionDeck = [...currentSessionVocabList];
-      srsCurrentIndex = 0;
-      activateView('srs-gameplay');
-      loadSrsCard(0);
-    });
-
-    document.getElementById('btnExitSrs').addEventListener('click', () => {
-      showCustomConfirm("Thoát phiên học 🎴", "Bạn có chắc muốn thoát phiên học hiện tại không? Tiến trình học tập của phiên này sẽ bị hủy.", () => {
-        clearSelections();
-        activateView('storage');
+    const btnCreateFlashcards = document.getElementById('btnCreateFlashcards');
+    if (btnCreateFlashcards) {
+      btnCreateFlashcards.addEventListener('click', () => {
+        if (currentSessionVocabList.length === 0) {
+          currentSessionVocabList = PHOTO_VOCAB_DB['p1'] || [];
+        }
+        srsSessionDeck = [...currentSessionVocabList];
+        srsCurrentIndex = 0;
+        window.activateView('srs-gameplay');
+        loadSrsCard(0);
       });
-    });
+    }
+
+    const btnExitSrs = document.getElementById('btnExitSrs');
+    if (btnExitSrs) {
+      btnExitSrs.addEventListener('click', () => {
+        showCustomConfirm("Thoát phiên học 🎴", "Bạn có chắc muốn thoát phiên học hiện tại không? Tiến trình học tập của phiên này sẽ bị hủy.", () => {
+          clearSelections();
+          window.activateView('storage');
+        });
+      });
+    }
 
     function loadSrsCard(index) {
       if (index >= srsSessionDeck.length) {
@@ -3487,6 +3906,89 @@
       }
     });
 
+    // --- NOTIFICATION CENTER SYSTEM LOGIC ---
+    const btnNotifBell = document.getElementById('btnNotifBell');
+    const notifCenterOverlay = document.getElementById('notifCenterOverlay');
+    const notifBadgePill = document.getElementById('notifBadgePill');
+    const btnMarkAllRead = document.getElementById('btnMarkAllRead');
+    const notifFilterTabs = document.querySelectorAll('.notif-filter-tab');
+    const notifCards = document.querySelectorAll('.notif-card');
+
+    if (btnNotifBell && notifCenterOverlay) {
+      btnNotifBell.addEventListener('click', () => {
+        notifCenterOverlay.classList.add('open');
+      });
+
+      notifCenterOverlay.addEventListener('click', (e) => {
+        if (e.target === notifCenterOverlay) {
+          notifCenterOverlay.classList.remove('open');
+        }
+      });
+    }
+
+    if (btnMarkAllRead) {
+      btnMarkAllRead.addEventListener('click', () => {
+        document.querySelectorAll('.notif-card.unread').forEach(card => {
+          card.classList.remove('unread');
+          card.style.background = 'var(--surface)';
+          const dot = card.querySelector('.unread-dot');
+          if (dot) dot.remove();
+        });
+        if (notifBadgePill) {
+          notifBadgePill.textContent = '0';
+          notifBadgePill.style.display = 'none';
+        }
+        alert('Đã đánh dấu tất cả thông báo là đã đọc! 🔔');
+      });
+    }
+
+    // Filter switching
+    notifFilterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        notifFilterTabs.forEach(t => {
+          t.classList.remove('active');
+          t.style.background = 'var(--surface)';
+          t.style.color = 'var(--ink-coffee)';
+          t.style.boxShadow = '0 3px 0 var(--ink-coffee)';
+        });
+        tab.classList.add('active');
+        tab.style.background = 'var(--duo-green)';
+        tab.style.color = 'white';
+        tab.style.boxShadow = '0 3px 0 var(--duo-green-shadow)';
+
+        const filter = tab.getAttribute('data-filter');
+        notifCards.forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-type') === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Card click -> Deep Link navigation
+    notifCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const targetView = card.getAttribute('data-target');
+        if (card.classList.contains('unread')) {
+          card.classList.remove('unread');
+          card.style.background = 'var(--surface)';
+          const dot = card.querySelector('.unread-dot');
+          if (dot) dot.remove();
+          
+          let currentCount = parseInt(notifBadgePill.textContent) || 0;
+          if (currentCount > 0) {
+            currentCount--;
+            notifBadgePill.textContent = currentCount;
+            if (currentCount === 0) notifBadgePill.style.display = 'none';
+          }
+        }
+        if (notifCenterOverlay) notifCenterOverlay.classList.remove('open');
+        if (targetView) window.activateView(targetView);
+      });
+    });
+
     templateBadges.forEach(badge => {
       badge.addEventListener('click', () => {
         templateBadges.forEach(b => b.classList.remove('active'));
@@ -3497,9 +3999,8 @@
     function handleMockUploadScan(e) {
       if (quotaScans <= 0) {
         alert("Bạn đã hết lượt quét miễn phí hôm nay! Hãy nâng cấp PRO tại Cài đặt để quét không giới hạn.");
-        bottomSheetOverlay.classList.remove('open');
-        activateView('settings');
-        tabBtnPaywall.click();
+        if (bottomSheetOverlay) bottomSheetOverlay.classList.remove('open');
+        window.activateView('settings');
         return;
       }
 
@@ -3724,9 +4225,18 @@
       
       const updateSubTabs = (activeCategory) => {
         activeShopCategory = activeCategory;
-        tabMascots.classList.toggle('active', activeCategory === 'mascot');
-        tabAccessories.classList.toggle('active', activeCategory === 'accessory');
-        tabBackgrounds.classList.toggle('active', activeCategory === 'background');
+        if (tabMascots) {
+          tabMascots.classList.toggle('primary', activeCategory === 'mascot');
+          tabMascots.classList.toggle('secondary', activeCategory !== 'mascot');
+        }
+        if (tabAccessories) {
+          tabAccessories.classList.toggle('primary', activeCategory === 'accessory');
+          tabAccessories.classList.toggle('secondary', activeCategory !== 'accessory');
+        }
+        if (tabBackgrounds) {
+          tabBackgrounds.classList.toggle('primary', activeCategory === 'background');
+          tabBackgrounds.classList.toggle('secondary', activeCategory !== 'background');
+        }
         renderShopItems();
       };
 
@@ -4026,8 +4536,8 @@
         handle.addEventListener('touchstart', dragTouchStart, { passive: false });
 
         function dragMouseDown(e) {
-          // Skip dragging if user clicked a button or input inside the handle
-          if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.closest('button')) {
+          // Skip dragging if user clicked a button or input inside the handle (except handle itself)
+          if (elmnt !== handle && (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || (e.target.closest('button') && e.target.closest('button') !== handle))) {
             return;
           }
           e.preventDefault();
@@ -4255,6 +4765,32 @@
           handleSendMessage(prompt);
         });
       });
+
+      // Sub-tab toggling for Personal Album vs Friends Feed
+      const btnAlbumPersonal = document.getElementById('btnAlbumPersonal');
+      const btnAlbumFriends = document.getElementById('btnAlbumFriends');
+      const containerAlbumPersonal = document.getElementById('containerAlbumPersonal');
+      const containerAlbumFriends = document.getElementById('containerAlbumFriends');
+
+      if (btnAlbumPersonal && btnAlbumFriends) {
+        btnAlbumPersonal.addEventListener('click', () => {
+          btnAlbumPersonal.classList.add('primary');
+          btnAlbumPersonal.classList.remove('secondary');
+          btnAlbumFriends.classList.add('secondary');
+          btnAlbumFriends.classList.remove('primary');
+          containerAlbumPersonal.style.display = 'block';
+          containerAlbumFriends.style.display = 'none';
+        });
+
+        btnAlbumFriends.addEventListener('click', () => {
+          btnAlbumFriends.classList.add('primary');
+          btnAlbumFriends.classList.remove('secondary');
+          btnAlbumPersonal.classList.add('secondary');
+          btnAlbumPersonal.classList.remove('primary');
+          containerAlbumPersonal.style.display = 'none';
+          containerAlbumFriends.style.display = 'block';
+        });
+      }
 
       // Expose globally for gameplay screens
       window.askCapyAI = function(word) {

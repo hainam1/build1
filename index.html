@@ -12,7 +12,7 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (!urlParams.has('v')) {
         urlParams.set('v', 'fresh-' + Date.now());
-        window.location.search = urlParams.toString();
+        window.history.replaceState(null, '', '?' + urlParams.toString());
         return;
       }
       const saved = localStorage.getItem('theme');
@@ -965,62 +965,70 @@
     /* --- Floating View Mode Switcher --- */
     .view-mode-switcher {
       position: fixed;
-      top: 16px;
+      top: 14px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(8px);
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border: 1.5px solid #E8DCD1;
       border-radius: 99px;
-      padding: 4px;
-      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.08);
-      z-index: 9999;
+      padding: 5px;
+      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.12);
+      z-index: 99999;
       user-select: none;
+      max-width: 95vw;
+      overflow-x: auto;
     }
     html.dark .view-mode-switcher {
-      background: rgba(45, 39, 35, 0.85);
+      background: rgba(45, 39, 35, 0.92);
       border-color: #3E342F;
     }
     .view-mode-switcher a {
       font-family: 'Fredoka', 'Nunito', sans-serif;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 700;
       color: #5C4F4B;
       text-decoration: none;
-      padding: 8px 18px;
+      padding: 7px 15px;
       border-radius: 99px;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       gap: 6px;
+      white-space: nowrap;
     }
     html.dark .view-mode-switcher a {
       color: #D8CECA;
     }
     .view-mode-switcher a.active {
-      background: #D2A374;
+      background: #FF9600;
       color: #FFFFFF !important;
+      box-shadow: 0 3px 0 #E58700;
     }
     .view-mode-switcher a:hover:not(.active) {
-      background: rgba(210, 163, 116, 0.15);
-      color: #D2A374;
+      background: rgba(255, 150, 0, 0.12);
+      color: #E58700;
     }
   </style>
 </head>
 <body>
 
-  <!-- --- Floating View Mode Switcher --- -->
+  <!-- --- Floating View Mode Switcher (4 Pages) --- -->
   <div class="view-mode-switcher">
-    <a href="index.html" onclick="location.href='index.html?v=fresh-' + Date.now(); return false;" class="switch-btn active">📊 Class Diagram UML</a>
-    <a href="capy_vocab.html" onclick="location.href='capy_vocab.html?v=fresh-' + Date.now(); return false;" class="switch-btn">📱 Giao diện App (Capybara)</a>
+    <a href="index.html" class="switch-btn active">📊 Class Diagram UML</a>
+    <a href="capy_vocab.html" class="switch-btn">📱 App UI (Capybara)</a>
+    <a href="database_schema.html" class="switch-btn">🗄️ Database Schema</a>
+    <a href="sequence_diagrams.html" class="switch-btn">🔄 Sequence Diagrams</a>
   </div>
 
   <!-- --- Top Header Bar --- -->
   <div class="bar">
     <div class="brand">
       <h1>Class Diagram Explorer</h1>
-      <div class="sub">AI Vocabulary Photo Note · 13 Classes · 3 Packages</div>
+      <div class="sub">AI Vocabulary Photo Note · 15 Classes · 3 Packages</div>
     </div>
     
     <!-- Filter Chips -->
@@ -1082,7 +1090,7 @@
 
         <!-- Class Quick Navigation -->
         <div>
-          <div class="section-title">Danh sách các lớp (<span id="class-count">13</span>)</div>
+          <div class="section-title">Danh sách các lớp (<span id="class-count">15</span>)</div>
           <div class="class-list" id="classList">
             <!-- Dynamically populated -->
           </div>
@@ -1231,7 +1239,7 @@
           <!-- Class cards inserted as HTML inside foreignObject -->
           <g id="svgNodes">
             <!-- User -->
-            <foreignObject id="node-User" x="80" y="120" width="260" height="250">
+            <foreignObject id="node-User" x="80" y="50" width="260" height="310">
               <div class="class-card" data-class="User" data-package="Core Entities">
                 <div class="card-header">
                   <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
@@ -1243,6 +1251,9 @@
                 <div class="card-compartment">
                   <div class="card-member">+ id: <span class="type">string</span></div>
                   <div class="card-member">+ email: <span class="type">string</span></div>
+                  <div class="card-member">+ googleId: <span class="type">string?</span></div>
+                  <div class="card-member">+ avatarUrl: <span class="type">string</span></div>
+                  <div class="card-member">+ isGoogleLoggedIn: <span class="type">boolean</span></div>
                   <div class="card-member">+ subscriptionTier: <span class="type">SubTier</span></div>
                   <div class="card-member">+ dailyScansLeft: <span class="type">int</span></div>
                   <div class="card-member">+ dailyChatLeft: <span class="type">int</span></div>
@@ -1251,6 +1262,8 @@
                 <div class="card-compartment">
                   <div class="card-member">+ canScan(): <span class="type">boolean</span></div>
                   <div class="card-member">+ canChat(): <span class="type">boolean</span></div>
+                  <div class="card-member">+ loginWithGoogle(): <span class="type">Promise&lt;boolean&gt;</span></div>
+                  <div class="card-member">+ getFriendsList(): <span class="type">User[]</span></div>
                   <div class="card-member">+ addYuzuCoins(amt): <span class="type">void</span></div>
                   <div class="card-member">+ deductYuzuCoins(amt): <span class="type">boolean</span></div>
                 </div>
@@ -1301,7 +1314,7 @@
             </foreignObject>
 
             <!-- Photo -->
-            <foreignObject id="node-Photo" x="80" y="450" width="260" height="200">
+            <foreignObject id="node-Photo" x="80" y="380" width="260" height="230">
               <div class="class-card" data-class="Photo" data-package="Core Entities">
                 <div class="card-header">
                   <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
@@ -1316,11 +1329,33 @@
                   <div class="card-member">+ originalUri: <span class="type">string</span></div>
                   <div class="card-member">+ annotatedUri: <span class="type">string</span></div>
                   <div class="card-member">+ templateId: <span class="type">string</span></div>
+                  <div class="card-member">+ isPublic: <span class="type">boolean</span></div>
                   <div class="card-member">+ createdAt: <span class="type">Date</span></div>
                 </div>
                 <div class="card-compartment">
+                  <div class="card-member">+ togglePublicShare(): <span class="type">void</span></div>
                   <div class="card-member">+ getNotes(): <span class="type">PhotoNote[]</span></div>
                   <div class="card-member">+ getVocabularies(): <span class="type">Vocabulary[]</span></div>
+                </div>
+              </div>
+            </foreignObject>
+
+            <!-- Friendship -->
+            <foreignObject id="node-Friendship" x="80" y="630" width="260" height="190">
+              <div class="class-card" data-class="Friendship" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;entity&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">Friendship</span>
+                    <span class="card-db-tag">friendships</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ id: <span class="type">string</span></div>
+                  <div class="card-member">+ requesterId: <span class="type">string</span></div>
+                  <div class="card-member">+ addresseeId: <span class="type">string</span></div>
+                  <div class="card-member">+ status: <span class="type">FriendStatus</span></div>
+                  <div class="card-member">+ createdAt: <span class="type">Date</span></div>
                 </div>
               </div>
             </foreignObject>
@@ -1607,6 +1642,24 @@
                 </div>
               </div>
             </foreignObject>
+
+            <!-- SocialService -->
+            <foreignObject id="node-SocialService" x="1080" y="1020" width="270" height="210">
+              <div class="class-card" data-class="SocialService" data-package="Core Entities">
+                <div class="card-header">
+                  <span class="card-stereotype">&lt;&lt;service&gt;&gt;</span>
+                  <div class="card-name-row">
+                    <span class="card-name">SocialService</span>
+                  </div>
+                </div>
+                <div class="card-compartment">
+                  <div class="card-member">+ searchUsersByNameOrEmail(query): <span class="type">User[]</span></div>
+                  <div class="card-member">+ sendFriendRequest(friendId): <span class="type">Promise&lt;boolean&gt;</span></div>
+                  <div class="card-member">+ getFriendsLeaderboard(): <span class="type">Promise&lt;User[]&gt;</span></div>
+                  <div class="card-member">+ getFriendsPhotoFeed(ids): <span class="type">Promise&lt;Photo[]&gt;</span></div>
+                </div>
+              </div>
+            </foreignObject>
           </g>
         </g>
       </svg>
@@ -1697,7 +1750,8 @@
           { name: "dailyScansLeft", type: "number", desc: "Số lượt quét miễn phí còn lại của ngày hiện tại." },
           { name: "dailyChatLeft", type: "number", desc: "Số lượt đặt câu hỏi đàm thoại miễn phí còn lại." },
           { name: "lastScanDate", type: "string", desc: "Ngày quét gần nhất (mốc reset quota vào lúc 0h00)." },
-          { name: "totalYuzuCoins", type: "number", desc: "Tổng xu Yuzu tích lũy được." }
+          { name: "totalYuzuCoins", type: "number", desc: "Tổng xu Yuzu tích lũy được." },
+          { name: "unreadNotificationCount", type: "number", desc: "Số lượng thông báo chưa đọc hiển thị trên icon Chuông 🔔." }
         ],
         methods: [
           { name: "canScan()", desc: "Kiểm tra xem User còn lượt quét AI miễn phí trong ngày hay không (hoặc là PRO)." },
@@ -1714,7 +1768,8 @@
         relationships: [
           { target: "Photo", type: "Association 1 → N", desc: "Một người dùng có thể sở hữu nhiều bức ảnh được ghi chú từ vựng trong bộ sưu tập cá nhân." },
           { target: "ChatMessage", type: "Composition 1 → N", desc: "Quan hệ ràng buộc vòng đời: Một người dùng sở hữu lịch sử tin nhắn hỏi đáp." },
-          { target: "UserInventory", type: "Composition 1 → 1", desc: "Mỗi User sở hữu một UserInventory để quản lý các vật phẩm trang phục, linh vật đã mở khóa." }
+          { target: "UserInventory", type: "Composition 1 → 1", desc: "Mỗi User sở hữu một UserInventory để quản lý các vật phẩm trang phục, linh vật đã mở khóa." },
+          { target: "AppNotification", type: "Composition 1 → N", desc: "Một người dùng sở hữu danh sách các thông báo cá nhân." }
         ]
       },
       UserInventory: {
@@ -2148,6 +2203,67 @@
         relationships: [
           { target: "PhotoNote", type: "Dependency (validates)", desc: "Đọc `orderIndex` và vị trí ghim để thiết lập logic chấm điểm." },
           { target: "LessonNode", type: "Dependency (updates_status)", desc: "Cập nhật cờ hoàn thành và mở khóa khi người dùng thắng game." }
+        ]
+      },
+      AppNotification: {
+        name: "AppNotification",
+        package: "Core Entities",
+        stereotype: "entity",
+        dbTable: "app_notifications",
+        description: "Đại diện cho một thông báo hệ thống, lời mời kết bạn, hoặc nhắc nhở ôn tập SRS trong ứng dụng.",
+        dbMapping: [
+          { field: "id", desc: "Khóa chính UUID định danh thông báo." },
+          { field: "user_id", desc: "Khóa ngoại liên kết tới tài khoản người nhận." },
+          { field: "title", desc: "Tiêu đề thông báo hiển thị đậm." },
+          { field: "body", desc: "Nội dung chi tiết thông báo." },
+          { field: "type", desc: "Phân loại (`SRS_REMINDER`, `FRIEND_REQUEST`, `SYSTEM_REWARD`, `LEADERBOARD_ALERT`)." },
+          { field: "target_screen", desc: "Màn hình đích điều hướng Deep Link." },
+          { field: "target_params", desc: "Tham số bổ sung dưới dạng JSON string." },
+          { field: "is_read", desc: "Trạng thái đã đọc (0: Chưa đọc, 1: Đã đọc)." },
+          { field: "created_at", desc: "Thời điểm khởi tạo thông báo ISO8601." }
+        ],
+        attributes: [
+          { name: "id", type: "string", desc: "UUID thông báo." },
+          { name: "userId", type: "string", desc: "ID người dùng." },
+          { name: "title", type: "string", desc: "Tiêu đề thông báo." },
+          { name: "body", type: "string", desc: "Nội dung thông báo." },
+          { name: "type", type: "NotifType", desc: "Phân loại thông báo." },
+          { name: "targetScreen", type: "string", desc: "Màn hình đích (e.g. FlashcardScreen, FriendsFeed)." },
+          { name: "targetParams", type: "object", desc: "Tham số truyền kèm Deep Link." },
+          { name: "isRead", type: "boolean", desc: "Cờ trạng thái đã đọc." },
+          { name: "createdAt", type: "Date", desc: "Thời điểm tạo thông báo." }
+        ],
+        methods: [
+          { name: "markAsRead()", desc: "Đánh dấu thông báo đã được đọc và cập nhật cờ isRead." },
+          { name: "toDict()", desc: "Chuyển đổi dữ liệu thông báo sang đối tượng JSON." }
+        ],
+        principles: [
+          { title: "Deep Linking Routing", desc: "Lưu giữ thông tin target_screen giúp chuyển tiếp trực tiếp người dùng tới tính năng cần tương tác khi bấm thông báo." }
+        ],
+        relationships: [
+          { target: "User", type: "Composition N → 1", desc: "Thông báo thuộc sở hữu của một User nhất định." }
+        ]
+      },
+      NotificationService: {
+        name: "NotificationService",
+        package: "Batch & SRS",
+        stereotype: "service",
+        dbTable: "N/A",
+        description: "Dịch vụ quản lý việc xin quyền thông báo, lên lịch nhắc nhở SRS đẩy cục bộ và xử lý Deep Link.",
+        dbMapping: [],
+        attributes: [],
+        methods: [
+          { name: "requestPermission()", desc: "Xin quyền gửi thông báo từ hệ điều hành (Expo Notifications)." },
+          { name: "scheduleLocalSRSReminder(count, date)", desc: "Lập lịch thông báo nhắc học SRS dựa trên số lượng thẻ đến hạn." },
+          { name: "fetchUnreadCount()", desc: "Truy vấn tổng số lượng thông báo chưa đọc từ SQLite." },
+          { name: "markAllAsRead()", desc: "Đánh dấu tất cả thông báo của người dùng là đã đọc." },
+          { name: "handleNotificationResponse(nav)", desc: "Xử lý sự kiện bấm thông báo và điều hướng Deep Link đến màn hình tương ứng." }
+        ],
+        principles: [
+          { title: "Local Push Scheduling", desc: "Tự động gửi thông báo nhắc ôn tập ngắt quãng cục bộ trên thiết bị mà không cần máy chủ backend." }
+        ],
+        relationships: [
+          { target: "AppNotification", type: "Dependency (manages)", desc: "Quản lý truy vấn và cập nhật trạng thái các bản ghi thông báo trong SQLite." }
         ]
       }
     };
