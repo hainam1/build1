@@ -2910,38 +2910,125 @@
       </button>
     </div>
 
-    <!-- --- Floating Desktop Draggable AI Chatbot --- -->
-    <button class="desktop-chatbot-toggle" id="desktopChatToggle" title="Trợ lý AI 🍊">
+    <!-- --- Floating Desktop Draggable AI & P2P Chatbot Window --- -->
+    <button class="desktop-chatbot-toggle" id="desktopChatToggle" title="Hộp thư & Trợ lý AI 🍊">
       🦫
     </button>
     
     <div class="desktop-chatbot-window" id="desktopChatWindow">
+      <!-- Desktop Header with Drag & Back Button -->
       <div class="desktop-chat-header" id="desktopChatHeader">
-        <div class="desktop-chat-header-info">
-          <div class="desktop-chat-avatar">🦫</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <!-- Back Button (Hidden in Inbox View, Visible in Detail View) -->
+          <button id="btnDesktopChatBack" title="Quay lại Hộp thư" style="display:none; background:var(--surface); border:1.5px solid var(--ink-coffee); border-radius:10px; padding:2px 8px; font-weight:800; font-size:12px; cursor:pointer; color:var(--ink-coffee); box-shadow:0 2px 0 var(--ink-coffee);">←</button>
+          <div class="desktop-chat-avatar" id="desktopChatAvatar">💬</div>
           <div class="desktop-chat-title-group">
-            <div class="desktop-chat-title">Capy-sensei AI 🍊</div>
-            <div class="desktop-chat-status">Đang online & sẵn sàng...</div>
+            <div class="desktop-chat-title" id="desktopChatTitle">Hộp Thư Chat 💬</div>
+            <div class="desktop-chat-status" id="desktopChatStatus">4 hội thoại</div>
           </div>
         </div>
         <button class="desktop-chat-close" id="desktopChatClose" title="Đóng">×</button>
       </div>
-      
-      <div class="desktop-chat-messages" id="desktopChatMessages">
-        <div class="desktop-chat-bubble bot">
-          Chào bạn! Tớ là <b>Capy-sensei AI</b> 🍊. Tớ có thể giúp bạn học từ vựng tiếng Anh, giải thích ngữ pháp hoặc trả lời các thắc mắc về ứng dụng Capy Vocab. Hãy kéo thả tớ đi bất kỳ đâu nhé! 🐾
+
+      <!-- VIEW 1: INBOX VIEW (List of Threads) -->
+      <div class="desktop-chat-inbox-view" id="desktopChatInboxView" style="flex:1; display:flex; flex-direction:column; background:var(--bg-cloud); overflow-y:auto; padding:12px;">
+        
+        <!-- Search Bar -->
+        <div style="position:relative; margin-bottom:10px;">
+          <input type="text" id="desktopInboxSearch" placeholder="Tìm kiếm cuộc trò chuyện..." style="width:100%; padding:7px 12px 7px 30px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:12px; background:var(--surface); color:var(--ink-coffee);">
+          <span style="position:absolute; left:9px; top:50%; transform:translateY(-50%); font-size:12px;">🔍</span>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <!-- PINNED THREAD TOP: CAPY AI ASSISTANT -->
+          <div class="desktop-thread-item pinned" id="threadCapyAi" data-thread-id="ai" data-thread-name="Capy-sensei AI 🍊" data-thread-avatar="🦫" data-is-ai="true" style="display:flex; gap:10px; align-items:center; padding:10px; background:var(--creamy-yuzu); border:2.5px solid var(--duo-orange); border-radius:16px; box-shadow:0 3.5px 0 var(--duo-orange-shadow); cursor:pointer; position:relative; transition:transform 0.1s ease;">
+            <div style="position:relative; width:40px; height:40px; border-radius:50%; background:var(--duo-blue); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0;">
+              🦫
+              <span style="position:absolute; bottom:0; right:0; width:10px; height:10px; border-radius:50%; background:#46A302; border:1.5px solid white;"></span>
+            </div>
+            <div style="flex:1; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:800; font-size:12.5px; color:var(--ink-coffee);">Capy-sensei AI 🍊</div>
+                <span style="font-size:9px; font-weight:800; background:var(--duo-orange); color:white; padding:1px 5px; border-radius:6px; border:1px solid var(--ink-coffee);">📌 Ghim</span>
+              </div>
+              <div id="threadPreviewCapyAi" style="font-size:11px; color:var(--ink-coffee); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Chào bạn! Tớ đã sẵn sàng giải đáp từ vựng cho bạn! 🍊</div>
+            </div>
+          </div>
+
+          <div style="font-size:10px; font-weight:800; text-transform:uppercase; color:var(--muted); letter-spacing:0.5px; margin-top:4px;">
+            Trò chuyện Bạn Bè (Direct Chats)
+          </div>
+
+          <!-- FRIEND THREAD 1: Capy Mây -->
+          <div class="desktop-thread-item" id="threadCapyMay" data-thread-id="capy_may" data-thread-name="Capy Mây (Google User)" data-thread-avatar="🍵" data-is-ai="false" style="display:flex; gap:10px; align-items:center; padding:10px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+            <div style="position:relative; width:38px; height:38px; border-radius:50%; background:var(--duo-green); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;">
+              🍵
+              <span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:#46A302; border:1.5px solid white;"></span>
+            </div>
+            <div style="flex:1; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:800; font-size:12.5px; color:var(--ink-coffee);">Capy Mây (Google User)</div>
+                <span style="font-size:9.5px; color:var(--muted); font-weight:700;">10m</span>
+              </div>
+              <div id="threadPreviewCapyMay" style="font-size:11px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Bạn: Cậu thuộc từ 'Mantis' chưa? 🎴</div>
+            </div>
+            <span class="unread-pill" style="background:#FF4B4B; color:white; font-size:9.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 5px; min-width:16px; text-align:center;">2</span>
+          </div>
+
+          <!-- FRIEND THREAD 2: Alex -->
+          <div class="desktop-thread-item" id="threadAlex" data-thread-id="alex" data-thread-name="Alex (Top 1 Leaderboard)" data-thread-avatar="👑" data-is-ai="false" style="display:flex; gap:10px; align-items:center; padding:10px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+            <div style="position:relative; width:38px; height:38px; border-radius:50%; background:var(--duo-purple); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;">
+              👑
+              <span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:#46A302; border:1.5px solid white;"></span>
+            </div>
+            <div style="flex:1; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:800; font-size:12.5px; color:var(--ink-coffee);">Alex (Top 1 Leaderboard)</div>
+                <span style="font-size:9.5px; color:var(--muted); font-weight:700;">30m</span>
+              </div>
+              <div id="threadPreviewAlex" style="font-size:11px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Đã chia sẻ 1 Photo Note 🖼️: Study Desk</div>
+            </div>
+            <span class="unread-pill" style="background:#FF4B4B; color:white; font-size:9.5px; font-weight:800; font-family:var(--font-cute); border:1.5px solid var(--ink-coffee); border-radius:99px; padding:1px 5px; min-width:16px; text-align:center;">1</span>
+          </div>
+
+          <!-- FRIEND THREAD 3: Capy Cam -->
+          <div class="desktop-thread-item" id="threadCapyCam" data-thread-id="capy_cam" data-thread-name="Capy Cam (Study Buddy)" data-thread-avatar="🍊" data-is-ai="false" style="display:flex; gap:10px; align-items:center; padding:10px; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee); cursor:pointer; transition:transform 0.1s ease;">
+            <div style="position:relative; width:38px; height:38px; border-radius:50%; background:var(--duo-orange); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:19px; flex-shrink:0;">
+              🍊
+              <span style="position:absolute; bottom:0; right:0; width:9px; height:9px; border-radius:50%; background:#CCCCCC; border:1.5px solid white;"></span>
+            </div>
+            <div style="flex:1; overflow:hidden;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:800; font-size:12.5px; color:var(--ink-coffee);">Capy Cam (Study Buddy)</div>
+                <span style="font-size:9.5px; color:var(--muted); font-weight:700;">1d</span>
+              </div>
+              <div id="threadPreviewCapyCam" style="font-size:11px; color:var(--muted); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Hôm nay mình vừa vượt mốc 200 PTS nè! 🍊</div>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div class="desktop-chat-suggestions">
-        <button class="desktop-chat-chip" data-prompt="Mẹo ghi nhớ từ vựng hiệu quả? 💡">Mẹo nhớ từ vựng 💡</button>
-        <button class="desktop-chat-chip" data-prompt="Giải thích thuật toán lặp lại ngắt quãng? 🔄">Thuật toán lặp lại? 🔄</button>
-        <button class="desktop-chat-chip" data-prompt="Bật chế độ tối 🌙">Chế độ tối 🌙</button>
-      </div>
-      
-      <div class="desktop-chat-input-area">
-        <input type="text" class="desktop-chat-input" id="desktopChatInput" placeholder="Hỏi Capy-sensei...">
-        <button class="desktop-chat-send" id="desktopChatSend">Gửi</button>
+
+      <!-- VIEW 2: DETAIL CHAT VIEW (Messages & Input) -->
+      <div class="desktop-chat-detail-view" id="desktopChatDetailView" style="flex:1; display:none; flex-direction:column; background:var(--bg-cloud); overflow:hidden;">
+        <div class="desktop-chat-messages" id="desktopChatMessages">
+          <div class="desktop-chat-bubble bot">
+            Chào bạn! Tớ là <b>Capy-sensei AI</b> 🍊. Tớ có thể giúp bạn học từ vựng tiếng Anh, giải thích ngữ pháp hoặc trả lời các thắc mắc về ứng dụng Capy Vocab. 🐾
+          </div>
+        </div>
+        
+        <!-- Quick AI Suggestion Chips (Visible ONLY when chatting with AI) -->
+        <div class="desktop-chat-suggestions" id="desktopChatSuggestions">
+          <button class="desktop-chat-chip" data-prompt="Mẹo ghi nhớ từ vựng hiệu quả? 💡">Mẹo nhớ từ vựng 💡</button>
+          <button class="desktop-chat-chip" data-prompt="Giải thích thuật toán lặp lại ngắt quãng? 🔄">Thuật toán lặp lại? 🔄</button>
+          <button class="desktop-chat-chip" data-prompt="Bật chế độ tối 🌙">Chế độ tối 🌙</button>
+        </div>
+        
+        <!-- Input area -->
+        <div class="desktop-chat-input-area">
+          <button id="btnDesktopAttachVocab" class="btn-cute secondary" title="Gửi thẻ từ vựng 🎴" style="display:none; padding:7px 10px; border-radius:12px; font-size:13px; box-shadow:0 2px 0 var(--ink-coffee);">🎴</button>
+          <input type="text" class="desktop-chat-input" id="desktopChatInput" placeholder="Hỏi Capy-sensei...">
+          <button class="desktop-chat-send" id="desktopChatSend">Gửi</button>
+        </div>
       </div>
     </div>
 
@@ -4806,19 +4893,108 @@
     initPetShop();
     updateAvatarGlobally();
 
-    // --- Floating Desktop Draggable AI Chatbot Logic ---
+    // --- Floating Desktop Draggable AI & P2P Chatbot Window Logic ---
     (function() {
       const desktopChatToggle = document.getElementById('desktopChatToggle');
       const desktopChatWindow = document.getElementById('desktopChatWindow');
       const desktopChatClose = document.getElementById('desktopChatClose');
       const desktopChatHeader = document.getElementById('desktopChatHeader');
+      const btnDesktopChatBack = document.getElementById('btnDesktopChatBack');
+      const desktopChatAvatar = document.getElementById('desktopChatAvatar');
+      const desktopChatTitle = document.getElementById('desktopChatTitle');
+      const desktopChatStatus = document.getElementById('desktopChatStatus');
+
+      const desktopChatInboxView = document.getElementById('desktopChatInboxView');
+      const desktopChatDetailView = document.getElementById('desktopChatDetailView');
+      const desktopInboxSearch = document.getElementById('desktopInboxSearch');
+      const desktopThreadItems = document.querySelectorAll('.desktop-thread-item');
+
       const desktopChatMessages = document.getElementById('desktopChatMessages');
+      const desktopChatSuggestions = document.getElementById('desktopChatSuggestions');
+      const btnDesktopAttachVocab = document.getElementById('btnDesktopAttachVocab');
       const desktopChatInput = document.getElementById('desktopChatInput');
       const desktopChatSend = document.getElementById('desktopChatSend');
       const themeBtn = document.getElementById('themeBtn');
 
+      let currentThreadId = 'ai';
+      let currentThreadName = 'Capy-sensei AI 🍊';
+      let currentThreadAvatar = '🦫';
+      let isCurrentAi = true;
+
       let isDraggingToggle = false;
       let startX = 0, startY = 0;
+
+      // Switch between Inbox View and Detail Chat View
+      function switchDesktopChatView(viewMode, threadId, name, avatar, isAi) {
+        if (viewMode === 'inbox') {
+          desktopChatInboxView.style.display = 'flex';
+          desktopChatDetailView.style.display = 'none';
+          btnDesktopChatBack.style.display = 'none';
+          desktopChatAvatar.textContent = '💬';
+          desktopChatTitle.textContent = 'Hộp Thư Chat 💬';
+          desktopChatStatus.textContent = `${desktopThreadItems.length} hội thoại`;
+        } else {
+          currentThreadId = threadId || 'ai';
+          currentThreadName = name || 'Capy-sensei AI 🍊';
+          currentThreadAvatar = avatar || '🦫';
+          isCurrentAi = isAi !== undefined ? isAi : (currentThreadId === 'ai');
+
+          desktopChatInboxView.style.display = 'none';
+          desktopChatDetailView.style.display = 'flex';
+          btnDesktopChatBack.style.display = 'inline-block';
+          desktopChatAvatar.textContent = currentThreadAvatar;
+          desktopChatTitle.textContent = currentThreadName;
+          desktopChatStatus.textContent = 'Đang online 🟢';
+
+          if (isCurrentAi) {
+            desktopChatSuggestions.style.display = 'flex';
+            btnDesktopAttachVocab.style.display = 'none';
+            desktopChatInput.placeholder = 'Hỏi Capy-sensei...';
+          } else {
+            desktopChatSuggestions.style.display = 'none';
+            btnDesktopAttachVocab.style.display = 'inline-block';
+            desktopChatInput.placeholder = `Nhập tin nhắn cho ${currentThreadName.split(' ')[0]}...`;
+          }
+        }
+      }
+
+      // Back button click -> Switch to Inbox
+      if (btnDesktopChatBack) {
+        btnDesktopChatBack.addEventListener('click', () => {
+          switchDesktopChatView('inbox');
+        });
+      }
+
+      // Thread item click -> Switch to Detail View
+      desktopThreadItems.forEach(item => {
+        item.addEventListener('click', () => {
+          const tId = item.getAttribute('data-thread-id');
+          const tName = item.getAttribute('data-thread-name');
+          const tAvatar = item.getAttribute('data-thread-avatar');
+          const isAi = item.getAttribute('data-is-ai') === 'true';
+
+          // Clear unread badge
+          const unreadPill = item.querySelector('.unread-pill');
+          if (unreadPill) unreadPill.remove();
+
+          switchDesktopChatView('detail', tId, tName, tAvatar, isAi);
+        });
+      });
+
+      // Search filter in Inbox
+      if (desktopInboxSearch) {
+        desktopInboxSearch.addEventListener('input', (e) => {
+          const q = e.target.value.trim().toLowerCase();
+          desktopThreadItems.forEach(item => {
+            const name = (item.getAttribute('data-thread-name') || '').toLowerCase();
+            if (name.includes(q)) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      }
 
       // Toggle Chat Window
       desktopChatToggle.addEventListener('mousedown', (e) => {
@@ -4834,9 +5010,8 @@
         }
         desktopChatWindow.classList.toggle('open');
         if (desktopChatWindow.classList.contains('open')) {
-          desktopChatInput.focus();
-          
-          // Re-position chat window near the toggle button if not moved yet
+          switchDesktopChatView('inbox');
+          // Re-position near button if not dragged yet
           if (!desktopChatWindow.style.left && !desktopChatWindow.style.top) {
             desktopChatWindow.style.right = '15px';
             desktopChatWindow.style.bottom = '145px';
@@ -4859,7 +5034,6 @@
         handle.addEventListener('touchstart', dragTouchStart, { passive: false });
 
         function dragMouseDown(e) {
-          // Skip dragging if user clicked a button or input inside the handle (except handle itself)
           if (elmnt !== handle && (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || (e.target.closest('button') && e.target.closest('button') !== handle))) {
             return;
           }
@@ -4877,7 +5051,6 @@
           pos3 = e.clientX;
           pos4 = e.clientY;
 
-          // Check if it's the toggle button to set dragging flag
           if (elmnt === desktopChatToggle) {
             if (Math.abs(e.clientX - startX) > 5 || Math.abs(e.clientY - startY) > 5) {
               isDraggingToggle = true;
@@ -4892,7 +5065,6 @@
           const parentHeight = parent.clientHeight;
           const rect = elmnt.getBoundingClientRect();
 
-          // Bounds enforcement relative to offsetParent (phone-container)
           if (newLeft < 0) newLeft = 0;
           if (newTop < 0) newTop = 0;
           if (newLeft + rect.width > parentWidth) newLeft = parentWidth - rect.width;
@@ -4910,7 +5082,6 @@
           handle.style.cursor = 'grab';
         }
 
-        // Touch drag support
         let isTouchDragging = false;
         function dragTouchStart(e) {
           if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.closest('button')) {
@@ -4941,7 +5112,7 @@
           }
 
           if (isTouchDragging) {
-            e.preventDefault(); // prevent screen scrolling when dragging chatbot
+            e.preventDefault();
           }
 
           let newTop = elmnt.offsetTop - pos2;
@@ -4963,31 +5134,41 @@
           elmnt.style.right = 'auto';
         }
 
-        // Close Touch Drag
         function closeDragTouch() {
           document.removeEventListener('touchend', closeDragTouch);
           document.removeEventListener('touchmove', elementTouchDrag);
         }
       }
 
-      // Initialize dragging
       makeElementDraggable(desktopChatToggle);
       makeElementDraggable(desktopChatWindow, desktopChatHeader);
 
-      // --- Chatbot Logic & Message Sending ---
+      // Chat Messages & Preview Update Utility
       function appendDesktopMessage(text, sender) {
         const bubble = document.createElement('div');
         bubble.className = `desktop-chat-bubble ${sender}`;
         bubble.innerHTML = text;
         desktopChatMessages.appendChild(bubble);
         desktopChatMessages.scrollTop = desktopChatMessages.scrollHeight;
+
+        // Update Inbox Last Message Preview in real time!
+        let previewElemId = 'threadPreviewCapyAi';
+        if (currentThreadId === 'capy_may') previewElemId = 'threadPreviewCapyMay';
+        else if (currentThreadId === 'alex') previewElemId = 'threadPreviewAlex';
+        else if (currentThreadId === 'capy_cam') previewElemId = 'threadPreviewCapyCam';
+
+        const previewElem = document.getElementById(previewElemId);
+        if (previewElem) {
+          const cleanText = text.replace(/<[^>]*>?/gm, '');
+          previewElem.textContent = (sender === 'user' ? 'Bạn: ' : '') + cleanText;
+        }
       }
 
       function showTypingIndicator() {
         const indicator = document.createElement('div');
         indicator.id = 'desktopTypingIndicator';
         indicator.className = 'desktop-chat-bubble bot';
-        indicator.innerHTML = '<i>Capy-sensei đang gõ... 🐾</i>';
+        indicator.innerHTML = `<i>${currentThreadName.split(' ')[0]} đang gõ... 🐾</i>`;
         desktopChatMessages.appendChild(indicator);
         desktopChatMessages.scrollTop = desktopChatMessages.scrollHeight;
       }
@@ -5000,7 +5181,6 @@
       function getChatbotResponse(query) {
         const text = query.toLowerCase().trim();
         
-        // Theme commands
         if (text.includes("tối") || text.includes("dark") || text.includes("sáng") || text.includes("light") || text.includes("giao diện") || text.includes("theme")) {
           setTimeout(() => {
             if (themeBtn) themeBtn.click();
@@ -5010,7 +5190,6 @@
           return;
         }
 
-        // Specific questions responses
         if (text.includes("mẹo") || text.includes("ghi nhớ") || text.includes("remember") || text.includes("học từ")) {
           return `<b>Mẹo nhớ từ vựng cùng Capy-sensei 🍊:</b><br><br>
           1. <b>Học qua hình ảnh:</b> Chụp và ghim trực tiếp nghĩa tiếng Việt đè lên ảnh. Trí não của bạn ghi nhớ hình ảnh nhanh gấp 60.000 lần chữ viết!<br>
@@ -5028,7 +5207,7 @@
         }
 
         if (text.includes("chào") || text.includes("hello") || text.includes("hi") || text.includes("hey")) {
-          return `Chào bạn! Tớ là Capy-sensei, rất vui được trò chuyện với bạn! 🦫🍊 Bạn cần tớ hỗ trợ gì về từ vựng tiếng Anh hay cách sử dụng app hôm nay?`;
+          return `Chào bạn! Tớ là ${currentThreadName}, rất vui được trò chuyện với bạn! 🍊 Bạn cần hỗ trợ gì về học từ vựng hay ứng dụng hôm nay?`;
         }
         
         if (text.includes("keyboard") || text.includes("bàn phím")) {
@@ -5044,23 +5223,29 @@
           - Ví dụ: <i>'She held the warm coffee mug with both hands.'</i> (Cô ấy áp hai tay vào chiếc cốc cà phê ấm áp.)`;
         }
 
-        // Generic fallback response
-        return `Capy-sensei đã nghe rõ câu hỏi của bạn về <i>"${query}"</i>.<br><br>
-        Tớ là một AI chuyên về từ vựng. Bạn có thể hỏi tớ cách phân biệt các từ, dịch nghĩa hoặc mẹo học tập. Hãy thử gõ các từ như <code>Keyboard</code>, <code>Coffee Mug</code> hoặc click vào các gợi ý ở dưới nhé! 🐾🍊`;
+        return `Tớ đã nghe rõ câu hỏi của bạn về <i>"${query}"</i>.<br><br>
+        Tớ luôn sẵn sàng cùng bạn luyện tập từ vựng! Bạn có thể hỏi tớ cách phân biệt các từ, dịch nghĩa hoặc mẹo học tập nhé! 🐾🍊`;
       }
 
       function handleSendMessage(userMsgText) {
         if (!userMsgText) return;
         appendDesktopMessage(userMsgText, 'user');
-        showTypingIndicator();
-
-        setTimeout(() => {
-          removeTypingIndicator();
-          const botReply = getChatbotResponse(userMsgText);
-          if (botReply) {
-            appendDesktopMessage(botReply, 'bot');
-          }
-        }, 800);
+        
+        if (isCurrentAi) {
+          showTypingIndicator();
+          setTimeout(() => {
+            removeTypingIndicator();
+            const botReply = getChatbotResponse(userMsgText);
+            if (botReply) {
+              appendDesktopMessage(botReply, 'bot');
+            }
+          }, 800);
+        } else {
+          // Friend auto response mock
+          setTimeout(() => {
+            appendDesktopMessage(`Cảm ơn bạn! Tớ vừa nhận được tin nhắn: "${userMsgText}" 🍊`, 'bot');
+          }, 1000);
+        }
       }
 
       desktopChatSend.addEventListener('click', () => {
@@ -5081,7 +5266,7 @@
         }
       });
 
-      // Quick Chips triggers
+      // Quick Chips triggers (AI Chat View)
       document.querySelectorAll('.desktop-chat-chip').forEach(chip => {
         chip.addEventListener('click', () => {
           const prompt = chip.dataset.prompt;
@@ -5089,35 +5274,18 @@
         });
       });
 
-      // Sub-tab toggling for Personal Album vs Friends Feed
-      const btnAlbumPersonal = document.getElementById('btnAlbumPersonal');
-      const btnAlbumFriends = document.getElementById('btnAlbumFriends');
-      const containerAlbumPersonal = document.getElementById('containerAlbumPersonal');
-      const containerAlbumFriends = document.getElementById('containerAlbumFriends');
-
-      if (btnAlbumPersonal && btnAlbumFriends) {
-        btnAlbumPersonal.addEventListener('click', () => {
-          btnAlbumPersonal.classList.add('primary');
-          btnAlbumPersonal.classList.remove('secondary');
-          btnAlbumFriends.classList.add('secondary');
-          btnAlbumFriends.classList.remove('primary');
-          containerAlbumPersonal.style.display = 'block';
-          containerAlbumFriends.style.display = 'none';
-        });
-
-        btnAlbumFriends.addEventListener('click', () => {
-          btnAlbumFriends.classList.add('primary');
-          btnAlbumFriends.classList.remove('secondary');
-          btnAlbumPersonal.classList.add('secondary');
-          btnAlbumPersonal.classList.remove('primary');
-          containerAlbumPersonal.style.display = 'none';
-          containerAlbumFriends.style.display = 'block';
+      // Attach Vocab Card button trigger (Friend Chat View)
+      if (btnDesktopAttachVocab) {
+        btnDesktopAttachVocab.addEventListener('click', () => {
+          const cardText = `Đã chia sẻ 1 Thẻ Từ Vựng 🎴: Matcha Tea / Trà xanh`;
+          appendDesktopMessage(cardText, 'user');
         });
       }
 
       // Expose globally for gameplay screens
       window.askCapyAI = function(word) {
         desktopChatWindow.classList.add('open');
+        switchDesktopChatView('detail', 'ai', 'Capy-sensei AI 🍊', '🦫', true);
         handleSendMessage("Giải thích từ: " + word);
       };
     })();
