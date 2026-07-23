@@ -206,6 +206,59 @@
       display: none !important;
     }
 
+    /* Letter input boxes for Photo Letter Fill Game */
+    .letter-box-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    .letter-box {
+      width: 34px;
+      height: 42px;
+      border: 2px solid var(--ink-coffee);
+      border-bottom-width: 4px;
+      border-radius: 10px;
+      text-align: center;
+      font-family: var(--font-cute);
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: var(--surface);
+      color: var(--ink-coffee);
+      outline: none;
+      transition: all 0.15s ease;
+    }
+    .letter-box:focus {
+      border-color: var(--duo-blue);
+      box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.25);
+      transform: translateY(-2px);
+    }
+    .letter-box.correct {
+      background: var(--duo-green) !important;
+      color: white !important;
+      border-color: var(--ink-coffee) !important;
+      border-bottom-color: var(--duo-green-shadow) !important;
+    }
+    .letter-box.wrong {
+      background: var(--duo-red) !important;
+      color: white !important;
+      border-color: var(--ink-coffee) !important;
+      border-bottom-color: var(--duo-red-shadow) !important;
+    }
+    .letter-box.warning-empty {
+      border-color: var(--duo-orange) !important;
+      background: #FFF5E6 !important;
+      animation: shakeEmpty 0.35s ease;
+    }
+    @keyframes shakeEmpty {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-4px); }
+      40%, 80% { transform: translateX(4px); }
+    }
+
+
     /* --- Common Styled UI Cards & Squircle --- */
     .capy-card {
       background: var(--surface);
@@ -1974,12 +2027,12 @@
         <!-- Onboarding Header & Progress Bar -->
         <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:4px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-family:var(--font-cute); font-size:12px; font-weight:800; color:var(--primary);" id="onboardingStepTitle">Bước 1 / 4</span>
-            <span style="font-size:11px; font-weight:700; color:var(--muted);" id="onboardingPercentText">25%</span>
+            <span style="font-family:var(--font-cute); font-size:12px; font-weight:800; color:var(--primary);" id="onboardingStepTitle">Bước 1 / 5</span>
+            <span style="font-size:11px; font-weight:700; color:var(--muted);" id="onboardingPercentText">20%</span>
           </div>
           <!-- 3D Progress Bar -->
           <div style="width:100%; height:12px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
-            <div id="onboardingProgressBar" style="width:25%; height:100%; background:linear-gradient(90deg, #FF9600 0%, #58CC02 100%); border-radius:99px; transition:width 0.3s ease;"></div>
+            <div id="onboardingProgressBar" style="width:20%; height:100%; background:linear-gradient(90deg, #FF9600 0%, #58CC02 100%); border-radius:99px; transition:width 0.3s ease;"></div>
           </div>
         </div>
 
@@ -2101,6 +2154,39 @@
           
           <div style="display:flex; gap:10px;">
             <button class="btn-cute secondary" style="flex:1; padding:12px; font-size:13px; border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee);" onclick="nextOnboardStep(3)">← Quay lại</button>
+            <button class="btn-cute primary" style="flex:2; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="nextOnboardStep(5)">Tiếp Tục →</button>
+          </div>
+        </div>
+
+        <!-- STEP 5: Daily Target Vocab Count -->
+        <div class="onboarding-step-card" id="onboardStep5" style="display:none; flex-direction:column; gap:12px;">
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:14px; box-shadow:none;">
+            <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin:0;">5. Số lượng từ vựng bạn muốn học mỗi ngày? 📚</h3>
+            
+            <p style="font-size:12px; color:var(--body); margin:0; line-height:1.4;">Tự nhập số lượng từ vựng bạn đặt mục tiêu chinh phục mỗi ngày hoặc chọn nhanh bên dưới:</p>
+
+            <!-- Custom Input Box -->
+            <div style="display:flex; align-items:center; gap:8px; background:var(--creamy-yuzu); border:2.5px solid var(--ink-coffee); border-radius:18px; padding:8px 14px; box-shadow:0 3.5px 0 var(--ink-coffee);">
+              <span style="font-size:26px;">🎯</span>
+              <input type="number" id="onboardDailyTargetInput" min="1" max="500" value="10" placeholder="Ví dụ: 15" style="flex:1; border:none; background:transparent; outline:none; font-family:var(--font-cute); font-size:22px; font-weight:800; color:var(--ink-coffee);" oninput="onTargetInputChange(this.value)">
+              <span style="font-family:var(--font-cute); font-size:14px; font-weight:800; color:var(--ink-coffee);">từ / ngày</span>
+            </div>
+
+            <!-- Quick Selection Presets -->
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <span style="font-size:11.5px; font-weight:800; color:var(--muted);">Gợi ý chọn nhanh:</span>
+              <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                <button type="button" class="btn-cute secondary target-preset-btn" onclick="setTargetPreset(5, this)" style="padding:6px 12px; font-size:12px; border-radius:12px;">5 từ (Nhẹ nhàng)</button>
+                <button type="button" class="btn-cute primary target-preset-btn" onclick="setTargetPreset(10, this)" style="padding:6px 12px; font-size:12px; border-radius:12px;">10 từ (Tiêu chuẩn)</button>
+                <button type="button" class="btn-cute secondary target-preset-btn" onclick="setTargetPreset(15, this)" style="padding:6px 12px; font-size:12px; border-radius:12px;">15 từ (Tăng tốc)</button>
+                <button type="button" class="btn-cute secondary target-preset-btn" onclick="setTargetPreset(20, this)" style="padding:6px 12px; font-size:12px; border-radius:12px;">20 từ (Thử thách)</button>
+                <button type="button" class="btn-cute secondary target-preset-btn" onclick="setTargetPreset(30, this)" style="padding:6px 12px; font-size:12px; border-radius:12px;">30 từ (Siêu cấp)</button>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:10px;">
+            <button class="btn-cute secondary" style="flex:1; padding:12px; font-size:13px; border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee);" onclick="nextOnboardStep(4)">← Quay lại</button>
             <button class="btn-cute primary" style="flex:2; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="finishOnboarding()">HOÀN TẤT & BẮT ĐẦU 🚀</button>
           </div>
         </div>
@@ -2206,24 +2292,38 @@
               <div class="node-tooltip">Bài 2: Tách Cà Phê (Ôn tập)</div>
             </div>
 
-            <div class="path-node active" style="left: 135px; top: 170px;" data-level="3" onclick="window.launchOrderGame(3)">
+            <div class="path-node completed" style="left: 135px; top: 170px;" data-level="3" onclick="window.launchOrderGame(3)">
               <span class="node-icon">💻</span>
-              <div class="node-tooltip">Bài 3: Bàn phím cơ (Chơi game 🎮)</div>
+              <div class="node-tooltip">Bài 3: Bàn phím cơ (Ôn tập)</div>
+            </div>
+
+            <div class="path-node active" style="left: 215px; top: 250px;" data-level="4" onclick="window.launchOrderGame(4)">
+              <span class="node-icon">🎒</span>
+              <div class="node-tooltip">Bài 4: Ba lô du lịch (Sắp xếp từ 🎒)</div>
               <!-- Floating Mascot Wrapper -->
               <div class="path-mascot-avatar" id="pathMascotAvatar">
                 <!-- Selected Pet SVG goes here dynamically -->
               </div>
             </div>
 
-            <div class="path-node locked" style="left: 215px; top: 250px;" data-level="4" onclick="window.launchOrderGame(4)">
-              <span class="node-icon">🔒</span>
-              <div class="node-tooltip">Bài 4: Ba lô du lịch (Khóa)</div>
-            </div>
-
             <div class="path-node locked" style="left: 135px; top: 330px;" data-level="5" onclick="alert('Bài học 5 đang bị khóa! Hãy mở khóa các bài học trước nhé 🔒')">
               <span class="node-icon">🔒</span>
               <div class="node-tooltip">Bài 5: Sổ học tập (Khóa)</div>
             </div>
+          </div>
+        </div>
+
+        <!-- Featured New Game Card on Home Screen -->
+        <div class="capy-card pastel-yuzu" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; padding:14px; margin-top:2px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+            <div style="flex:1;">
+              <span style="font-size:10px; font-weight:800; text-transform:uppercase; background:var(--duo-orange); color:white; padding:2px 8px; border-radius:6px; font-family:var(--font-cute); border:1px solid var(--ink-coffee);">🎮 Game Mới</span>
+              <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin-top:4px;">Điền Từ Theo Ảnh 📷</h3>
+              <p style="font-size:11.5px; color:var(--body); font-weight:700; margin-top:2px; line-height:1.3;">Nhìn ảnh đồ vật đã đánh số & gõ chữ cái vào ô trống!</p>
+            </div>
+            <button class="btn-cute primary" onclick="window.launchPhotoFillGame(1)" style="font-size:12px; padding:8px 14px; border-radius:14px; white-space:nowrap; background:var(--duo-green); box-shadow:0 3px 0 var(--duo-green-shadow);">
+              Chơi Ngay 🚀
+            </button>
           </div>
         </div>
 
@@ -2678,6 +2778,10 @@
             <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
               <span style="font-weight:800; color:var(--muted);">⏰ Khung giờ học:</span>
               <span style="font-weight:800; color:var(--duo-orange);" id="settingsUserStudyTime">20:00 - 21:00 🌙</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+              <span style="font-weight:800; color:var(--muted);">📚 Target từ vựng/ngày:</span>
+              <span style="font-weight:800; color:var(--primary);" id="settingsUserDailyTarget">10 từ / ngày 🎯</span>
             </div>
           </div>
 
@@ -3232,6 +3336,88 @@
       </div>
     </div>
 
+    <!-- --- Screen Mới: Màn Hình Chơi Game Điền Từ Theo Ảnh (Photo Letter Fill Game) --- -->
+    <div class="bottom-sheet-overlay" id="photoFillGameOverlay" style="display:none; justify-content:center; align-items:center; z-index:2500;">
+      <div style="width:100%; max-width:430px; height:100%; max-height:920px; background:var(--bg-cloud); border:3px solid var(--ink-coffee); border-radius:24px; display:flex; flex-direction:column; position:relative; overflow:hidden; box-shadow:0 12px 0 var(--ink-coffee); margin: 0 10px;">
+        
+        <!-- Top Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border-bottom:2.5px solid var(--ink-coffee); background:var(--surface);">
+          <button id="btnExitPhotoFillGame" class="btn-cute secondary" style="padding:6px 12px; font-size:14px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">✕</button>
+          
+          <div style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee);" id="photoFillGameTitle">
+            Điền Từ Theo Ảnh 📷
+          </div>
+          
+          <div style="display:flex; align-items:center; gap:4px; font-weight:800; font-size:13px; color:var(--ink-coffee); background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:12px; padding:4px 10px;">
+            <span id="photoFillPointsText">200</span> 🍊
+          </div>
+        </div>
+
+        <!-- Center Workspace (Photo Display & Numbered Pins) -->
+        <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; padding:15px; align-items:center; gap:12px; background:var(--surface-aside);">
+          
+          <!-- Photo Card -->
+          <div id="photoFillPhotoCard" style="width:100%; aspect-ratio:1.2; background:var(--surface); border:2.5px solid var(--ink-coffee); border-radius:20px; position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 6px 0 var(--line);">
+            <div id="photoFillPhotoVisual" style="font-size:90px; user-select:none; transition:transform 0.3s ease;">💡</div>
+            <div style="position:absolute; inset:0; background:rgba(255,255,255,0.3); backdrop-filter:blur(2px); pointer-events:none;"></div>
+            
+            <!-- Pins Container -->
+            <div id="photoFillPinsContainer" style="position:absolute; inset:0;">
+              <!-- Dynamic pins here -->
+            </div>
+          </div>
+
+          <!-- Capy mascot comment speech bubble -->
+          <div style="display:flex; gap:10px; align-items:center; width:100%;">
+            <div id="photoFillMascotFace" style="width:44px; height:44px; flex-shrink:0;">
+              <!-- Dynamic pet SVG -->
+            </div>
+            <div style="flex:1; background:var(--surface); border:2px solid var(--ink-coffee); border-radius:16px; padding:8px 12px; position:relative; box-shadow:0 3px 0 var(--ink-coffee);">
+              <div style="position:absolute; left:-8px; top:14px; width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-right:8px solid var(--ink-coffee);"></div>
+              <div style="position:absolute; left:-6px; top:14px; width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-right:8px solid var(--surface);"></div>
+              <p id="photoFillBubbleText" style="font-size:11.5px; font-weight:700; color:var(--ink-coffee); margin:0; line-height:1.3;">
+                Nhìn ảnh & gõ từ bàn phím chữ cái vào các ô trống bên dưới nhé! 🐾
+              </p>
+            </div>
+          </div>
+
+          <!-- List of Items & Blank Letter Input Boxes -->
+          <div id="photoFillWordListContainer" style="width:100%; display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+            <!-- Generated dynamically -->
+          </div>
+
+          <!-- Warning notification banner when submitting incomplete -->
+          <div id="photoFillWarningBanner" style="display:none; width:100%; background:#FFF3CD; border:2px solid var(--duo-orange); border-radius:14px; padding:10px 14px; font-size:12px; font-weight:800; color:#856404; text-align:center; box-shadow:0 3px 0 var(--ink-coffee); animation: shakeEmpty 0.35s ease;">
+            ⚠️ Bạn chưa hoàn thành tất cả ô trống! Hãy điền đủ các ô trước khi nộp bài nhé.
+          </div>
+
+          <!-- Result Banner after submission -->
+          <div id="photoFillResultBanner" style="display:none; width:100%; background:var(--creamy-yuzu); border:2px solid var(--ink-coffee); border-radius:16px; padding:12px; text-align:center; box-shadow:0 4px 0 var(--ink-coffee);">
+            <div id="photoFillResultTitle" style="font-family:var(--font-cute); font-size:16px; font-weight:800; color:var(--ink-coffee);">Kết Quả Bài Làm 🎉</div>
+            <div id="photoFillResultDesc" style="font-size:12px; font-weight:700; color:var(--body); margin-top:4px;">Bạn đúng 3/3 từ vựng! Nhận +20 xu Yuzu 🍊</div>
+          </div>
+
+        </div>
+
+        <!-- Confetti Canvas -->
+        <canvas id="photoFillConfettiCanvas" style="position:absolute; inset:0; pointer-events:none; z-index:10; display:none;"></canvas>
+
+        <!-- Bottom Action Bar -->
+        <div style="background:var(--surface); border-top:2.5px solid var(--ink-coffee); padding:14px 15px; display:flex; gap:10px; justify-content:center; align-items:center;">
+          <button id="btnSubmitPhotoFill" class="btn-cute primary" style="flex:1; padding:12px; border-radius:16px; font-size:14px; font-family:var(--font-cute); box-shadow:0 4px 0 var(--duo-green-shadow); background:var(--duo-green);" onclick="window.submitPhotoFillGame()">
+            Nộp Bài 📝
+          </button>
+          <button id="btnNextPhotoFill" class="btn-cute orange" style="display:none; flex:1; padding:12px; border-radius:16px; font-size:14px; font-family:var(--font-cute); box-shadow:0 4px 0 var(--duo-orange-shadow); background:var(--duo-orange);" onclick="window.launchPhotoFillGame((currentPhotoFillLevel % 3) + 1)">
+            Ảnh Tiếp Theo ➡️
+          </button>
+          <button id="btnRetryPhotoFill" class="btn-cute secondary" style="display:none; padding:12px 16px; border-radius:16px; font-size:14px; font-family:var(--font-cute); box-shadow:0 3px 0 var(--line);" onclick="window.launchPhotoFillGame(currentPhotoFillLevel)">
+            Thử Lại 🔄
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- --- Phone Navigation Bottom Bar --- -->
     <div class="bottom-bar">
       <button class="nav-tab active" data-view="home">
@@ -3475,7 +3661,8 @@
     // --- ONBOARDING SURVEY WIZARD LOGIC ---
     let onboardData = {
       role: 'personal',
-      time: '20:00 - 21:00 (Buổi tối 🌙)'
+      time: '20:00 - 21:00 (Buổi tối 🌙)',
+      dailyTarget: '10 từ / ngày 🎯'
     };
 
     window.selectOnboardRole = function(role) {
@@ -3503,6 +3690,30 @@
       }
     };
 
+    window.onTargetInputChange = function(val) {
+      const num = parseInt(val) || 10;
+      onboardData.dailyTarget = `${num} từ / ngày 🎯`;
+      document.querySelectorAll('.target-preset-btn').forEach(b => {
+        const pVal = parseInt(b.getAttribute('onclick')?.match(/\d+/)?.[0]);
+        if (pVal === num) {
+          b.className = 'btn-cute primary target-preset-btn';
+        } else {
+          b.className = 'btn-cute secondary target-preset-btn';
+        }
+      });
+    };
+
+    window.setTargetPreset = function(num, btn) {
+      const input = document.getElementById('onboardDailyTargetInput');
+      if (input) input.value = num;
+      onboardData.dailyTarget = `${num} từ / ngày 🎯`;
+      
+      document.querySelectorAll('.target-preset-btn').forEach(b => {
+        b.className = 'btn-cute secondary target-preset-btn';
+      });
+      if (btn) btn.className = 'btn-cute primary target-preset-btn';
+    };
+
     window.nextOnboardStep = function(stepNum) {
       document.querySelectorAll('.onboarding-step-card').forEach(c => c.style.display = 'none');
       const targetStep = document.getElementById(`onboardStep${stepNum}`);
@@ -3514,8 +3725,8 @@
       const mascotTitle = document.getElementById('onboardingMascotTitle');
       const mascotDesc = document.getElementById('onboardingMascotDesc');
 
-      const percent = stepNum * 25;
-      if (stepTitle) stepTitle.textContent = `Bước ${stepNum} / 4`;
+      const percent = stepNum * 20;
+      if (stepTitle) stepTitle.textContent = `Bước ${stepNum} / 5`;
       if (percentText) percentText.textContent = `${percent}%`;
       if (progressBar) progressBar.style.width = `${percent}%`;
 
@@ -3523,6 +3734,7 @@
       if (stepNum === 2 && mascotTitle) { mascotTitle.textContent = 'Thông tin độ tuổi & SĐT 📱'; mascotDesc.textContent = 'Giúp Bé Capy bảo mật và gửi thông báo nhắc nhở chuẩn hơn!'; }
       if (stepNum === 3 && mascotTitle) { mascotTitle.textContent = 'Chọn vai trò tài khoản 👥'; mascotDesc.textContent = 'Bạn dùng ứng dụng làm cá nhân hay phụ huynh theo dõi con?'; }
       if (stepNum === 4 && mascotTitle) { mascotTitle.textContent = 'Lên lịch học tập ⏰'; mascotDesc.textContent = 'Bật thông báo nhắc học vào khung giờ vàng mỗi ngày nhé!'; }
+      if (stepNum === 5 && mascotTitle) { mascotTitle.textContent = 'Mục tiêu học từ vựng 📚'; mascotDesc.textContent = 'Tự nhập số lượng từ vựng bạn muốn chinh phục mỗi ngày!'; }
     };
 
     window.finishOnboarding = function() {
@@ -3530,6 +3742,8 @@
       const username = document.getElementById('onboardUsername')?.value.trim() || 'capy_may';
       const age = document.getElementById('onboardAge')?.value.trim() || '20';
       const phone = document.getElementById('onboardPhone')?.value.trim() || '0987654321';
+      const inputVal = parseInt(document.getElementById('onboardDailyTargetInput')?.value);
+      const customTargetVal = (inputVal && inputVal > 0) ? inputVal : 10;
 
       currentAuthUser.name = name;
       currentAuthUser.username = username.startsWith('@') ? username : `@${username}`;
@@ -3537,10 +3751,11 @@
       currentAuthUser.phone = phone;
       currentAuthUser.role = onboardData.role === 'personal' ? 'Cá nhân 👤' : 'Phụ huynh 👨‍👩‍👧';
       currentAuthUser.studyTime = onboardData.time;
+      currentAuthUser.dailyTarget = `${customTargetVal} từ / ngày 🎯`;
       currentAuthUser.isLoggedIn = true;
 
       updateAuthUI();
-      alert(`Chúc mừng ${currentAuthUser.name} (${currentAuthUser.username}) đã hoàn tất khảo sát cá nhân! Thưởng ngay +20 Xu Yuzu chào mừng! 🍊🎉`);
+      alert(`Chúc mừng ${currentAuthUser.name} (${currentAuthUser.username}) đã hoàn tất khảo sát cá nhân!\nMục tiêu học: ${currentAuthUser.dailyTarget}\nThưởng ngay +20 Xu Yuzu chào mừng! 🍊🎉`);
       studyPoints += 20;
       if (typeof updateSrsCoinsBadges === 'function') updateSrsCoinsBadges();
 
@@ -4226,6 +4441,8 @@
       if (agePhoneEl && currentAuthUser.age) agePhoneEl.textContent = `${currentAuthUser.age} tuổi · ${currentAuthUser.phone || ''}`;
       if (roleEl && currentAuthUser.role) roleEl.textContent = currentAuthUser.role;
       if (studyTimeEl && currentAuthUser.studyTime) studyTimeEl.textContent = currentAuthUser.studyTime;
+      const dailyTargetEl = document.getElementById('settingsUserDailyTarget');
+      if (dailyTargetEl && currentAuthUser.dailyTarget) dailyTargetEl.textContent = currentAuthUser.dailyTarget;
       
       if (!currentAuthUser.isLoggedIn) {
         if (bottomBar) bottomBar.style.display = 'none';
@@ -4580,6 +4797,364 @@
 
       updateAvatarGlobally();
     });
+
+    // --- PHOTO LETTER FILL GAME DATA & ENGINE ---
+    const PHOTO_FILL_DATA = {
+      1: {
+        title: "Study Desk Setup 💻",
+        emoji: "💻",
+        bg: "linear-gradient(135deg, #FFF2CC 0%, #FFE082 100%)",
+        items: [
+          { id: 1, word: "LAMP", vi: "Đèn bàn", pinX: 48, pinY: 35 },
+          { id: 2, word: "BULB", vi: "Bóng đèn", pinX: 52, pinY: 20 },
+          { id: 3, word: "SWITCH", vi: "Công tắc", pinX: 38, pinY: 65 }
+        ]
+      },
+      2: {
+        title: "Coffee Shop Mug ☕",
+        emoji: "☕",
+        bg: "linear-gradient(135deg, #FFE0B2 0%, #D7CCC8 100%)",
+        items: [
+          { id: 1, word: "MUG", vi: "Ly cà phê", pinX: 50, pinY: 55 },
+          { id: 2, word: "STEAM", vi: "Hơi nước", pinX: 50, pinY: 25 },
+          { id: 3, word: "HANDLE", vi: "Quai cầm", pinX: 74, pinY: 60 }
+        ]
+      },
+      3: {
+        title: "Backpack Setup 🎒",
+        emoji: "🎒",
+        bg: "linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%)",
+        items: [
+          { id: 1, word: "BACKPACK", vi: "Ba lô du lịch", pinX: 50, pinY: 50 },
+          { id: 2, word: "ZIPPER", vi: "Khóa kéo", pinX: 50, pinY: 30 },
+          { id: 3, word: "STRAP", vi: "Quai đeo", pinX: 32, pinY: 65 }
+        ]
+      }
+    };
+
+    let currentPhotoFillLevel = 1;
+    let photoFillSubmitted = false;
+    let photoFillConfettiInterval = null;
+
+    function launchPhotoFillGame(level = 1) {
+      stopPhotoFillConfetti();
+      const data = PHOTO_FILL_DATA[level] || PHOTO_FILL_DATA[1];
+      currentPhotoFillLevel = level;
+      photoFillSubmitted = false;
+
+      const overlay = document.getElementById('photoFillGameOverlay');
+      const titleEl = document.getElementById('photoFillGameTitle');
+      const visualEl = document.getElementById('photoFillPhotoVisual');
+      const photoCard = document.getElementById('photoFillPhotoCard');
+      const pinsContainer = document.getElementById('photoFillPinsContainer');
+      const listContainer = document.getElementById('photoFillWordListContainer');
+      const warningBanner = document.getElementById('photoFillWarningBanner');
+      const resultBanner = document.getElementById('photoFillResultBanner');
+      const mascotFace = document.getElementById('photoFillMascotFace');
+      const bubbleText = document.getElementById('photoFillBubbleText');
+      const pointsText = document.getElementById('photoFillPointsText');
+      const btnSubmit = document.getElementById('btnSubmitPhotoFill');
+      const btnNext = document.getElementById('btnNextPhotoFill');
+      const btnRetry = document.getElementById('btnRetryPhotoFill');
+
+      if (titleEl) titleEl.textContent = data.title;
+      if (visualEl) visualEl.textContent = data.emoji;
+      if (photoCard) photoCard.style.background = data.bg;
+      if (pointsText) pointsText.textContent = studyPoints;
+      if (mascotFace) mascotFace.innerHTML = getMascotFullSVG(avatarIconId, activeItems, 44);
+
+      if (warningBanner) warningBanner.style.display = 'none';
+      if (resultBanner) resultBanner.style.display = 'none';
+      if (btnSubmit) btnSubmit.style.display = 'block';
+      if (btnNext) btnNext.style.display = 'none';
+      if (btnRetry) btnRetry.style.display = 'none';
+
+      if (bubbleText) {
+        bubbleText.textContent = `Nhìn ảnh & gõ từ bàn phím chữ cái vào các ô trống bên dưới nhé! 🐾`;
+      }
+
+      // Render pins on photo
+      if (pinsContainer) {
+        pinsContainer.innerHTML = '';
+        data.items.forEach(item => {
+          const pin = document.createElement('div');
+          pin.className = 'game-pin-marker active';
+          pin.style.left = `${item.pinX}%`;
+          pin.style.top = `${item.pinY}%`;
+          pin.innerHTML = `
+            <div class="game-pin-circle">${item.id}</div>
+            <div class="game-pin-label">Đồ vật #${item.id} (${item.word.length} chữ)</div>
+          `;
+          pinsContainer.appendChild(pin);
+        });
+      }
+
+      // Render items with letter boxes
+      if (listContainer) {
+        listContainer.innerHTML = '';
+        data.items.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'capy-card';
+          card.style.cssText = 'border:2px solid var(--ink-coffee); border-bottom-width:4px; box-shadow:none; padding:12px; display:flex; flex-direction:column; gap:8px; background:white;';
+
+          let letterBoxesHtml = '';
+          for (let i = 0; i < item.word.length; i++) {
+            letterBoxesHtml += `<input type="text" maxlength="1" class="letter-box" data-item-id="${item.id}" data-box-idx="${i}" autocomplete="off" spellcheck="false">`;
+          }
+
+          card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:800; font-size:13px; color:var(--ink-coffee);">
+                Đồ vật #${item.id}: <span style="color:var(--muted); font-size:12px;">(${item.vi} - ${item.word.length} chữ cái)</span>
+              </span>
+              <span class="word-status-tag" id="photoFillStatusTag_${item.id}" style="font-size:11px; font-weight:800; display:none;"></span>
+            </div>
+            <div class="letter-box-row" id="photoFillRow_${item.id}">
+              ${letterBoxesHtml}
+            </div>
+          `;
+          listContainer.appendChild(card);
+        });
+
+        // Add keyboard navigation logic to letter boxes
+        const allBoxes = listContainer.querySelectorAll('.letter-box');
+        allBoxes.forEach((box, index) => {
+          box.addEventListener('input', (e) => {
+            box.value = box.value.toUpperCase();
+            box.classList.remove('warning-empty');
+            if (warningBanner) warningBanner.style.display = 'none';
+
+            if (box.value.length > 0) {
+              // Move focus to next input box
+              if (index < allBoxes.length - 1) {
+                allBoxes[index + 1].focus();
+              }
+            }
+          });
+
+          box.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && box.value === '') {
+              if (index > 0) {
+                allBoxes[index - 1].focus();
+              }
+            } else if (e.key === 'ArrowLeft') {
+              if (index > 0) allBoxes[index - 1].focus();
+            } else if (e.key === 'ArrowRight') {
+              if (index < allBoxes.length - 1) allBoxes[index + 1].focus();
+            } else if (e.key === 'Enter') {
+              submitPhotoFillGame();
+            }
+          });
+        });
+
+        // Focus first box automatically
+        setTimeout(() => {
+          if (allBoxes.length > 0) allBoxes[0].focus();
+        }, 300);
+      }
+
+      if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.classList.add('open');
+      }
+    }
+
+    function submitPhotoFillGame() {
+      if (photoFillSubmitted) return;
+
+      const data = PHOTO_FILL_DATA[currentPhotoFillLevel] || PHOTO_FILL_DATA[1];
+      const listContainer = document.getElementById('photoFillWordListContainer');
+      const warningBanner = document.getElementById('photoFillWarningBanner');
+      const resultBanner = document.getElementById('photoFillResultBanner');
+      const resultTitle = document.getElementById('photoFillResultTitle');
+      const resultDesc = document.getElementById('photoFillResultDesc');
+      const bubbleText = document.getElementById('photoFillBubbleText');
+      const pointsText = document.getElementById('photoFillPointsText');
+      const btnSubmit = document.getElementById('btnSubmitPhotoFill');
+      const btnNext = document.getElementById('btnNextPhotoFill');
+      const btnRetry = document.getElementById('btnRetryPhotoFill');
+
+      const allBoxes = listContainer.querySelectorAll('.letter-box');
+      let hasEmpty = false;
+
+      allBoxes.forEach(box => {
+        if (!box.value.trim()) {
+          hasEmpty = true;
+          box.classList.add('warning-empty');
+        } else {
+          box.classList.remove('warning-empty');
+        }
+      });
+
+      // REQUIREMENT: "chưa làm xong mà click nộp có thông báo"
+      if (hasEmpty) {
+        if (warningBanner) {
+          warningBanner.style.display = 'block';
+          warningBanner.innerHTML = `⚠️ Bạn chưa hoàn thành tất cả ô trống! Hãy điền đủ các chữ cái trước khi nộp bài nhé.`;
+        }
+        playBeep(220, 'triangle', 0.3);
+        if (bubbleText) bubbleText.textContent = `Bạn ơi! Vẫn còn ô trống chưa điền kìa. Hãy điền hết các chữ nhé! 🐾`;
+        return;
+      }
+
+      // If all boxes filled -> Proceed to grade!
+      if (warningBanner) warningBanner.style.display = 'none';
+      photoFillSubmitted = true;
+
+      let correctCount = 0;
+      let totalCount = data.items.length;
+
+      data.items.forEach(item => {
+        const row = document.getElementById(`photoFillRow_${item.id}`);
+        const tag = document.getElementById(`photoFillStatusTag_${item.id}`);
+        const boxes = row.querySelectorAll('.letter-box');
+        
+        let typedWord = '';
+        boxes.forEach(b => typedWord += b.value.toUpperCase());
+
+        const isCorrect = (typedWord === item.word.toUpperCase());
+        if (isCorrect) {
+          correctCount++;
+          boxes.forEach(b => {
+            b.classList.add('correct');
+            b.disabled = true;
+          });
+          if (tag) {
+            tag.style.display = 'inline-block';
+            tag.style.color = 'var(--duo-green)';
+            tag.textContent = '✓ Chính xác!';
+          }
+        } else {
+          boxes.forEach(b => {
+            b.classList.add('wrong');
+            b.disabled = true;
+          });
+          if (tag) {
+            tag.style.display = 'inline-block';
+            tag.style.color = 'var(--duo-red)';
+            tag.textContent = `✗ Đáp án: ${item.word}`;
+          }
+        }
+      });
+
+      // Grade feedback
+      if (btnSubmit) btnSubmit.style.display = 'none';
+
+      if (correctCount === totalCount) {
+        // 100% correct!
+        playBeep(880, 'sine', 0.2);
+        setTimeout(() => playBeep(1318, 'sine', 0.3), 150);
+        triggerPointsAward(20);
+        triggerPhotoFillConfetti();
+
+        if (resultBanner) {
+          resultBanner.style.display = 'block';
+          resultTitle.textContent = `XUẤT SẮC! 🎉`;
+          resultDesc.textContent = `Bạn đã điền đúng toàn bộ ${totalCount}/${totalCount} từ vựng! Thưởng +20 xu Yuzu 🍊`;
+        }
+        if (bubbleText) {
+          bubbleText.textContent = `Tuyệt vời quá! Bạn thật là thiên tài từ vựng! 🍊✨`;
+        }
+        if (btnNext) btnNext.style.display = 'block';
+      } else {
+        // Partial or wrong
+        playBeep(330, 'triangle', 0.3);
+        const pts = correctCount * 5;
+        if (pts > 0) triggerPointsAward(pts);
+
+        if (resultBanner) {
+          resultBanner.style.display = 'block';
+          resultTitle.textContent = `KẾT QUẢ: ${correctCount}/${totalCount} Từ Đúng 📝`;
+          resultDesc.textContent = `Bạn đã làm đúng ${correctCount}/${totalCount} từ. Hãy thử lại để đạt điểm tuyệt đối nhé! 💪`;
+        }
+        if (bubbleText) {
+          bubbleText.textContent = `Cố lên! Kiểm tra các từ màu đỏ (sai) và thử lại bài học nhé! 🐾`;
+        }
+        if (btnRetry) btnRetry.style.display = 'block';
+        if (btnNext) btnNext.style.display = 'block';
+      }
+    }
+
+    function triggerPhotoFillConfetti() {
+      const canvas = document.getElementById('photoFillConfettiCanvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+
+      const colors = ['#58CC02', '#FF9600', '#1CB0F6', '#FFC800', '#FF4B4B'];
+      const particles = [];
+      for (let i = 0; i < 50; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * canvas.height,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          tilt: Math.random() * 10 - 5,
+          tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+          tiltAngle: 0
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach((p, idx) => {
+          p.tiltAngle += p.tiltAngleIncremental;
+          p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+          p.x += Math.sin(p.tiltAngle);
+          p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+          ctx.beginPath();
+          ctx.lineWidth = p.r;
+          ctx.strokeStyle = p.color;
+          ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+          ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+          ctx.stroke();
+
+          if (p.y > canvas.height) {
+            particles[idx] = {
+              x: Math.random() * canvas.width,
+              y: -20,
+              r: p.r,
+              d: p.d,
+              color: p.color,
+              tilt: p.tilt,
+              tiltAngleIncremental: p.tiltAngleIncremental,
+              tiltAngle: 0
+            };
+          }
+        });
+      }
+
+      photoFillConfettiInterval = setInterval(draw, 24);
+    }
+
+    function stopPhotoFillConfetti() {
+      if (photoFillConfettiInterval) {
+        clearInterval(photoFillConfettiInterval);
+        photoFillConfettiInterval = null;
+      }
+      const canvas = document.getElementById('photoFillConfettiCanvas');
+      if (canvas) canvas.style.display = 'none';
+    }
+
+    const btnExitPhotoFill = document.getElementById('btnExitPhotoFillGame');
+    if (btnExitPhotoFill) {
+      btnExitPhotoFill.addEventListener('click', () => {
+        stopPhotoFillConfetti();
+        const overlay = document.getElementById('photoFillGameOverlay');
+        if (overlay) {
+          overlay.style.display = 'none';
+          overlay.classList.remove('open');
+        }
+      });
+    }
+
+    window.launchPhotoFillGame = launchPhotoFillGame;
+    window.submitPhotoFillGame = submitPhotoFillGame;
+
 
     // --- Pet Vector SVG Helpers ---
     function getMascotBaseSVG(avatarId) {
