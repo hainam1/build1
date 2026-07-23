@@ -4326,6 +4326,14 @@
             tile.classList.add('correct');
             playBeep(880, 'sine', 0.2); // high beep
 
+            // Automatically speak correct word (TTS)
+            if ('speechSynthesis' in window) {
+              const utterance = new SpeechSynthesisUtterance(word);
+              utterance.lang = 'en-US';
+              utterance.rate = 0.85;
+              window.speechSynthesis.speak(utterance);
+            }
+
             const pinMarker = document.getElementById(`game-pin-${gameExpectedIndex}`);
             if (pinMarker) {
               pinMarker.classList.remove('active');
