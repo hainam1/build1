@@ -5895,6 +5895,7 @@
       document.getElementById('proPaywallProgress').style.width = '0%';
 
       if (overlay && box) {
+        overlay.classList.add('open');
         overlay.style.display = 'flex';
         // Force reflow
         overlay.offsetHeight;
@@ -5910,6 +5911,7 @@
       if (overlay && box) {
         box.style.transform = 'scale(0.9)';
         box.style.opacity = '0';
+        overlay.classList.remove('open');
         setTimeout(() => {
           overlay.style.display = 'none';
         }, 200);
