@@ -2952,27 +2952,8 @@
         </p>
 
         <!-- QR Code container -->
-        <div id="proQrCardContent" style="display:flex; flex-direction:column; align-items:center; background:var(--surface); border:2px dashed var(--ink-coffee); border-radius:18px; padding:15px; gap:8px;">
-          <img id="proQrImage" src="" alt="Mã thanh toán QR" style="width:150px; height:150px; border-radius:10px; border:2px solid var(--ink-coffee); background:white;">
-          
-          <div style="width:100%; display:flex; flex-direction:column; gap:4px; font-size:11.5px;">
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--muted); font-weight:800;">Ngân hàng:</span>
-              <span style="font-weight:800; color:var(--ink-coffee);">CapyBank (MB)</span>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--muted); font-weight:800;">Số tài khoản:</span>
-              <span style="font-weight:800; color:var(--ink-coffee); font-family:var(--font-mono);">0987654321</span>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--muted); font-weight:800;">Số tiền:</span>
-              <span style="font-weight:800; color:#E67E22; font-family:var(--font-cute);">49.000đ 🍊</span>
-            </div>
-            <div style="display:flex; justify-content:space-between;">
-              <span style="color:var(--muted); font-weight:800;">Nội dung:</span>
-              <span style="font-weight:800; color:var(--primary); font-family:var(--font-mono);" id="proPaywallMemo">CAPYPRO ALEX</span>
-            </div>
-          </div>
+        <div id="proQrCardContent" style="display:flex; justify-content:center; align-items:center; background:white; border:2.5px solid var(--ink-coffee); border-radius:18px; overflow:hidden; padding:2px; box-shadow:inset 0 2px 5px rgba(0,0,0,0.1);">
+          <img id="proQrImage" src="vietqr_pay.png" alt="Mã thanh toán QR" style="width:100%; max-height:400px; object-fit:contain; border-radius:14px;">
         </div>
 
         <!-- Confirm and Fake verification -->
@@ -5907,14 +5888,6 @@
       const overlay = document.getElementById('proPaywallOverlay');
       const box = document.querySelector('#proPaywallOverlay .bottom-sheet');
       
-      const username = (currentAuthUser.username || '@alex_capy');
-      const cleanUsername = username.replace('@', '').toUpperCase();
-      document.getElementById('proPaywallMemo').textContent = 'CAPYPRO ' + cleanUsername;
-
-      // Real dynamic QR code image via qrserver API
-      const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent('STK:0987654321|NH:MBBank|ND:CAPYPRO ' + cleanUsername + '|ST:49000');
-      document.getElementById('proQrImage').src = qrUrl;
-
       // Reset loading states
       document.getElementById('proQrCardContent').style.display = 'flex';
       document.getElementById('proPaywallActions').style.display = 'flex';
