@@ -92,7 +92,7 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      padding-top: 80px;
+      padding-top: 20px;
       padding-bottom: 40px;
       overflow-x: hidden;
       transition: background 0.3s ease;
@@ -1386,57 +1386,6 @@
       text-shadow: 1px 1px 0 var(--ink-coffee);
     }
 
-    /* --- Floating View Mode Switcher --- */
-    .view-mode-switcher {
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 4px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1.5px solid #E8DCD1;
-      border-radius: 99px;
-      padding: 5px;
-      box-shadow: 0 8px 32px rgba(58, 46, 43, 0.12);
-      z-index: 99999;
-      user-select: none;
-      max-width: 95vw;
-      overflow-x: auto;
-    }
-    html.dark .view-mode-switcher {
-      background: rgba(45, 39, 35, 0.92);
-      border-color: #3E342F;
-    }
-    .view-mode-switcher a {
-      font-family: 'Fredoka', 'Nunito', sans-serif;
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #5C4F4B;
-      text-decoration: none;
-      padding: 7px 15px;
-      border-radius: 99px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
-    }
-    html.dark .view-mode-switcher a {
-      color: #D8CECA;
-    }
-    .view-mode-switcher a.active {
-      background: #FF9600;
-      color: #FFFFFF !important;
-      box-shadow: 0 3px 0 #E58700;
-    }
-    .view-mode-switcher a:hover:not(.active) {
-      background: rgba(255, 150, 0, 0.12);
-      color: #E58700;
-    }
-
     /* --- Word Sorting 3D Game Styles --- */
     .word-tile-3d {
       background: var(--surface);
@@ -1827,17 +1776,19 @@
       display: flex;
       gap: 10px;
     }
+  
+    @keyframes bounceCute {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-8px) scale(1.06); }
+    }
+    @keyframes spinOrbit {
+      0% { transform: rotate(0deg) translateX(36px) rotate(0deg); }
+      100% { transform: rotate(360deg) translateX(36px) rotate(-360deg); }
+    }
+
   </style>
 </head>
 <body>
-
-  <!-- --- Floating View Mode Switcher (4 Pages) --- -->
-  <div class="view-mode-switcher">
-    <a href="index.html" class="switch-btn">📊 Class Diagram UML</a>
-    <a href="capy_vocab.html" class="switch-btn active">📱 App UI (Capybara)</a>
-    <a href="database_schema.html" class="switch-btn">🗄️ Database Schema</a>
-    <a href="sequence_diagrams.html" class="switch-btn">🔄 Sequence Diagrams</a>
-  </div>
 
   <!-- --- Phone Simulator Shell --- -->
   <div class="phone-container">
@@ -1871,8 +1822,216 @@
     <!-- --- Screen View Contents --- -->
     <div class="screen-content" id="screenContent">
 
+      
+      <!-- ================== AUTH VIEW (LOGIN & REGISTER) ================== -->
+      <div class="screen-view" id="view-auth">
+        <!-- Cute Mascot Banner -->
+        <div class="capy-card pastel-yuzu" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:18px 14px; border:2.5px solid var(--ink-coffee); border-bottom-width:6px; margin-bottom:4px;">
+          <div style="width:65px; height:65px; border-radius:50%; background:white; border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:36px; box-shadow:0 3px 0 var(--ink-coffee); margin-bottom:8px;">
+            🦫
+          </div>
+          <h2 style="font-family:var(--font-cute); font-size:20px; font-weight:800; color:var(--ink-coffee); margin-bottom:2px;">Capy Vocab 🍊</h2>
+          <p style="font-size:12px; color:var(--body); font-weight:700;">Học từ vựng chill & kết bạn mỗi ngày!</p>
+        </div>
+
+        <!-- Auth Mode Toggle (Đăng nhập / Đăng ký) -->
+        <div style="display:flex; background:var(--surface-aside); padding:4px; border-radius:16px; border:2px solid var(--ink-coffee);">
+          <button id="btnAuthTabLogin" class="btn-cute primary" style="flex:1; padding:8px; font-size:12.5px; border-radius:12px; box-shadow:none;" onclick="switchAuthMode('login')">Đăng Nhập</button>
+          <button id="btnAuthTabRegister" class="btn-cute secondary" style="flex:1; padding:8px; font-size:12.5px; border-radius:12px; box-shadow:none;" onclick="switchAuthMode('register')">Đăng Ký</button>
+        </div>
+
+        <!-- Auth Form Card -->
+        <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:none;">
+          <!-- Name field (Register only) -->
+          <div id="authNameGroup" style="display:none; flex-direction:column; gap:4px;">
+            <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">👤 Họ và tên</label>
+            <input type="text" id="authNameInput" placeholder="Nhập tên của bạn..." style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+          </div>
+
+          <!-- Email field -->
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">✉️ Email / Tên đăng nhập</label>
+            <input type="email" id="authEmailInput" placeholder="capy@example.com" value="user@capyvocab.com" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+          </div>
+
+          <!-- Password field -->
+          <div style="display:flex; flex-direction:column; gap:4px;">
+            <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">🔒 Mật khẩu</label>
+            <input type="password" id="authPasswordInput" placeholder="••••••••" value="123456" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+          </div>
+
+          <!-- Submit Button -->
+          <button id="btnAuthSubmit" class="btn-cute primary" style="width:100%; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow); margin-top:4px;" onclick="handleFormAuth()">
+            🚀 ĐĂNG NHẬP NGAY
+          </button>
+        </div>
+
+        <!-- Divider OR -->
+        <div style="display:flex; align-items:center; gap:10px; margin:2px 0;">
+          <div style="flex:1; height:1.5px; background:var(--line);"></div>
+          <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase;">Hoặc tiếp tục bằng</span>
+          <div style="flex:1; height:1.5px; background:var(--line);"></div>
+        </div>
+
+        <!-- Social Logins -->
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Google Login -->
+          <button id="btnGoogleAuth" class="btn-cute" style="background:#FFFFFF; color:var(--ink-coffee); border:2.5px solid var(--ink-coffee); border-bottom-width:5px; width:100%; padding:11px; font-size:13px; font-weight:800; border-radius:16px; box-shadow:0 3.5px 0 var(--ink-coffee); display:flex; align-items:center; justify-content:center; gap:10px;" onclick="handleSocialAuth('Google')">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+            <span>Đăng nhập bằng Google</span>
+          </button>
+
+          <!-- Facebook Login -->
+          <button id="btnFacebookAuth" class="btn-cute" style="background:#1877F2; color:#FFFFFF; border:2.5px solid #0F52AB; border-bottom-width:5px; width:100%; padding:11px; font-size:13px; font-weight:800; border-radius:16px; box-shadow:0 3.5px 0 #0F52AB; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="handleSocialAuth('Facebook')">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            <span>Đăng nhập bằng Facebook</span>
+          </button>
+        </div>
+      </div>
+
+
+      
+      <!-- ================== ONBOARDING SURVEY WIZARD ================== -->
+      <div class="screen-view hidden" id="view-onboarding">
+        <!-- Onboarding Header & Progress Bar -->
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:4px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:var(--font-cute); font-size:12px; font-weight:800; color:var(--primary);" id="onboardingStepTitle">Bước 1 / 4</span>
+            <span style="font-size:11px; font-weight:700; color:var(--muted);" id="onboardingPercentText">25%</span>
+          </div>
+          <!-- 3D Progress Bar -->
+          <div style="width:100%; height:12px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
+            <div id="onboardingProgressBar" style="width:25%; height:100%; background:linear-gradient(90deg, #FF9600 0%, #58CC02 100%); border-radius:99px; transition:width 0.3s ease;"></div>
+          </div>
+        </div>
+
+        <!-- Mascot Speech Banner -->
+        <div class="capy-card pastel-yuzu" style="display:flex; align-items:center; gap:12px; padding:12px; border:2.5px solid var(--ink-coffee); border-bottom-width:5px; margin-bottom:6px;">
+          <div style="width:48px; height:48px; border-radius:50%; background:white; border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:26px; flex-shrink:0;">
+            🦫
+          </div>
+          <div>
+            <h4 style="font-family:var(--font-cute); font-size:13.5px; font-weight:800; color:var(--ink-coffee); margin:0;" id="onboardingMascotTitle">Chào bạn mới! 🍊</h4>
+            <p style="font-size:11px; color:var(--body); margin:2px 0 0 0; line-height:1.3;" id="onboardingMascotDesc">Hãy trả lời vài câu hỏi ngắn để Bé Capy lên lộ trình học nhé!</p>
+          </div>
+        </div>
+
+        <!-- STEP 1: Name & Username -->
+        <div class="onboarding-step-card" id="onboardStep1" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:none;">
+            <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin:0;">1. Họ tên & Biệt danh Username 👤</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">Họ và tên của bạn</label>
+              <input type="text" id="onboardFullName" placeholder="Nguyễn Văn A" value="Capy Mây" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">Biệt danh Username (@)</label>
+              <input type="text" id="onboardUsername" placeholder="capy_chill" value="capy_may" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+            </div>
+          </div>
+          
+          <button class="btn-cute primary" style="width:100%; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="nextOnboardStep(2)">
+            Tiếp Tục →
+          </button>
+        </div>
+
+        <!-- STEP 2: Age & Phone -->
+        <div class="onboarding-step-card" id="onboardStep2" style="display:none; flex-direction:column; gap:12px;">
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:none;">
+            <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin:0;">2. Độ tuổi & Số điện thoại 📱</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">Tuổi của bạn</label>
+              <input type="number" id="onboardAge" placeholder="18" value="20" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <label style="font-size:11.5px; font-weight:800; color:var(--ink-coffee);">Số điện thoại liên hệ</label>
+              <input type="tel" id="onboardPhone" placeholder="0901234567" value="0987654321" style="padding:10px 14px; border:2px solid var(--ink-coffee); border-radius:14px; outline:none; font-family:var(--font-body); font-size:13px; background:var(--surface); color:var(--ink-coffee);">
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:10px;">
+            <button class="btn-cute secondary" style="flex:1; padding:12px; font-size:13px; border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee);" onclick="nextOnboardStep(1)">← Quay lại</button>
+            <button class="btn-cute primary" style="flex:2; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="nextOnboardStep(3)">Tiếp Tục →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Account Role (Cá nhân vs Phụ huynh) -->
+        <div class="onboarding-step-card" id="onboardStep3" style="display:none; flex-direction:column; gap:12px;">
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:none;">
+            <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin:0;">3. Bạn sử dụng app với vai trò nào? 👥</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <div class="onboard-role-opt active" id="roleOptPersonal" onclick="selectOnboardRole('personal')" style="display:flex; align-items:center; gap:12px; padding:12px; border:2px solid var(--duo-green); background:var(--creamy-yuzu); border-radius:16px; cursor:pointer; box-shadow:0 3px 0 var(--ink-coffee);">
+                <span style="font-size:26px;">👤</span>
+                <div>
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Cá nhân học tập</div>
+                  <div style="font-size:11px; color:var(--body);">Tự luyện từ vựng, chơi game & kết bạn</div>
+                </div>
+              </div>
+
+              <div class="onboard-role-opt" id="roleOptParent" onclick="selectOnboardRole('parent')" style="display:flex; align-items:center; gap:12px; padding:12px; border:2px solid var(--line); background:var(--surface); border-radius:16px; cursor:pointer; box-shadow:0 3px 0 var(--line);">
+                <span style="font-size:26px;">👨‍👩‍👧</span>
+                <div>
+                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Phụ huynh / Giám sát</div>
+                  <div style="font-size:11px; color:var(--body);">Theo dõi tiến độ học & nhận báo cáo</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:10px;">
+            <button class="btn-cute secondary" style="flex:1; padding:12px; font-size:13px; border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee);" onclick="nextOnboardStep(2)">← Quay lại</button>
+            <button class="btn-cute primary" style="flex:2; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="nextOnboardStep(4)">Tiếp Tục →</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Daily Study Time Schedule -->
+        <div class="onboarding-step-card" id="onboardStep4" style="display:none; flex-direction:column; gap:12px;">
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:none;">
+            <h3 style="font-family:var(--font-cute); font-size:15px; font-weight:800; color:var(--ink-coffee); margin:0;">4. Khung giờ học hàng ngày của bạn? ⏰</h3>
+            
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+              <div class="onboard-time-opt" id="timeOptMorning" onclick="selectOnboardTime('07:00 - 08:00 (Sáng 🌅)', this)" style="padding:10px; border:2px solid var(--line); background:var(--surface); border-radius:14px; text-align:center; cursor:pointer;">
+                <div style="font-size:22px;">🌅</div>
+                <div style="font-weight:800; font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Sáng sớm</div>
+                <div style="font-size:10px; color:var(--muted);">07:00 - 08:00</div>
+              </div>
+
+              <div class="onboard-time-opt" id="timeOptNoon" onclick="selectOnboardTime('12:00 - 13:00 (Trưa ☀️)', this)" style="padding:10px; border:2px solid var(--line); background:var(--surface); border-radius:14px; text-align:center; cursor:pointer;">
+                <div style="font-size:22px;">☀️</div>
+                <div style="font-weight:800; font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Trưa nghỉ</div>
+                <div style="font-size:10px; color:var(--muted);">12:00 - 13:00</div>
+              </div>
+
+              <div class="onboard-time-opt" id="timeOptAfternoon" onclick="selectOnboardTime('17:30 - 18:30 (Chiều 🌆)', this)" style="padding:10px; border:2px solid var(--line); background:var(--surface); border-radius:14px; text-align:center; cursor:pointer;">
+                <div style="font-size:22px;">🌆</div>
+                <div style="font-weight:800; font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Chiều tối</div>
+                <div style="font-size:10px; color:var(--muted);">17:30 - 18:30</div>
+              </div>
+
+              <div class="onboard-time-opt active" id="timeOptNight" onclick="selectOnboardTime('20:00 - 21:00 (Tối 🌙)', this)" style="padding:10px; border:2px solid var(--duo-green); background:var(--creamy-yuzu); border-radius:14px; text-align:center; cursor:pointer;">
+                <div style="font-size:22px;">🌙</div>
+                <div style="font-weight:800; font-size:11.5px; color:var(--ink-coffee); margin-top:2px;">Buổi tối</div>
+                <div style="font-size:10px; color:var(--muted);">20:00 - 21:00</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:10px;">
+            <button class="btn-cute secondary" style="flex:1; padding:12px; font-size:13px; border-radius:16px; box-shadow:0 3px 0 var(--ink-coffee);" onclick="nextOnboardStep(3)">← Quay lại</button>
+            <button class="btn-cute primary" style="flex:2; padding:12px; font-size:14px; border-radius:16px; box-shadow:0 4px 0 var(--duo-green-shadow);" onclick="finishOnboarding()">HOÀN TẤT & BẮT ĐẦU 🚀</button>
+          </div>
+        </div>
+
+      </div>
+
+
       <!-- ================== TAB 1: HOME ================== -->
-      <div class="screen-view" id="view-home">
+      <div class="screen-view hidden" id="view-home">
         <!-- Welcome avatar capy -->
         <div class="capy-card home-avatar-section">
           <div class="avatar-wrapper" id="homeAvatarWrapper">
@@ -1995,51 +2154,7 @@
           <p>☁️ Lượt quét hôm nay: <span id="quotaText">3/3</span> lượt miễn phí</p>
         </div>
 
-        <!-- Daily Review Card -->
-        <div class="capy-card review-widget">
-          <div class="card-title">📌 Daily Card Ôn Tập</div>
-          <p style="font-size: 13px; line-height: 1.4;">Bé Capy đang gặm cỏ chờ bạn ôn tập lại <b>12 từ vựng</b> sắp quên kìa!</p>
-          <div class="review-widget-content">
-            <button class="btn-cute primary" id="btnPlayDailyReview">
-              Chơi Flashcard Ngay 🍊
-            </button>
-          </div>
-        </div>
-
-        <!-- Recent Notes list -->
-        <div>
-          <div class="card-title" style="margin-left: 4px; font-size:15px;">Ghi chú mới nhất 🖼️</div>
-          <div class="recent-notes-scroll">
-            
-            <div class="recent-note-card">
-              <div class="recent-note-img">
-                💻
-                <div class="badge-label">🏷️ 5 từ</div>
-              </div>
-              <h4>Laptop setup</h4>
-              <p>2 giờ trước</p>
-            </div>
-
-            <div class="recent-note-card">
-              <div class="recent-note-img">
-                ☕
-                <div class="badge-label">🏷️ 3 từ</div>
-              </div>
-              <h4>Coffee shop</h4>
-              <p>Hôm qua</p>
-            </div>
-
-            <div class="recent-note-card">
-              <div class="recent-note-img">
-                🌲
-                <div class="badge-label">🏷️ 4 từ</div>
-              </div>
-              <h4>Outdoor park</h4>
-              <p>3 ngày trước</p>
-            </div>
-
-          </div>
-        </div>
+        
       </div>
 
 
@@ -2052,15 +2167,11 @@
           </button>
         </div>
 
-        <!-- Sub-tabs: Personal vs Friends Feed -->
-        <div style="display:flex; gap:8px; margin-bottom:12px; border-bottom:2px solid var(--line); padding-bottom:8px;">
-          <button class="btn-cute primary" id="btnAlbumPersonal" onclick="window.switchAlbumSubtab('personal')" style="flex:1; font-size:12px; padding:6px 10px; border-radius:12px; box-shadow:0 3px 0 var(--duo-green-shadow);">Sổ Ảnh Cá Nhân 🖼️</button>
-          <button class="btn-cute secondary" id="btnAlbumFriends" onclick="window.switchAlbumSubtab('friends')" style="flex:1; font-size:12px; padding:6px 10px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee);">Nhật Ký Bạn Bè 👥</button>
-        </div>
+        
 
         <!-- Container 1: Personal Photos -->
         <div id="containerAlbumPersonal">
-          <p style="font-size: 12px; color: var(--muted); margin-top: -4px; margin-bottom: 10px;">Sổ lưu giữ hình ảnh học từ vựng cá nhân của bạn.</p>
+          
 
         <div class="album-grid">
           
@@ -2122,34 +2233,8 @@
         </div>
       </div>
 
-        <!-- Container 2: Friends Feed (Public Shared Photos) -->
-        <div id="containerAlbumFriends" style="display:none;">
-          <p style="font-size: 12px; color: var(--muted); margin-top: -4px; margin-bottom: 10px;">Ảnh từ vựng công khai do bạn bè chia sẻ.</p>
-
-          <div style="display:flex; flex-direction:column; gap:14px;">
-            <!-- Friend Feed Item 1 -->
-            <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:5px; padding:12px; background:white;">
-              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
-                <span style="font-size:22px; background:var(--creamy-yuzu); border:1.5px solid var(--ink-coffee); border-radius:50%; padding:4px;">🦫</span>
-                <div>
-                  <div style="font-weight:800; font-size:13px; color:var(--ink-coffee);">Capy Mây (Google User)</div>
-                  <div style="font-size:10.5px; color:var(--muted);">Chia sẻ 3 giờ trước · 🌐 Public</div>
-                </div>
-              </div>
-              <div class="recent-note-img" style="height:110px; font-size:36px;">🍵</div>
-              <div style="margin-top:8px;">
-                <div style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Matcha Tea Ceremony</div>
-                <div style="display:flex; gap:6px; margin-top:4px;">
-                  <span class="preview-chip">Matcha / Trà xanh</span>
-                  <span class="preview-chip">Whisk / Cây đánh trà</span>
-                </div>
-                <button class="btn-cute primary" style="width:100%; margin-top:8px; padding:6px; font-size:11.5px; border-radius:10px; box-shadow:0 3px 0 var(--duo-green-shadow);" onclick="alert('Đã lưu 2 từ vựng từ bạn Capy Mây về Sổ cá nhân! 📥')">
-                  Lưu từ này về Sổ cá nhân 📥
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        
+              
       </div>
 
 
@@ -2301,16 +2386,52 @@
           <button class="btn-cute secondary" onclick="activateView('home')" style="padding:4px 12px; font-size:12px; border-radius:12px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;">✕ Trở về</button>
         </div>
         
-        <!-- Google Social Login Button -->
-        <button class="btn-cute" id="btnGoogleLogin" style="background:#1CB0F6; color:white; border:2.5px solid #1899D6; border-bottom-width:6px; width:100%; padding:12px; font-size:14px; font-weight:800; border-radius:18px; box-shadow:0 4px 0 #1899D6; display:flex; align-items:center; justify-content:center; gap:10px;" onclick="alert('Đăng nhập Google OAuth thành công! 🌐 Sync Cloud Data đã bật.')">
-          🌐 CONTINUE WITH GOOGLE
-        </button>
+        
+        <!-- User Profile & Account Card -->
+        <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; padding:14px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <div style="width:44px; height:44px; border-radius:50%; background:var(--creamy-yuzu); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:24px;" id="settingsUserAvatar">
+                🦫
+              </div>
+              <div>
+                <div style="font-weight:800; font-size:14px; color:var(--ink-coffee);" id="settingsUserName">Alex Capy</div>
+                <div style="font-size:11px; color:var(--muted);" id="settingsUserEmail">user@capyvocab.com</div>
+              </div>
+            </div>
+            <span style="font-size:10px; font-weight:800; background:var(--duo-green); color:white; padding:4px 9px; border-radius:10px; border:1.5px solid var(--ink-coffee);" id="settingsAuthBadge">Google 🌐</span>
+          </div>
+
+          <!-- Log out Button -->
+          <button id="btnLogout" class="btn-cute" style="background:#FF4B4B; color:white; border:2.5px solid #EA2B2B; border-bottom-width:5px; width:100%; padding:10px; font-size:13px; font-weight:800; border-radius:14px; box-shadow:0 3.5px 0 #EA2B2B; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="handleLogout()">
+            🚪 ĐĂNG XUẤT TÀI KHOẢN
+          </button>
+        </div>
+
 
         <!-- Account preferences list -->
         <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none;">
           <div style="display:flex; flex-direction:column; gap:10px;">
             <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
-              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Giao diện (Theme Mode)</span>
+              
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Username (@)</span>
+              <span style="font-size:12px; color:var(--primary); font-weight:800;" id="settingsUserUsername">@capy_may</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Độ tuổi & SĐT</span>
+              <span style="font-size:12px; color:var(--body); font-weight:700;" id="settingsUserAgePhone">20 tuổi · 0987654321</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Vai trò tài khoản</span>
+              <span style="font-size:12px; color:var(--success); font-weight:800;" id="settingsUserRole">Cá nhân 👤</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line-soft); padding-bottom:8px;">
+              <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Khung giờ học</span>
+              <span style="font-size:12px; color:var(--warning); font-weight:800;" id="settingsUserStudyTime">20:00 - 21:00 🌙</span>
+            </div>
+
+            <span style="font-weight:700; font-size:13px; color:var(--ink-coffee);">Giao diện (Theme Mode)</span>
               <button class="btn-cute secondary" id="themeBtn" title="Chuyển chế độ Sáng / Tối" style="padding:4px 12px; font-size:12px; font-weight:800; border-radius:12px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;">
                 <span id="themeText">Sáng ☀️</span>
               </button>
@@ -2440,7 +2561,7 @@
             </div>
             <div style="display:flex; gap:4px;">
               <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Mây (Google User)', '🍵')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="document.getElementById('btnAlbumFriends').click(); activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
             </div>
           </div>
 
@@ -2456,7 +2577,7 @@
             </div>
             <div style="display:flex; gap:4px;">
               <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Cam (Study Buddy)', '🍊')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="document.getElementById('btnAlbumFriends').click(); activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
             </div>
           </div>
 
@@ -2472,7 +2593,7 @@
             </div>
             <div style="display:flex; gap:4px;">
               <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Nấm', '🦫')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="document.getElementById('btnAlbumFriends').click(); activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
             </div>
           </div>
         </div>
@@ -2944,6 +3065,41 @@
       </div>
     </div>
 
+    
+    <!-- --- Cute Fake Loading Modal (3s OAuth Loading) --- -->
+    <div class="custom-dialog-overlay" id="authLoadingOverlay" style="z-index: 2000;">
+      <div class="custom-dialog-box" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding:24px 20px; width:310px; max-width:90%;">
+        <!-- Bouncing Cute Capybara Avatar -->
+        <div style="position:relative; width:80px; height:80px; margin-bottom:12px;">
+          <div style="width:75px; height:75px; border-radius:50%; background:var(--creamy-yuzu); border:3px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:42px; box-shadow:0 4px 0 var(--ink-coffee); animation: bounceCute 0.8s infinite alternate;" id="loadingMascotIcon">
+            🦫
+          </div>
+          <!-- Orbiting Orange 🍊 -->
+          <div style="position:absolute; top:-4px; right:-4px; font-size:22px; animation: spinOrbit 2s infinite linear;">
+            🍊
+          </div>
+        </div>
+
+        <!-- Provider Title & Message -->
+        <h3 style="font-family:var(--font-cute); font-size:16px; font-weight:800; color:var(--ink-coffee); margin-bottom:4px;" id="authLoadingTitle">
+          Đang đăng nhập...
+        </h3>
+        <p style="font-size:12px; font-weight:700; color:var(--muted); margin-bottom:14px;" id="authLoadingDesc">
+          Đang xác thực thông tin tài khoản...
+        </p>
+
+        <!-- Cute 3D Progress Bar -->
+        <div style="width:100%; height:14px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:99px; overflow:hidden; position:relative; box-shadow:inset 0 2px 4px rgba(0,0,0,0.06);">
+          <div id="authLoadingProgressBar" style="width:0%; height:100%; background:linear-gradient(90deg, #FF9600 0%, #58CC02 100%); border-radius:99px; transition:width 0.1s linear;"></div>
+        </div>
+
+        <div style="font-size:10.5px; font-weight:800; color:var(--muted); margin-top:8px;" id="authLoadingPercent">
+          0%
+        </div>
+      </div>
+    </div>
+
+
     <!-- --- Custom 3D Dialog Overlay --- -->
     <div class="custom-dialog-overlay" id="customDialogOverlay">
       <div class="custom-dialog-box">
@@ -2960,6 +3116,269 @@
 
   <!-- --- Script block --- -->
   <script>
+    
+    
+    // --- ONBOARDING SURVEY WIZARD LOGIC ---
+    let onboardData = {
+      role: 'personal',
+      time: '20:00 - 21:00 (Buổi tối 🌙)'
+    };
+
+    window.selectOnboardRole = function(role) {
+      onboardData.role = role;
+      const p = document.getElementById('roleOptPersonal');
+      const parent = document.getElementById('roleOptParent');
+      if (role === 'personal') {
+        if (p) { p.style.borderColor = 'var(--duo-green)'; p.style.background = 'var(--creamy-yuzu)'; }
+        if (parent) { parent.style.borderColor = 'var(--line)'; parent.style.background = 'var(--surface)'; }
+      } else {
+        if (p) { p.style.borderColor = 'var(--line)'; p.style.background = 'var(--surface)'; }
+        if (parent) { parent.style.borderColor = 'var(--duo-green)'; parent.style.background = 'var(--creamy-yuzu)'; }
+      }
+    };
+
+    window.selectOnboardTime = function(timeStr, el) {
+      onboardData.time = timeStr;
+      document.querySelectorAll('.onboard-time-opt').forEach(opt => {
+        opt.style.borderColor = 'var(--line)';
+        opt.style.background = 'var(--surface)';
+      });
+      if (el) {
+        el.style.borderColor = 'var(--duo-green)';
+        el.style.background = 'var(--creamy-yuzu)';
+      }
+    };
+
+    window.nextOnboardStep = function(stepNum) {
+      document.querySelectorAll('.onboarding-step-card').forEach(c => c.style.display = 'none');
+      const targetStep = document.getElementById(`onboardStep${stepNum}`);
+      if (targetStep) targetStep.style.display = 'flex';
+
+      const stepTitle = document.getElementById('onboardingStepTitle');
+      const percentText = document.getElementById('onboardingPercentText');
+      const progressBar = document.getElementById('onboardingProgressBar');
+      const mascotTitle = document.getElementById('onboardingMascotTitle');
+      const mascotDesc = document.getElementById('onboardingMascotDesc');
+
+      const percent = stepNum * 25;
+      if (stepTitle) stepTitle.textContent = `Bước ${stepNum} / 4`;
+      if (percentText) percentText.textContent = `${percent}%`;
+      if (progressBar) progressBar.style.width = `${percent}%`;
+
+      if (stepNum === 1 && mascotTitle) { mascotTitle.textContent = 'Chào bạn mới! 🍊'; mascotDesc.textContent = 'Nhập tên thật và biệt danh bạn muốn bạn bè nhìn thấy nhé!'; }
+      if (stepNum === 2 && mascotTitle) { mascotTitle.textContent = 'Thông tin độ tuổi & SĐT 📱'; mascotDesc.textContent = 'Giúp Bé Capy bảo mật và gửi thông báo nhắc nhở chuẩn hơn!'; }
+      if (stepNum === 3 && mascotTitle) { mascotTitle.textContent = 'Chọn vai trò tài khoản 👥'; mascotDesc.textContent = 'Bạn dùng ứng dụng làm cá nhân hay phụ huynh theo dõi con?'; }
+      if (stepNum === 4 && mascotTitle) { mascotTitle.textContent = 'Lên lịch học tập ⏰'; mascotDesc.textContent = 'Bật thông báo nhắc học vào khung giờ vàng mỗi ngày nhé!'; }
+    };
+
+    window.finishOnboarding = function() {
+      const name = document.getElementById('onboardFullName')?.value.trim() || 'Capy Mây';
+      const username = document.getElementById('onboardUsername')?.value.trim() || 'capy_may';
+      const age = document.getElementById('onboardAge')?.value.trim() || '20';
+      const phone = document.getElementById('onboardPhone')?.value.trim() || '0987654321';
+
+      currentAuthUser.name = name;
+      currentAuthUser.username = username.startsWith('@') ? username : `@${username}`;
+      currentAuthUser.age = age;
+      currentAuthUser.phone = phone;
+      currentAuthUser.role = onboardData.role === 'personal' ? 'Cá nhân 👤' : 'Phụ huynh 👨‍👩‍👧';
+      currentAuthUser.studyTime = onboardData.time;
+      currentAuthUser.isLoggedIn = true;
+
+      updateAuthUI();
+      alert(`Chúc mừng ${currentAuthUser.name} (${currentAuthUser.username}) đã hoàn tất khảo sát cá nhân! Thưởng ngay +20 Xu Yuzu chào mừng! 🍊🎉`);
+      studyPoints += 20;
+      if (typeof updateSrsCoinsBadges === 'function') updateSrsCoinsBadges();
+
+      activateView('home');
+    };
+
+    // --- AUTHENTICATION & LOGIN/REGISTER SYSTEM ---
+    let currentAuthUser = {
+      name: 'Alex Capy',
+      email: 'user@capyvocab.com',
+      provider: 'Google 🌐',
+      avatar: '🦫',
+      isLoggedIn: false
+    };
+
+    window.switchAuthMode = function(mode) {
+      const btnLogin = document.getElementById('btnAuthTabLogin');
+      const btnReg = document.getElementById('btnAuthTabRegister');
+      const nameGroup = document.getElementById('authNameGroup');
+      const submitBtn = document.getElementById('btnAuthSubmit');
+      
+      if (mode === 'login') {
+        if (btnLogin) btnLogin.className = 'btn-cute primary';
+        if (btnReg) btnReg.className = 'btn-cute secondary';
+        if (nameGroup) nameGroup.style.display = 'none';
+        if (submitBtn) submitBtn.textContent = '🚀 ĐĂNG NHẬP NGAY';
+      } else {
+        if (btnLogin) btnLogin.className = 'btn-cute secondary';
+        if (btnReg) btnReg.className = 'btn-cute primary';
+        if (nameGroup) nameGroup.style.display = 'flex';
+        if (submitBtn) submitBtn.textContent = '✨ ĐĂNG KÝ TÀI KHOẢN';
+      }
+    };
+
+    window.handleFormAuth = function() {
+      const emailInput = document.getElementById('authEmailInput');
+      const nameInput = document.getElementById('authNameInput');
+      
+      const email = (emailInput && emailInput.value.trim()) ? emailInput.value.trim() : 'user@capyvocab.com';
+      const name = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : email.split('@')[0];
+      
+      currentAuthUser = {
+        name: name,
+        email: email,
+        provider: 'Email ✉️',
+        avatar: '🦫',
+        isLoggedIn: true
+      };
+
+      const overlay = document.getElementById('authLoadingOverlay');
+      const title = document.getElementById('authLoadingTitle');
+      const desc = document.getElementById('authLoadingDesc');
+      const progressBar = document.getElementById('authLoadingProgressBar');
+      const percentText = document.getElementById('authLoadingPercent');
+      const mascotIcon = document.getElementById('loadingMascotIcon');
+
+      if (title) title.textContent = 'Đang đăng nhập... 🚀';
+      if (desc) desc.textContent = 'Đang kiểm tra mật khẩu & khởi tạo môi trường...';
+      if (mascotIcon) mascotIcon.textContent = '🦫';
+
+      if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.classList.add('open');
+      }
+
+      let progress = 0;
+      if (progressBar) progressBar.style.width = '0%';
+      if (percentText) percentText.textContent = '0%';
+
+      const interval = setInterval(() => {
+        progress += 3.33;
+        if (progress > 100) progress = 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (percentText) percentText.textContent = `${Math.round(progress)}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            if (overlay) {
+              overlay.classList.remove('open');
+              overlay.style.display = 'none';
+            }
+            updateAuthUI();
+            alert("Đăng nhập tài khoản thành công! Chào mừng " + currentAuthUser.name + " 🍊🎉");
+            activateView('onboarding'); nextOnboardStep(1);
+          }, 200);
+        }
+      }, 100);
+    };
+
+    window.handleSocialAuth = function(providerName) {
+      const overlay = document.getElementById('authLoadingOverlay');
+      const title = document.getElementById('authLoadingTitle');
+      const desc = document.getElementById('authLoadingDesc');
+      const progressBar = document.getElementById('authLoadingProgressBar');
+      const percentText = document.getElementById('authLoadingPercent');
+      const mascotIcon = document.getElementById('loadingMascotIcon');
+
+      if (providerName === 'Google') {
+        if (title) title.textContent = 'Đang kết nối Google 🌐';
+        if (desc) desc.textContent = 'Đang xác thực và đồng bộ dữ liệu Capy Vocab...';
+        if (mascotIcon) mascotIcon.textContent = '🍵';
+        currentAuthUser = {
+          name: 'Capy Mây (Google)',
+          email: 'capymay@gmail.com',
+          provider: 'Google 🌐',
+          avatar: '🍵',
+          isLoggedIn: true
+        };
+      } else if (providerName === 'Facebook') {
+        if (title) title.textContent = 'Đang kết nối Facebook 📘';
+        if (desc) desc.textContent = 'Đang tải danh sách bạn bè & xếp hạng...';
+        if (mascotIcon) mascotIcon.textContent = '👑';
+        currentAuthUser = {
+          name: 'Alex Capy (Facebook)',
+          email: 'alex.capy@facebook.com',
+          provider: 'Facebook 📘',
+          avatar: '👑',
+          isLoggedIn: true
+        };
+      }
+
+      if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.classList.add('open');
+      }
+
+      let progress = 0;
+      if (progressBar) progressBar.style.width = '0%';
+      if (percentText) percentText.textContent = '0%';
+
+      const interval = setInterval(() => {
+        progress += 3.33;
+        if (progress > 100) progress = 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        if (percentText) percentText.textContent = `${Math.round(progress)}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            if (overlay) {
+              overlay.classList.remove('open');
+              overlay.style.display = 'none';
+            }
+            updateAuthUI();
+            alert(`Đăng nhập thành công bằng ${providerName}! Chào mừng ${currentAuthUser.name} 🍊🎉`);
+            activateView('onboarding'); nextOnboardStep(1);
+          }, 200);
+        }
+      }, 100);
+    };
+
+    window.handleLogout = function() {
+      showCustomConfirm("Xác nhận Đăng Xuất 🚪", "Bạn có chắc chắn muốn đăng xuất khỏi tài khoản hiện tại không?", () => {
+        currentAuthUser.isLoggedIn = false;
+        updateAuthUI();
+        alert("Đã đăng xuất tài khoản thành công! 🚪");
+        activateView('auth');
+      });
+    };
+
+    function updateAuthUI() {
+      const nameEl = document.getElementById('settingsUserName');
+      const emailEl = document.getElementById('settingsUserEmail');
+      const badgeEl = document.getElementById('settingsAuthBadge');
+      const avatarEl = document.getElementById('settingsUserAvatar');
+
+      const usernameEl = document.getElementById('settingsUserUsername');
+      const agePhoneEl = document.getElementById('settingsUserAgePhone');
+      const roleEl = document.getElementById('settingsUserRole');
+      const studyTimeEl = document.getElementById('settingsUserStudyTime');
+
+      const bottomBar = document.querySelector('.bottom-bar');
+      
+      if (nameEl) nameEl.textContent = currentAuthUser.name;
+      if (emailEl) emailEl.textContent = currentAuthUser.email;
+      if (badgeEl) badgeEl.textContent = currentAuthUser.provider;
+      if (avatarEl) avatarEl.textContent = currentAuthUser.avatar;
+
+      if (usernameEl && currentAuthUser.username) usernameEl.textContent = currentAuthUser.username;
+      if (agePhoneEl && currentAuthUser.age) agePhoneEl.textContent = `${currentAuthUser.age} tuổi · ${currentAuthUser.phone || ''}`;
+      if (roleEl && currentAuthUser.role) roleEl.textContent = currentAuthUser.role;
+      if (studyTimeEl && currentAuthUser.studyTime) studyTimeEl.textContent = currentAuthUser.studyTime;
+      
+      if (!currentAuthUser.isLoggedIn) {
+        if (bottomBar) bottomBar.style.display = 'none';
+      } else {
+        if (bottomBar) bottomBar.style.display = 'flex';
+      }
+    }
+    window.updateAuthUI = updateAuthUI;
+
     // --- Global State variables ---
     let studyPoints = 200;
     let quotaScans = 3;
