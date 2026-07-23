@@ -2466,6 +2466,7 @@
           <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:4px;">Từ này nghĩa là gì? 🤔</span>
           <h2 style="font-family:var(--font-cute); font-size:22px; font-weight:800; color:var(--ink-coffee); margin:0;" id="soloQuestionWord">Desk Lamp</h2>
           <p style="font-size:12px; color:var(--muted); font-family:var(--font-mono); margin-top:2px;" id="soloQuestionPhonetic">/dɛsk læmp/</p>
+          <button class="btn-cute secondary" id="btnSoloSwapQuestion" style="padding:4px 8px; font-size:10px; border-radius:6px; width:auto; margin:6px auto 0 auto; display:none;" onclick="window.triggerSoloQuestionSwap()">🔄 Đổi Câu Hỏi</button>
         </div>
 
         <!-- 4 Options Grid -->
@@ -3631,6 +3632,8 @@
           else if (equippedSoloItem === 'solo_no_loss') isNoLossActive = true;
           else if (equippedSoloItem === 'solo_time_freeze') isTimeFreezeActive = true;
           else if (equippedSoloItem === 'solo_hint') isHintActive = true;
+          else if (equippedSoloItem === 'solo_swap_question') isSwapActive = true;
+          else if (equippedSoloItem === 'solo_prophecy') isProphecyActive = true;
         }
       }
 
@@ -3677,12 +3680,20 @@
       document.getElementById('soloTimerText').textContent = soloTimerVal + "s";
       document.getElementById('soloTimerText').style.color = "var(--duo-orange)";
 
+      // Swap Question Buff display logic
+      const swapBtn = document.getElementById('btnSoloSwapQuestion');
+      if (swapBtn) {
+        swapBtn.style.display = isSwapActive ? 'block' : 'none';
+      }
+
       // Setup initial battle log message depending on buff item
       let initialLogMsg = "⚔️ Trận đấu đã bắt đầu! Trả lời thật nhanh để giành điểm!";
       if (isDoubleDmgActive) initialLogMsg = "⚡ Kích hoạt X2 Sát thương! Nhận +20đ cho mỗi câu đúng!";
       else if (isNoLossActive) initialLogMsg = "🛡️ Kích hoạt Bảo Hộ Cam! Bạn sẽ không mất xu cược nếu thua!";
       else if (isTimeFreezeActive) initialLogMsg = "⏳ Kích hoạt Đóng Băng! Nhận thêm +5 giây suy nghĩ mỗi câu hỏi!";
       else if (isHintActive) initialLogMsg = "🦋 Kích hoạt Bướm Gợi Ý! Đã loại bỏ 2 đáp án sai giúp bạn!";
+      else if (isSwapActive) initialLogMsg = "🔄 Kích hoạt Đổi Câu Hỏi! Bạn có 1 cơ hội để đổi câu hỏi khó!";
+      else if (isProphecyActive) initialLogMsg = "🔮 Kích hoạt Kính Tiên Tri! Đáp án đúng đang tỏa ánh sáng xanh!";
       
       document.getElementById('soloBattleLog').innerHTML = initialLogMsg;
 
@@ -3803,6 +3814,26 @@
         checkSoloQuestionComplete();
       }, fakeDecisionDelay);
     }
+
+    window.triggerSoloQuestionSwap = function() {
+      if (!isSwapActive) return;
+      isSwapActive = false;
+      const swapBtn = document.getElementById('btnSoloSwapQuestion');
+      if (swapBtn) swapBtn.style.display = 'none';
+
+      // Pull a random vocabulary from pool that is not the current one
+      const currentWord = soloQuestions[soloCurrentQIndex].word;
+      const mixedPool = [...SOLO_USER_POOL, ...SOLO_OPPONENT_POOL].filter(x => x.word !== currentWord);
+      const randomNew = mixedPool[Math.floor(Math.random() * mixedPool.length)];
+
+      soloQuestions[soloCurrentQIndex] = randomNew;
+      
+      // Re-trigger load question
+      loadSoloQuestion(soloCurrentQIndex);
+      
+      playBeep(660, 'sine', 0.2);
+      document.getElementById('soloBattleLog').innerHTML = "🔄 Đã đổi câu hỏi thành công!";
+    };
 
     function checkSoloQuestionComplete() {
       if (soloHasUserAnswered && soloHasOpponentAnswered) {
@@ -5381,7 +5412,15 @@
       { id: 'bg_default', name: 'Thung Lũng', category: 'background', price: 0, icon: '🌲', val: '🌲', unlocked: true },
       { id: 'bg_onsen', name: 'Suối Nước Nóng', category: 'background', price: 60, icon: '♨️', val: '♨️', unlocked: false },
       { id: 'bg_cafe', name: 'Tiệm Cà Phê', category: 'background', price: 90, icon: '☕', val: '☕', unlocked: false },
-      { id: 'bg_beach', name: 'Bãi Biển Vàng', category: 'background', price: 130, icon: '🏖️', val: '🏖️', unlocked: false }
+      { id: 'bg_beach', name: 'Bãi Biển Vàng', category: 'background', price: 130, icon: '🏖️', val: '🏖️', unlocked: false },
+
+      // Solo Battle items (6 Items Demo)
+      { id: 'solo_double_dmg', name: 'X2 Sát Thương ⚡', category: 'solo', price: 50, icon: '⚡', desc: 'x2 điểm số mỗi câu trả lời đúng', count: 0, unlocked: false },
+      { id: 'solo_no_loss', name: 'Bảo Hộ Cam 🛡️', category: 'solo', price: 80, icon: '🛡️', desc: 'Không mất xu cược Yuzu khi thua trận', count: 0, unlocked: false },
+      { id: 'solo_time_freeze', name: 'Đóng Băng ❄️', category: 'solo', price: 40, icon: '⏳', desc: 'Tăng thêm 5 giây suy nghĩ mỗi câu hỏi', count: 0, unlocked: false },
+      { id: 'solo_hint', name: 'Bướm Gợi Ý 🦋', category: 'solo', price: 30, icon: '🦋', desc: 'Tự động loại bỏ 2 đáp án sai trong trận', count: 0, unlocked: false },
+      { id: 'solo_swap_question', name: 'Đổi Câu Hỏi 🔄', category: 'solo', price: 35, icon: '🔄', desc: 'Đổi câu hỏi ngẫu nhiên khác khi gặp khó', count: 0, unlocked: false },
+      { id: 'solo_prophecy', name: 'Kính Tiên Tri 🔮', category: 'solo', price: 45, icon: '🔮', desc: 'Phát hiện viền đáp án đúng nhấp nháy xanh', count: 0, unlocked: false }
     ];
 
     let activeShopCategory = 'mascot';
@@ -5391,6 +5430,7 @@
       const tabMascots = document.getElementById('shopTabMascots');
       const tabAccessories = document.getElementById('shopTabAccessories');
       const tabBackgrounds = document.getElementById('shopTabBackgrounds');
+      const tabSolo = document.getElementById('shopTabSolo');
       
       const updateSubTabs = (activeCategory) => {
         activeShopCategory = activeCategory;
@@ -5406,12 +5446,17 @@
           tabBackgrounds.classList.toggle('primary', activeCategory === 'background');
           tabBackgrounds.classList.toggle('secondary', activeCategory !== 'background');
         }
+        if (tabSolo) {
+          tabSolo.classList.toggle('primary', activeCategory === 'solo');
+          tabSolo.classList.toggle('secondary', activeCategory !== 'solo');
+        }
         renderShopItems();
       };
 
-      tabMascots.addEventListener('click', () => updateSubTabs('mascot'));
-      tabAccessories.addEventListener('click', () => updateSubTabs('accessory'));
-      tabBackgrounds.addEventListener('click', () => updateSubTabs('background'));
+      if (tabMascots) tabMascots.addEventListener('click', () => updateSubTabs('mascot'));
+      if (tabAccessories) tabAccessories.addEventListener('click', () => updateSubTabs('accessory'));
+      if (tabBackgrounds) tabBackgrounds.addEventListener('click', () => updateSubTabs('background'));
+      if (tabSolo) tabSolo.addEventListener('click', () => updateSubTabs('solo'));
 
       renderShopItems();
     }
@@ -5430,30 +5475,29 @@
                            
         const card = document.createElement('div');
         card.className = 'capy-card';
-        card.style.padding = '12px';
-        card.style.display = 'flex';
-        card.style.flexDirection = 'column';
-        card.style.alignItems = 'center';
-        card.style.justifyContent = 'space-between';
-        card.style.border = '2px solid var(--ink-coffee)';
-        card.style.borderBottomWidth = '6px';
-        card.style.boxShadow = 'none';
-        card.style.gap = '8px';
+        card.style.cssText = 'padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:space-between; border:2px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; gap:6px; min-height: 140px; background:white;';
         
         let buttonHTML = '';
-        if (!item.unlocked) {
-          buttonHTML = `<button class="btn-cute primary shop-action-btn" data-action="buy" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--duo-green-shadow);">🍊 ${item.price}</button>`;
-        } else if (isEquipped) {
-          buttonHTML = `<button class="btn-cute secondary shop-action-btn active" data-action="unequip" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; background:#FF9600; color:white; border-color:var(--ink-coffee); box-shadow:0 3px 0 var(--ink-coffee);">Đang dùng</button>`;
+        if (item.category === 'solo') {
+          const count = item.count || 0;
+          if (count > 0) {
+            buttonHTML = '\n              <div style="font-size:10.5px; font-weight:800; color:var(--success);">Sở hữu: x' + count + '</div>\n              <button class="btn-cute primary shop-action-btn" data-action="buy" data-id="' + item.id + '" style="font-size:10.5px; padding:5px 6px; border-radius:8px; width:100%; box-shadow:0 2px 0 var(--duo-green-shadow); margin-top:2px;">Mua thêm 🍊' + item.price + '</button>\n            ';
+          } else {
+            buttonHTML = '<button class="btn-cute primary shop-action-btn" data-action="buy" data-id="' + item.id + '" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--duo-green-shadow);">Mua 🍊 ' + item.price + '</button>';
+          }
         } else {
-          buttonHTML = `<button class="btn-cute secondary shop-action-btn" data-action="equip" data-id="${item.id}" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--line);">Trang bị</button>`;
+          if (!item.unlocked) {
+            buttonHTML = '<button class="btn-cute primary shop-action-btn" data-action="buy" data-id="' + item.id + '" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--duo-green-shadow);">🍊 ' + item.price + '</button>';
+          } else if (isEquipped) {
+            buttonHTML = '<button class="btn-cute secondary shop-action-btn active" data-action="unequip" data-id="' + item.id + '" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; background:#FF9600; color:white; border-color:var(--ink-coffee); box-shadow:0 3px 0 var(--ink-coffee);">Đang dùng</button>';
+          } else {
+            buttonHTML = '<button class="btn-cute secondary shop-action-btn" data-action="equip" data-id="' + item.id + '" style="font-size:11px; padding:5px 8px; border-radius:10px; width:100%; box-shadow:0 3px 0 var(--line);">Trang bị</button>';
+          }
         }
         
-        card.innerHTML = `
-          <div style="font-size:38px; transform: scale(1.1); margin: 4px 0;">${item.icon}</div>
-          <div style="font-weight:800; font-size:12px; text-align:center; color:var(--ink-coffee); height:16px; overflow:hidden;">${item.name}</div>
-          ${buttonHTML}
-        `;
+        const descHTML = item.desc ? '<div style="font-size:9.5px; color:var(--muted); text-align:center; height:24px; overflow:hidden; line-height:1.2; font-weight:700;">' + item.desc + '</div>' : '';
+
+        card.innerHTML = '\n          <div style="font-size:38px; transform: scale(1.1); margin: 2px 0;">' + item.icon + '</div>\n          <div style="font-weight:800; font-size:11.5px; text-align:center; color:var(--ink-coffee); height:16px; overflow:hidden;">' + item.name + '</div>\n          ' + descHTML + '\n          ' + buttonHTML + '\n        ';
         
         container.appendChild(card);
       });
@@ -5467,6 +5511,154 @@
         });
       });
     }
+
+    function handleShopAction(action, id, event) {
+      const item = SHOP_ITEMS.find(x => x.id === id);
+      if (!item) return;
+      
+      if (action === 'buy') {
+        if (studyPoints >= item.price) {
+          // Custom 3D dialog instead of blocking native confirm
+          showCustomConfirm("Xác nhận mua 🛍️", `Bạn có chắc muốn dùng ${item.price} xu Yuzu để mua [${item.name}] không? 🍊`, () => {
+            studyPoints -= item.price;
+            item.unlocked = true;
+            
+            if (item.category === 'solo') {
+              item.count = (item.count || 0) + 1;
+            } else {
+              equipShopItem(item);
+            }
+            
+            // FX
+            triggerShopConfetti();
+            triggerMascotJump();
+            
+            // Render
+            updateSrsCoinsBadges();
+            renderShopItems();
+          });
+        } else {
+          alert(`Bạn cần thêm ${item.price - studyPoints} xu Yuzu để mua vật phẩm này! Hãy chăm chỉ học tập thêm nhé! 🍊`);
+        }
+      } else if (action === 'equip') {
+        equipShopItem(item);
+        triggerMascotJump();
+        renderShopItems();
+      } else if (action === 'unequip') {
+        if (item.category === 'accessory') {
+          activeItems.delete(item.id);
+          updateAvatarGlobally();
+          renderShopItems();
+        }
+      }
+    }
+
+    function equipShopItem(item) {
+      if (item.category === 'mascot') {
+        avatarIconId = item.id;
+        document.getElementById('shopMascotNameText').textContent = item.name;
+      } else if (item.category === 'accessory') {
+        activeItems.add(item.id);
+      } else if (item.category === 'background') {
+        equippedBgId = item.id;
+        const bgEl = document.getElementById('shopPreviewBgText');
+        if (bgEl) bgEl.textContent = item.val || '🌲';
+        
+        const cardEl = document.getElementById('shopMascotCard');
+        if (cardEl) {
+          if (item.id === 'bg_default') {
+            cardEl.style.background = 'radial-gradient(circle, var(--creamy-yuzu) 40%, var(--surface) 100%)';
+          } else if (item.id === 'bg_onsen') {
+            cardEl.style.background = 'radial-gradient(circle, #E0F7FA 40%, #B2EBF2 100%)';
+          } else if (item.id === 'bg_cafe') {
+            cardEl.style.background = 'radial-gradient(circle, #FFE0B2 40%, #D7CCC8 100%)';
+          } else if (item.id === 'bg_beach') {
+            cardEl.style.background = 'radial-gradient(circle, #FFF9C4 40%, #FFE082 100%)';
+          }
+        }
+      }
+      updateAvatarGlobally();
+    }
+
+    function triggerShopConfetti() {
+      const canvas = document.getElementById('shopConfettiCanvas');
+      if (!canvas) return;
+      canvas.style.display = 'block';
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.parentElement.clientWidth;
+      canvas.height = canvas.parentElement.clientHeight;
+      
+      let particles = [];
+      for (let i = 0; i < 40; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -30,
+          vx: (Math.random() - 0.5) * 4,
+          vy: Math.random() * 4 + 3,
+          color: ['#FF9600', '#58CC02', '#1CB0F6', '#FFD200', '#FF3366'][Math.floor(Math.random() * 5)],
+          size: Math.random() * 5 + 4,
+          rot: Math.random() * Math.PI,
+          rotV: Math.random() * 0.1 - 0.05
+        });
+      }
+      
+      let startTime = Date.now();
+      function draw() {
+        if (Date.now() - startTime > 1500) {
+          canvas.style.display = 'none';
+          return;
+        }
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.rotV;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rot);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+          ctx.restore();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    function triggerMascotJump() {
+      const wrapper = document.getElementById('shopMascotWrapper');
+      if (!wrapper) return;
+      wrapper.style.transform = 'translateY(-20px) scale(1.1)';
+      setTimeout(() => {
+        wrapper.style.transform = 'translateY(5px) scale(0.95, 1.05)';
+        setTimeout(() => {
+          wrapper.style.transform = 'none';
+        }, 150);
+      }, 200);
+      
+      // Floating hearts
+      const heartsContainer = document.getElementById('shopMascotHearts');
+      if (heartsContainer) {
+        heartsContainer.innerHTML = '';
+        for (let i = 0; i < 5; i++) {
+          const heart = document.createElement('div');
+          heart.textContent = '❤️';
+          heart.style.position = 'absolute';
+          heart.style.left = `${Math.random() * 60 + 20}%`;
+          heart.style.bottom = '40px';
+          heart.style.fontSize = `${Math.random() * 12 + 10}px`;
+          heart.style.opacity = '1';
+          heart.style.transition = 'all 1s ease-out';
+          heartsContainer.appendChild(heart);
+          setTimeout(() => {
+            heart.style.transform = `translateY(-60px) translateX(${(Math.random() - 0.5) * 40}px)`;
+            heart.style.opacity = '0';
+          }, 20);
+        }
+      }
+    }
+
+
 
     function showCustomConfirm(title, message, onConfirm) {
       const overlay = document.getElementById('customDialogOverlay');
