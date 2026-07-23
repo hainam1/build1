@@ -2323,6 +2323,7 @@
           <button class="btn-cute primary" id="shopTabMascots" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🐾 Linh Vật</button>
           <button class="btn-cute secondary" id="shopTabAccessories" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🎩 Trang Phục</button>
           <button class="btn-cute secondary" id="shopTabBackgrounds" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">🖼️ Hình Nền</button>
+          <button class="btn-cute secondary" id="shopTabSolo" style="padding:6px 12px; font-size:11.5px; border-radius:12px; box-shadow:0 3px 0 var(--ink-coffee); width:auto;">⚔️ Solo Item</button>
         </div>
 
         <!-- Grid container for cards -->
@@ -2354,6 +2355,14 @@
 
         <!-- STATE 2: Bet selection screen (Shown after State 1 completes) -->
         <div id="soloLobbyStateBet" style="display:none; flex-direction:column; gap:16px;">
+          <!-- Solo Items Inventory Select Card -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:5px; padding:12px 14px; box-shadow:none; display:flex; flex-direction:column; gap:8px; background:white;">
+            <span style="font-weight:800; font-size:13px; color:var(--ink-coffee);">🎒 Trang bị vật phẩm bổ trợ:</span>
+            <div style="display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; scrollbar-width:none;" id="soloInventoryGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
           <!-- VS Avatars card -->
           <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:20px 12px; display:flex; align-items:center; justify-content:space-around; box-shadow:none; background: linear-gradient(180deg, #FFFDF8 0%, #FFF9EC 100%);">
             <!-- Player 1 -->
@@ -3489,9 +3498,12 @@
     let soloHasUserAnswered = false;
     let soloHasOpponentAnswered = false;
 
+    let equippedSoloItem = null;
+
     window.startSoloLobby = function(opponentName, opponentAvatar) {
       soloOpponentNameStr = opponentName;
       soloOpponentAvatarStr = opponentAvatar;
+      equippedSoloItem = null; // reset selection
 
       // Reset lobby views
       document.getElementById('soloLobbyStateWaiting').style.display = 'flex';
@@ -3519,9 +3531,51 @@
           
           document.getElementById('soloOpponentName').textContent = soloOpponentNameStr;
           document.getElementById('soloOpponentAvatar').textContent = soloOpponentAvatarStr;
+          
+          // Render inventory items in lobby
+          renderSoloInventory();
         }
       }, 100);
     };
+
+    function renderSoloInventory() {
+      const grid = document.getElementById('soloInventoryGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      const soloItems = SHOP_ITEMS.filter(x => x.category === 'solo' && x.unlocked && x.count > 0);
+      if (soloItems.length === 0) {
+        grid.innerHTML = '<span style="font-size:11px; color:var(--muted); font-style:italic; padding:6px 0; text-align:center; width:100%;">Chưa có vật phẩm hỗ trợ. Ghé Cửa hàng 🛍️ để mua!</span>';
+        equippedSoloItem = null;
+        return;
+      }
+
+      soloItems.forEach(item => {
+        const itemBox = document.createElement('div');
+        const isSelected = equippedSoloItem === item.id;
+        itemBox.className = 'capy-card';
+        itemBox.style.cssText = 'padding:8px; display:flex; align-items:center; gap:6px; border:2px solid ' + (isSelected ? 'var(--duo-green)' : 'var(--ink-coffee)') + '; background:' + (isSelected ? 'var(--creamy-yuzu)' : 'white') + '; border-bottom-width:4px; box-shadow:none; cursor:pointer; flex-shrink:0; min-width:115px; transition:all 0.15s ease;';
+
+        itemBox.innerHTML = `
+          <span style="font-size:18px;">${item.icon}</span>
+          <div style="flex:1; overflow:hidden;">
+            <div style="font-weight:800; font-size:10.5px; color:var(--ink-coffee); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name.split(' ')[0]}</div>
+            <div style="font-size:9.5px; color:var(--muted); font-weight:700;">Đang có: x${item.count}</div>
+          </div>
+        `;
+
+        itemBox.addEventListener('click', () => {
+          if (equippedSoloItem === item.id) {
+            equippedSoloItem = null;
+          } else {
+            equippedSoloItem = item.id;
+          }
+          renderSoloInventory();
+        });
+
+        grid.appendChild(itemBox);
+      });
+    }
 
     window.confirmSoloBet = function() {
       const slider = document.getElementById('soloBetSlider');
@@ -3548,17 +3602,41 @@
       }, 100);
     };
 
+    let isNoLossActive = false;
+    let isDoubleDmgActive = false;
+    let isTimeFreezeActive = false;
+    let isHintActive = false;
+
     window.startSoloGameplayMatch = function() {
       window.activateView('solo-game');
 
       document.getElementById('soloGameOpponentName').textContent = soloOpponentNameStr;
       document.getElementById('soloGameOpponentAvatar').textContent = soloOpponentAvatarStr;
 
+      // Consume the equipped items
+      isNoLossActive = false;
+      isDoubleDmgActive = false;
+      isTimeFreezeActive = false;
+      isHintActive = false;
+
+      if (equippedSoloItem) {
+        const itemObj = SHOP_ITEMS.find(x => x.id === equippedSoloItem);
+        if (itemObj && itemObj.count > 0) {
+          itemObj.count--;
+          if (itemObj.count <= 0) {
+            itemObj.unlocked = false;
+          }
+          
+          if (equippedSoloItem === 'solo_double_dmg') isDoubleDmgActive = true;
+          else if (equippedSoloItem === 'solo_no_loss') isNoLossActive = true;
+          else if (equippedSoloItem === 'solo_time_freeze') isTimeFreezeActive = true;
+          else if (equippedSoloItem === 'solo_hint') isHintActive = true;
+        }
+      }
+
       // Mix vocabularies
       const mixedPool = [...SOLO_USER_POOL, ...SOLO_OPPONENT_POOL];
-      // Shuffle mixed pool
       const shuffled = mixedPool.sort(() => Math.random() - 0.5);
-      // Select 5 questions
       soloQuestions = shuffled.slice(0, 5);
 
       // Reset scores
@@ -3574,7 +3652,8 @@
       document.getElementById('soloUserScoreText').textContent = soloUserScore + " Điểm";
       document.getElementById('soloOpponentScoreText').textContent = soloOpponentScore + " Điểm";
 
-      const userPercent = Math.min((soloUserScore / 50) * 100, 100);
+      const maxLimit = isDoubleDmgActive ? 100 : 50;
+      const userPercent = Math.min((soloUserScore / maxLimit) * 100, 100);
       const opponentPercent = Math.min((soloOpponentScore / 50) * 100, 100);
 
       document.getElementById('soloUserProgressBar').style.width = userPercent + "%";
@@ -3590,17 +3669,28 @@
       soloCurrentQIndex = index;
       soloHasUserAnswered = false;
       soloHasOpponentAnswered = false;
-      soloTimerVal = 10;
+      
+      // Time Freeze Item active effect: 15s instead of 10s!
+      soloTimerVal = isTimeFreezeActive ? 15 : 10;
 
       document.getElementById('soloQuestionNumText').textContent = (index + 1) + "/5";
       document.getElementById('soloTimerText').textContent = soloTimerVal + "s";
       document.getElementById('soloTimerText').style.color = "var(--duo-orange)";
 
+      // Setup initial battle log message depending on buff item
+      let initialLogMsg = "⚔️ Trận đấu đã bắt đầu! Trả lời thật nhanh để giành điểm!";
+      if (isDoubleDmgActive) initialLogMsg = "⚡ Kích hoạt X2 Sát thương! Nhận +20đ cho mỗi câu đúng!";
+      else if (isNoLossActive) initialLogMsg = "🛡️ Kích hoạt Bảo Hộ Cam! Bạn sẽ không mất xu cược nếu thua!";
+      else if (isTimeFreezeActive) initialLogMsg = "⏳ Kích hoạt Đóng Băng! Nhận thêm +5 giây suy nghĩ mỗi câu hỏi!";
+      else if (isHintActive) initialLogMsg = "🦋 Kích hoạt Bướm Gợi Ý! Đã loại bỏ 2 đáp án sai giúp bạn!";
+      
+      document.getElementById('soloBattleLog').innerHTML = initialLogMsg;
+
       const questionObj = soloQuestions[index];
       document.getElementById('soloQuestionWord').textContent = questionObj.word;
       document.getElementById('soloQuestionPhonetic').textContent = questionObj.phonetic;
 
-      // Generate 4 options (1 correct, 3 wrong from total pools)
+      // Generate 4 options
       const correctText = questionObj.meaning;
       const wrongPool = [...SOLO_USER_POOL, ...SOLO_OPPONENT_POOL]
         .map(x => x.meaning)
@@ -3614,39 +3704,52 @@
       const container = document.getElementById('soloOptionsGrid');
       container.innerHTML = '';
       
+      let hintedWrongCount = 0;
+
       options.forEach(optText => {
         const btn = document.createElement('button');
         btn.className = 'btn-cute secondary';
         btn.style.cssText = 'width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left; transition: all 0.2s ease;';
         btn.textContent = optText;
 
+        // Apply Hint Buff Effect: strike out 2 wrong options automatically
+        if (isHintActive && optText !== correctText && hintedWrongCount < 2) {
+          hintedWrongCount++;
+          btn.style.opacity = '0.4';
+          btn.style.textDecoration = 'line-through';
+          btn.style.pointerEvents = 'none';
+          btn.textContent = '🦋 ' + optText;
+        }
+
         btn.addEventListener('click', (e) => {
           if (soloHasUserAnswered) return;
           soloHasUserAnswered = true;
 
-          // Disable options selection hover/pointer
+          // Disable options selection
           document.querySelectorAll('#soloOptionsGrid button').forEach(b => b.style.pointerEvents = 'none');
 
           if (optText === correctText) {
             btn.classList.remove('secondary');
             btn.classList.add('correct');
-            soloUserScore += 10;
+            
+            // X2 Points Buff Effect
+            const scoreGained = isDoubleDmgActive ? 20 : 10;
+            soloUserScore += scoreGained;
             updateSoloScoreUI();
-            playBeep(880, 'sine', 0.15); // correct sound
-            document.getElementById('soloBattleLog').innerHTML = `✨ Bạn đã trả lời CHÍNH XÁC (+10đ)!`;
+            playBeep(880, 'sine', 0.15);
+            document.getElementById('soloBattleLog').innerHTML = isDoubleDmgActive ? `⚡ Trả lời CHÍNH XÁC (+20đ)!` : `✨ Trả lời CHÍNH XÁC (+10đ)!`;
           } else {
             btn.classList.remove('secondary');
             btn.classList.add('wrong');
             
-            // Highlight correct one green
             document.querySelectorAll('#soloOptionsGrid button').forEach(b => {
-              if (b.textContent === correctText) {
+              if (b.textContent === correctText || b.textContent.replace('🦋 ', '') === correctText) {
                 b.classList.remove('secondary');
                 b.classList.add('correct');
               }
             });
-            playBeep(220, 'triangle', 0.3); // wrong sound
-            document.getElementById('soloBattleLog').innerHTML = `🐾 Sai rồi! Đáp án đúng: <b>${correctText}</b>`;
+            playBeep(220, 'triangle', 0.3);
+            document.getElementById('soloBattleLog').innerHTML = `🐾 Sai rồi! Đáp án đúng: <b>soluoithayth</b>`.replace('soluoithayth', correctText);
           }
 
           checkSoloQuestionComplete();
@@ -3668,13 +3771,11 @@
         }
         if (soloTimerVal <= 0) {
           clearInterval(soloTimerInterval);
-          // user timed out if they didn't answer
           if (!soloHasUserAnswered) {
             soloHasUserAnswered = true;
             document.getElementById('soloBattleLog').textContent = "⏰ Hết giờ! Bạn chưa đưa ra câu trả lời.";
-            // Highlight correct answer
             document.querySelectorAll('#soloOptionsGrid button').forEach(b => {
-              if (b.textContent === correctText) {
+              if (b.textContent === correctText || b.textContent.replace('🦋 ', '') === correctText) {
                 b.classList.remove('secondary');
                 b.classList.add('correct');
               }
@@ -3685,12 +3786,12 @@
       }, 1000);
 
       // Setup fake Opponent decision process
-      const fakeDecisionDelay = Math.random() * 3000 + 1500; // 1.5s to 4.5s
+      const fakeDecisionDelay = Math.random() * 3000 + 1500;
       soloOpponentTimeout = setTimeout(() => {
         if (soloHasOpponentAnswered) return;
         soloHasOpponentAnswered = true;
 
-        const isCorrect = Math.random() < 0.70; // 70% chance of correct
+        const isCorrect = Math.random() < 0.70;
         if (isCorrect) {
           soloOpponentScore += 10;
           updateSoloScoreUI();
@@ -3705,7 +3806,6 @@
 
     function checkSoloQuestionComplete() {
       if (soloHasUserAnswered && soloHasOpponentAnswered) {
-        // Both answered, clear timer and load next question after delay
         if (soloTimerInterval) clearInterval(soloTimerInterval);
         setTimeout(() => {
           loadSoloQuestion(soloCurrentQIndex + 1);
@@ -3739,10 +3839,18 @@
         emojiEl.textContent = "😢";
         titleEl.textContent = "BẠN ĐÃ THUA CUỘC!";
         titleEl.style.color = "#FF4B4B";
-        descEl.textContent = `${soloOpponentNameStr} nhanh tay & chính xác hơn bạn.`;
-        coinsEl.textContent = "-" + soloBetAmount + " 🍊 xu";
-        coinsEl.style.color = "#FF4B4B";
-        studyPoints = Math.max(0, studyPoints - soloBetAmount);
+        
+        // No Loss Protection Buff Effect
+        if (isNoLossActive) {
+          descEl.textContent = "🛡️ Bảo Hộ Cam đã ngăn bạn bị trừ xu Yuzu!";
+          coinsEl.textContent = "0 🍊 xu (Đã Bảo Vệ 🛡️)";
+          coinsEl.style.color = "var(--success)";
+        } else {
+          descEl.textContent = `${soloOpponentNameStr} nhanh tay & chính xác hơn bạn.`;
+          coinsEl.textContent = "-" + soloBetAmount + " 🍊 xu";
+          coinsEl.style.color = "#FF4B4B";
+          studyPoints = Math.max(0, studyPoints - soloBetAmount);
+        }
       } else {
         emojiEl.textContent = "🤝";
         titleEl.textContent = "HÒA HỮU NGHỊ!";
@@ -3752,6 +3860,7 @@
         coinsEl.style.color = "var(--muted)";
       }
 
+      equippedSoloItem = null; // clear after match
       if (typeof updateSrsCoinsBadges === 'function') updateSrsCoinsBadges();
     }
 
@@ -5396,12 +5505,15 @@
       if (action === 'buy') {
         if (studyPoints >= item.price) {
           // Custom 3D dialog instead of blocking native confirm
-          showCustomConfirm("Xác nhận mua 🛍️", `Bạn có chắc muốn dùng ${item.price} xu Yuzu để mở khóa [${item.name}] không? 🍊`, () => {
+          showCustomConfirm("Xác nhận mua 🛍️", `Bạn có chắc muốn dùng ${item.price} xu Yuzu để mua [${item.name}] không? 🍊`, () => {
             studyPoints -= item.price;
             item.unlocked = true;
             
-            // Auto equip
-            equipShopItem(item);
+            if (item.category === 'solo') {
+              item.count = (item.count || 0) + 1;
+            } else {
+              equipShopItem(item);
+            }
             
             // FX
             triggerShopConfetti();
