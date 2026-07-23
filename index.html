@@ -1786,7 +1786,59 @@
       100% { transform: rotate(360deg) translateX(36px) rotate(-360deg); }
     }
 
-  </style>
+  
+    /* --- Solo Mode Custom Styles --- */
+    .mascot-loading-bounce {
+      animation: mascotBounce 0.8s infinite alternate ease-in-out;
+      display: inline-block;
+    }
+    @keyframes mascotBounce {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-20px) scale(0.95); }
+    }
+    #soloBetSlider {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 10px;
+      border-radius: 99px;
+      background: var(--surface-aside);
+      outline: none;
+      border: 2px solid var(--ink-coffee);
+    }
+    #soloBetSlider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--duo-orange);
+      border: 2.5px solid var(--ink-coffee);
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--duo-orange-shadow);
+    }
+    #soloBetSlider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--duo-orange);
+      border: 2.5px solid var(--ink-coffee);
+      cursor: pointer;
+      box-shadow: 0 3px 0 var(--duo-orange-shadow);
+    }
+    .btn-cute.correct {
+      background: var(--duo-green) !important;
+      color: white !important;
+      border-color: #3B8802 !important;
+      box-shadow: 0 3.5px 0 #3B8802 !important;
+    }
+    .btn-cute.wrong {
+      background: #FF4B4B !important;
+      color: white !important;
+      border-color: #EA2B2B !important;
+      box-shadow: 0 3.5px 0 #EA2B2B !important;
+    }
+
+</style>
 </head>
 <body>
 
@@ -2279,6 +2331,179 @@
         </div>
       </div>
 
+      
+      <!-- ================== SOLO LOBBY SCREEN ================== -->
+      <div class="screen-view hidden" id="view-solo-lobby">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+          <div class="card-title" style="margin:0;">Lobby Thách Đấu ⚔️</div>
+          <button class="btn-cute secondary" onclick="activateView('friends')" style="padding:4px 12px; font-size:12px; border-radius:12px; box-shadow:0 2px 0 var(--ink-coffee); width:auto;">Hủy ✕</button>
+        </div>
+
+        <!-- STATE 1: Waiting for acceptance (3s fake loading) -->
+        <div id="soloLobbyStateWaiting" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px 10px; height: 350px;">
+          <div class="mascot-loading-bounce" style="font-size: 54px;">🦫</div>
+          <div style="text-align:center;">
+            <h3 style="font-family:var(--font-cute); font-size:16px; color:var(--ink-coffee); margin:0;" id="soloLobbyWaitingTitle">Đang gửi lời mời...</h3>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0 0;">Đang đợi đối thủ chấp nhận lời mời thách đấu (3s)</p>
+          </div>
+          <!-- Cute small progress bar -->
+          <div style="width:160px; height:8px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
+            <div id="soloLobbyWaitingProgress" style="width:0%; height:100%; background:var(--duo-orange); transition:width 0.1s linear;"></div>
+          </div>
+        </div>
+
+        <!-- STATE 2: Bet selection screen (Shown after State 1 completes) -->
+        <div id="soloLobbyStateBet" style="display:none; flex-direction:column; gap:16px;">
+          <!-- VS Avatars card -->
+          <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; padding:20px 12px; display:flex; align-items:center; justify-content:space-around; box-shadow:none; background: linear-gradient(180deg, #FFFDF8 0%, #FFF9EC 100%);">
+            <!-- Player 1 -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px; width:100px;">
+              <div style="width:60px; height:60px; border-radius:50%; background:var(--creamy-yuzu); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 3px 0 var(--ink-coffee);">
+                🦫
+              </div>
+              <div style="font-weight:800; font-size:12.5px; color:var(--ink-coffee); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;">Bạn (Alex)</div>
+            </div>
+
+            <!-- VS Icon -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+              <div style="font-size:28px; font-weight:900; color:var(--duo-orange); font-family:var(--font-cute); filter: drop-shadow(0 2px 0 var(--ink-coffee));">VS</div>
+              <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase;">Solo Arena</span>
+            </div>
+
+            <!-- Player 2 -->
+            <div style="display:flex; flex-direction:column; align-items:center; gap:6px; width:100px;">
+              <div id="soloOpponentAvatar" style="width:60px; height:60px; border-radius:50%; background:var(--surface-aside); border:2px solid var(--ink-coffee); display:flex; align-items:center; justify-content:center; font-size:32px; box-shadow:0 3px 0 var(--ink-coffee);">
+                🍵
+              </div>
+              <div id="soloOpponentName" style="font-weight:800; font-size:12.5px; color:var(--ink-coffee); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;">Capy Mây</div>
+            </div>
+          </div>
+
+          <!-- Mức cược kéo cam (Orange Coin Bet slider) -->
+          <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:5px; padding:16px; box-shadow:none; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-weight:800; font-size:13.5px; color:var(--ink-coffee);">Mức cược Cam 🍊</span>
+              <span style="font-family:var(--font-cute); font-weight:800; font-size:16px; color:#E67E22;" id="soloBetValText">50 🍊 xu</span>
+            </div>
+            
+            <input type="range" id="soloBetSlider" min="10" max="100" step="10" value="50" style="width:100%; accent-color:var(--duo-orange); cursor:pointer;" oninput="document.getElementById('soloBetValText').textContent = this.value + ' 🍊 xu'">
+
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--muted); font-weight:700;">
+              <span>Min: 10 🍊</span>
+              <span>Max: 100 🍊</span>
+            </div>
+          </div>
+
+          <button class="btn-cute primary" id="btnConfirmSoloBet" style="width:100%; padding:12px; font-size:14px; border-radius:16px; background:var(--duo-orange); border-color:#E58700; box-shadow:0 4px 0 #E58700;" onclick="confirmSoloBet()">
+            ĐỒNG Ý MỨC CƯỢC 🤝
+          </button>
+        </div>
+
+        <!-- STATE 3: Waiting for opponent to confirm bet (3s fake loading) -->
+        <div id="soloLobbyStateWaitingOpponentBet" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:40px 10px; height: 350px;">
+          <div class="mascot-loading-bounce" style="font-size: 54px;">🍊</div>
+          <div style="text-align:center;">
+            <h3 style="font-family:var(--font-cute); font-size:16px; color:var(--ink-coffee); margin:0;">Đối thủ đang suy nghĩ...</h3>
+            <p style="font-size:12px; color:var(--muted); margin:4px 0 0 0;">Đang đợi đối thủ xác nhận mức cược (3s)</p>
+          </div>
+          <!-- Cute small progress bar -->
+          <div style="width:160px; height:8px; background:var(--surface-aside); border:2px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
+            <div id="soloLobbyWaitingOpponentBetProgress" style="width:0%; height:100%; background:var(--duo-green); transition:width 0.1s linear;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================== SOLO GAME SCREEN ================== -->
+      <div class="screen-view hidden" id="view-solo-game">
+        <!-- Top bar scoreboard -->
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px;">
+          <!-- User -->
+          <div style="display:flex; align-items:center; gap:8px; flex:1;">
+            <span style="font-size:24px;">🦫</span>
+            <div style="flex:1;">
+              <div style="font-weight:800; font-size:11px; color:var(--ink-coffee);">Bạn</div>
+              <div style="font-family:var(--font-cute); font-weight:800; font-size:14px; color:var(--primary);" id="soloUserScoreText">0 Điểm</div>
+            </div>
+          </div>
+
+          <!-- Vs Timer -->
+          <div style="display:flex; flex-direction:column; align-items:center; min-width:50px;">
+            <span style="font-size:10px; font-weight:800; color:var(--muted);">Q: <span id="soloQuestionNumText">1/5</span></span>
+            <div style="font-family:var(--font-cute); font-size:16px; font-weight:900; color:var(--duo-orange);" id="soloTimerText">10s</div>
+          </div>
+
+          <!-- Opponent -->
+          <div style="display:flex; align-items:center; gap:8px; flex:1; justify-content:flex-end; text-align:right;">
+            <div style="flex:1;">
+              <div style="font-weight:800; font-size:11px; color:var(--ink-coffee);" id="soloGameOpponentName">Capy Mây</div>
+              <div style="font-family:var(--font-cute); font-weight:800; font-size:14px; color:#E74C3C;" id="soloOpponentScoreText">0 Điểm</div>
+            </div>
+            <span id="soloGameOpponentAvatar" style="font-size:24px;">🍵</span>
+          </div>
+        </div>
+
+        <!-- 3D Progress Comparison Bars -->
+        <div style="display:flex; gap:8px; width:100%; margin-bottom:12px;">
+          <div style="flex:1; height:8px; background:#E5E5E5; border:1.5px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
+            <div id="soloUserProgressBar" style="width:0%; height:100%; background:var(--primary); transition:width 0.2s ease;"></div>
+          </div>
+          <div style="flex:1; height:8px; background:#E5E5E5; border:1.5px solid var(--ink-coffee); border-radius:99px; overflow:hidden;">
+            <div id="soloOpponentProgressBar" style="width:0%; height:100%; background:#E74C3C; transition:width 0.2s ease; transform: scaleX(-1);"></div>
+          </div>
+        </div>
+
+        <!-- Question Box -->
+        <div class="capy-card" style="border:2.5px solid var(--ink-coffee); border-bottom-width:6px; box-shadow:none; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:white; min-height:110px;">
+          <span style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:4px;">Từ này nghĩa là gì? 🤔</span>
+          <h2 style="font-family:var(--font-cute); font-size:22px; font-weight:800; color:var(--ink-coffee); margin:0;" id="soloQuestionWord">Desk Lamp</h2>
+          <p style="font-size:12px; color:var(--muted); font-family:var(--font-mono); margin-top:2px;" id="soloQuestionPhonetic">/dɛsk læmp/</p>
+        </div>
+
+        <!-- 4 Options Grid -->
+        <div style="display:grid; grid-template-columns:1fr; gap:8px; margin-top:4px;" id="soloOptionsGrid">
+          <button class="btn-cute secondary" style="width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left;">Đền để bàn</button>
+          <button class="btn-cute secondary" style="width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left;">Bóng đèn</button>
+          <button class="btn-cute secondary" style="width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left;">Công tắc điện</button>
+          <button class="btn-cute secondary" style="width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left;">Tách cà phê</button>
+        </div>
+
+        <!-- Live Battle Log Feed (toast style updates) -->
+        <div class="capy-card pastel-yuzu" style="border:1.5px solid var(--ink-coffee); border-bottom-width:3px; padding:8px 12px; box-shadow:none; font-size:11.5px; font-weight:800; text-align:center; color:var(--ink-coffee);" id="soloBattleLog">
+          ⚔️ Trận đấu đã bắt đầu! Trả lời thật nhanh để giành điểm!
+        </div>
+      </div>
+
+      <!-- ================== SOLO RESULT SCREEN ================== -->
+      <div class="screen-view hidden" id="view-solo-result" style="align-items:center; justify-content:center; gap:20px; padding:40px 10px;">
+        <div style="font-size:72px;" id="soloResultEmoji">🏆</div>
+        
+        <div style="text-align:center;">
+          <h2 style="font-family:var(--font-cute); font-size:24px; font-weight:900; color:var(--ink-coffee); margin:0;" id="soloResultTitle">BẠN ĐÃ THẮNG!</h2>
+          <p style="font-size:13.5px; color:var(--muted); margin:4px 0;" id="soloResultDesc">Bạn trả lời đúng nhiều hơn đối thủ!</p>
+        </div>
+
+        <!-- Score recap box -->
+        <div class="capy-card" style="border:2px solid var(--ink-coffee); border-bottom-width:5px; padding:16px; box-shadow:none; width:260px; display:flex; flex-direction:column; gap:10px; background:white;">
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800;">
+            <span style="color:var(--muted);">Điểm của bạn:</span>
+            <span style="color:var(--primary);" id="soloResultUserScore">40đ</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:12px; font-weight:800; border-bottom:1.5px dashed var(--line); padding-bottom:8px;">
+            <span style="color:var(--muted);">Điểm đối thủ:</span>
+            <span style="color:#E74C3C;" id="soloResultOpponentScore">20đ</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:800; align-items:center;">
+            <span style="color:var(--ink-coffee);">🍊 Tiền cược:</span>
+            <span style="color:#E67E22; font-family:var(--font-cute);" id="soloResultCoinChange">+50 🍊 xu</span>
+          </div>
+        </div>
+
+        <button class="btn-cute primary" style="width:260px; padding:12px; border-radius:16px; font-size:13.5px;" onclick="activateView('friends')">
+          Quay lại Bạn bè 👥
+        </button>
+      </div>
+
+
       <!-- ================== SELECTED VOCAB COLLECTION ================== -->
       <div class="screen-view hidden" id="view-selected-vocab">
         <div style="display:flex; flex-direction:column; gap:12px;">
@@ -2562,9 +2787,10 @@
                 <div style="font-size:11px; color:var(--muted);">🔥 5 ngày streak · 420 🍊 xu</div>
               </div>
             </div>
-            <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Mây (Google User)', '🍵')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+            <div style="display:flex; gap:3px;">
+              <button class="btn-cute secondary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="window.openDirectChat('Capy Mây (Google User)', '🍵')">💬 Chat</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto; background:var(--duo-orange); border-color:#E58700; box-shadow:0 2px 0 #E58700;" onclick="window.startSoloLobby('Capy Mây (Google User)', '🍵')">⚔️ Solo</button>
             </div>
           </div>
 
@@ -2578,9 +2804,10 @@
                 <div style="font-size:11px; color:var(--muted);">🔥 3 ngày streak · 310 🍊 xu</div>
               </div>
             </div>
-            <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Cam (Study Buddy)', '🍊')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+            <div style="display:flex; gap:3px;">
+              <button class="btn-cute secondary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="window.openDirectChat('Capy Cam (Study Buddy)', '🍊')">💬 Chat</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto; background:var(--duo-orange); border-color:#E58700; box-shadow:0 2px 0 #E58700;" onclick="window.startSoloLobby('Capy Cam', '🍊')">⚔️ Solo</button>
             </div>
           </div>
 
@@ -2594,9 +2821,10 @@
                 <div style="font-size:11px; color:var(--muted);">🔥 2 ngày streak · 210 🍊 xu</div>
               </div>
             </div>
-            <div style="display:flex; gap:4px;">
-              <button class="btn-cute secondary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="window.openDirectChat('Capy Nấm', '🦫')">💬 Chat</button>
-              <button class="btn-cute primary" style="padding:4px 8px; font-size:11px; border-radius:8px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+            <div style="display:flex; gap:3px;">
+              <button class="btn-cute secondary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="window.openDirectChat('Capy Nấm', '🦫')">💬 Chat</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto;" onclick="activateView('storage');">🖼️ Xem</button>
+              <button class="btn-cute primary" style="padding:3px 6px; font-size:10px; border-radius:6px; width:auto; background:var(--duo-orange); border-color:#E58700; box-shadow:0 2px 0 #E58700;" onclick="window.startSoloLobby('Capy Nấm', '🦫')">⚔️ Solo</button>
             </div>
           </div>
         </div>
@@ -3218,6 +3446,316 @@
     };
 
     
+    
+    // --- SOLO ARENA BATTLE ENGINE ---
+    let soloOpponentNameStr = "Capy Mây";
+    let soloOpponentAvatarStr = "🍵";
+    let soloBetAmount = 50;
+
+    // Vocab mix databases
+    const SOLO_USER_POOL = [
+      { word: "Desk Lamp", phonetic: "/dɛsk læmp/", meaning: "Đèn để bàn" },
+      { word: "Bulb", phonetic: "/bʌlb/", meaning: "Bóng đèn" },
+      { word: "Switch", phonetic: "/swɪtʃ/", meaning: "Công tắc điện" },
+      { word: "Coffee Mug", phonetic: "/ˈkɔːfi mʌɡ/", meaning: "Ly cà phê lớn" },
+      { word: "Hot Steam", phonetic: "/hɒt stiːm/", meaning: "Hơi nước nóng" },
+      { word: "Handle", phonetic: "/ˈhændl/", meaning: "Tay cầm" },
+      { word: "Tree", phonetic: "/triː/", meaning: "Cây xanh" },
+      { word: "Leaf", phonetic: "/liːf/", meaning: "Lá cây" },
+      { word: "Grass", phonetic: "/ɡrɑːs/", meaning: "Thảm cỏ" },
+      { word: "Backpack", phonetic: "/ˈbækpæk/", meaning: "Ba lo đeo vai" },
+      { word: "Zipper", phonetic: "/ˈzɪpər/", meaning: "Khóa kéo" },
+      { word: "Strap", phonetic: "/stræp/", meaning: "Quai đeo" }
+    ];
+
+    const SOLO_OPPONENT_POOL = [
+      { word: "Matcha Whisk", phonetic: "/ˈmætʃə wɪsk/", meaning: "Chổi đánh trà matcha" },
+      { word: "Teapot", phonetic: "/ˈtiːpɒt/", meaning: "Ấm pha trà" },
+      { word: "Mocha", phonetic: "/ˈmɒkə/", meaning: "Cà phê Mocha" },
+      { word: "Espresso", phonetic: "/ɛˈsprɛsoʊ/", meaning: "Cà phê Espresso" },
+      { word: "Mantis", phonetic: "/ˈmæntɪs/", meaning: "Con bọ ngựa" },
+      { word: "Bonsai", phonetic: "/ˈbɒnsaɪ/", meaning: "Cây kiểng cổ thụ Bonsai" },
+      { word: "Notebook", phonetic: "/ˈnoʊtbʊk/", meaning: "Sổ tay ghi chép" },
+      { word: "Highlighter", phonetic: "/ˈhaɪlaɪtər/", meaning: "Bút dạ quang đánh dấu" }
+    ];
+
+    let soloQuestions = [];
+    let soloCurrentQIndex = 0;
+    let soloUserScore = 0;
+    let soloOpponentScore = 0;
+    let soloTimerInterval = null;
+    let soloOpponentTimeout = null;
+    let soloTimerVal = 10;
+    let soloHasUserAnswered = false;
+    let soloHasOpponentAnswered = false;
+
+    window.startSoloLobby = function(opponentName, opponentAvatar) {
+      soloOpponentNameStr = opponentName;
+      soloOpponentAvatarStr = opponentAvatar;
+
+      // Reset lobby views
+      document.getElementById('soloLobbyStateWaiting').style.display = 'flex';
+      document.getElementById('soloLobbyStateBet').style.display = 'none';
+      document.getElementById('soloLobbyStateWaitingOpponentBet').style.display = 'none';
+      document.getElementById('soloLobbyWaitingTitle').textContent = "Đang thách đấu " + opponentName + "... ⚔️";
+
+      window.activateView('solo-lobby');
+
+      // 3s Loading progress waiting for opponent response
+      const progressBar = document.getElementById('soloLobbyWaitingProgress');
+      if (progressBar) progressBar.style.width = '0%';
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 3.33;
+        if (progress > 100) progress = 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          // Transition to Bet state
+          document.getElementById('soloLobbyStateWaiting').style.display = 'none';
+          document.getElementById('soloLobbyStateBet').style.display = 'flex';
+          
+          document.getElementById('soloOpponentName').textContent = soloOpponentNameStr;
+          document.getElementById('soloOpponentAvatar').textContent = soloOpponentAvatarStr;
+        }
+      }, 100);
+    };
+
+    window.confirmSoloBet = function() {
+      const slider = document.getElementById('soloBetSlider');
+      soloBetAmount = parseInt(slider.value) || 50;
+
+      // Switch to Waiting Opponent Bet Confirmation
+      document.getElementById('soloLobbyStateBet').style.display = 'none';
+      document.getElementById('soloLobbyStateWaitingOpponentBet').style.display = 'flex';
+
+      const progressBar = document.getElementById('soloLobbyWaitingOpponentBetProgress');
+      if (progressBar) progressBar.style.width = '0%';
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        progress += 3.33;
+        if (progress > 100) progress = 100;
+        if (progressBar) progressBar.style.width = `${progress}%`;
+
+        if (progress >= 100) {
+          clearInterval(interval);
+          // Transition to actual Solo Gameplay
+          window.startSoloGameplayMatch();
+        }
+      }, 100);
+    };
+
+    window.startSoloGameplayMatch = function() {
+      window.activateView('solo-game');
+
+      document.getElementById('soloGameOpponentName').textContent = soloOpponentNameStr;
+      document.getElementById('soloGameOpponentAvatar').textContent = soloOpponentAvatarStr;
+
+      // Mix vocabularies
+      const mixedPool = [...SOLO_USER_POOL, ...SOLO_OPPONENT_POOL];
+      // Shuffle mixed pool
+      const shuffled = mixedPool.sort(() => Math.random() - 0.5);
+      // Select 5 questions
+      soloQuestions = shuffled.slice(0, 5);
+
+      // Reset scores
+      soloUserScore = 0;
+      soloOpponentScore = 0;
+      soloCurrentQIndex = 0;
+
+      updateSoloScoreUI();
+      loadSoloQuestion(0);
+    };
+
+    function updateSoloScoreUI() {
+      document.getElementById('soloUserScoreText').textContent = soloUserScore + " Điểm";
+      document.getElementById('soloOpponentScoreText').textContent = soloOpponentScore + " Điểm";
+
+      const userPercent = Math.min((soloUserScore / 50) * 100, 100);
+      const opponentPercent = Math.min((soloOpponentScore / 50) * 100, 100);
+
+      document.getElementById('soloUserProgressBar').style.width = userPercent + "%";
+      document.getElementById('soloOpponentProgressBar').style.width = opponentPercent + "%";
+    }
+
+    function loadSoloQuestion(index) {
+      if (index >= 5) {
+        endSoloGameplayMatch();
+        return;
+      }
+
+      soloCurrentQIndex = index;
+      soloHasUserAnswered = false;
+      soloHasOpponentAnswered = false;
+      soloTimerVal = 10;
+
+      document.getElementById('soloQuestionNumText').textContent = (index + 1) + "/5";
+      document.getElementById('soloTimerText').textContent = soloTimerVal + "s";
+      document.getElementById('soloTimerText').style.color = "var(--duo-orange)";
+
+      const questionObj = soloQuestions[index];
+      document.getElementById('soloQuestionWord').textContent = questionObj.word;
+      document.getElementById('soloQuestionPhonetic').textContent = questionObj.phonetic;
+
+      // Generate 4 options (1 correct, 3 wrong from total pools)
+      const correctText = questionObj.meaning;
+      const wrongPool = [...SOLO_USER_POOL, ...SOLO_OPPONENT_POOL]
+        .map(x => x.meaning)
+        .filter(m => m !== correctText);
+      const shuffledWrongs = wrongPool.sort(() => Math.random() - 0.5);
+      const wrongs = shuffledWrongs.slice(0, 3);
+
+      const options = [correctText, ...wrongs].sort(() => Math.random() - 0.5);
+
+      // Render options buttons
+      const container = document.getElementById('soloOptionsGrid');
+      container.innerHTML = '';
+      
+      options.forEach(optText => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-cute secondary';
+        btn.style.cssText = 'width:100%; padding:12px; border-radius:14px; font-size:12.5px; font-weight:700; text-align:left; transition: all 0.2s ease;';
+        btn.textContent = optText;
+
+        btn.addEventListener('click', (e) => {
+          if (soloHasUserAnswered) return;
+          soloHasUserAnswered = true;
+
+          // Disable options selection hover/pointer
+          document.querySelectorAll('#soloOptionsGrid button').forEach(b => b.style.pointerEvents = 'none');
+
+          if (optText === correctText) {
+            btn.classList.remove('secondary');
+            btn.classList.add('correct');
+            soloUserScore += 10;
+            updateSoloScoreUI();
+            playBeep(880, 'sine', 0.15); // correct sound
+            document.getElementById('soloBattleLog').innerHTML = `✨ Bạn đã trả lời CHÍNH XÁC (+10đ)!`;
+          } else {
+            btn.classList.remove('secondary');
+            btn.classList.add('wrong');
+            
+            // Highlight correct one green
+            document.querySelectorAll('#soloOptionsGrid button').forEach(b => {
+              if (b.textContent === correctText) {
+                b.classList.remove('secondary');
+                b.classList.add('correct');
+              }
+            });
+            playBeep(220, 'triangle', 0.3); // wrong sound
+            document.getElementById('soloBattleLog').innerHTML = `🐾 Sai rồi! Đáp án đúng: <b>${correctText}</b>`;
+          }
+
+          checkSoloQuestionComplete();
+        });
+
+        container.appendChild(btn);
+      });
+
+      // Clear previous intervals
+      if (soloTimerInterval) clearInterval(soloTimerInterval);
+      if (soloOpponentTimeout) clearTimeout(soloOpponentTimeout);
+
+      // Setup Question Timer
+      soloTimerInterval = setInterval(() => {
+        soloTimerVal--;
+        document.getElementById('soloTimerText').textContent = soloTimerVal + "s";
+        if (soloTimerVal <= 3) {
+          document.getElementById('soloTimerText').style.color = "#FF4B4B";
+        }
+        if (soloTimerVal <= 0) {
+          clearInterval(soloTimerInterval);
+          // user timed out if they didn't answer
+          if (!soloHasUserAnswered) {
+            soloHasUserAnswered = true;
+            document.getElementById('soloBattleLog').textContent = "⏰ Hết giờ! Bạn chưa đưa ra câu trả lời.";
+            // Highlight correct answer
+            document.querySelectorAll('#soloOptionsGrid button').forEach(b => {
+              if (b.textContent === correctText) {
+                b.classList.remove('secondary');
+                b.classList.add('correct');
+              }
+            });
+          }
+          checkSoloQuestionComplete();
+        }
+      }, 1000);
+
+      // Setup fake Opponent decision process
+      const fakeDecisionDelay = Math.random() * 3000 + 1500; // 1.5s to 4.5s
+      soloOpponentTimeout = setTimeout(() => {
+        if (soloHasOpponentAnswered) return;
+        soloHasOpponentAnswered = true;
+
+        const isCorrect = Math.random() < 0.70; // 70% chance of correct
+        if (isCorrect) {
+          soloOpponentScore += 10;
+          updateSoloScoreUI();
+          document.getElementById('soloBattleLog').textContent = `⚡ ${soloOpponentNameStr} đã trả lời ĐÚNG (+10đ)!`;
+        } else {
+          document.getElementById('soloBattleLog').textContent = `💤 ${soloOpponentNameStr} trả lời SAI!`;
+        }
+
+        checkSoloQuestionComplete();
+      }, fakeDecisionDelay);
+    }
+
+    function checkSoloQuestionComplete() {
+      if (soloHasUserAnswered && soloHasOpponentAnswered) {
+        // Both answered, clear timer and load next question after delay
+        if (soloTimerInterval) clearInterval(soloTimerInterval);
+        setTimeout(() => {
+          loadSoloQuestion(soloCurrentQIndex + 1);
+        }, 2200);
+      }
+    }
+
+    function endSoloGameplayMatch() {
+      if (soloTimerInterval) clearInterval(soloTimerInterval);
+      if (soloOpponentTimeout) clearTimeout(soloOpponentTimeout);
+
+      window.activateView('solo-result');
+
+      document.getElementById('soloResultUserScore').textContent = soloUserScore + "đ";
+      document.getElementById('soloResultOpponentScore').textContent = soloOpponentScore + "đ";
+
+      const emojiEl = document.getElementById('soloResultEmoji');
+      const titleEl = document.getElementById('soloResultTitle');
+      const descEl = document.getElementById('soloResultDesc');
+      const coinsEl = document.getElementById('soloResultCoinChange');
+
+      if (soloUserScore > soloOpponentScore) {
+        emojiEl.textContent = "🏆";
+        titleEl.textContent = "BẠN ĐÃ THẮNG! 🎉";
+        titleEl.style.color = "var(--duo-green)";
+        descEl.textContent = `Bạn ghi nhớ nhiều từ vựng hơn ${soloOpponentNameStr}!`;
+        coinsEl.textContent = "+" + soloBetAmount + " 🍊 xu";
+        coinsEl.style.color = "var(--success)";
+        studyPoints += soloBetAmount;
+      } else if (soloUserScore < soloOpponentScore) {
+        emojiEl.textContent = "😢";
+        titleEl.textContent = "BẠN ĐÃ THUA CUỘC!";
+        titleEl.style.color = "#FF4B4B";
+        descEl.textContent = `${soloOpponentNameStr} nhanh tay & chính xác hơn bạn.`;
+        coinsEl.textContent = "-" + soloBetAmount + " 🍊 xu";
+        coinsEl.style.color = "#FF4B4B";
+        studyPoints = Math.max(0, studyPoints - soloBetAmount);
+      } else {
+        emojiEl.textContent = "🤝";
+        titleEl.textContent = "HÒA HỮU NGHỊ!";
+        titleEl.style.color = "var(--ink-coffee)";
+        descEl.textContent = "Cả hai đều ghi nhớ từ vựng xuất sắc như nhau!";
+        coinsEl.textContent = "0 🍊 xu";
+        coinsEl.style.color = "var(--muted)";
+      }
+
+      if (typeof updateSrsCoinsBadges === 'function') updateSrsCoinsBadges();
+    }
+
+
     // --- ADD FRIEND SYSTEM ---
     window.openAddFriendModal = function() {
       const overlay = document.getElementById('addFriendOverlay');
